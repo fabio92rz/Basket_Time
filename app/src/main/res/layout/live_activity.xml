@@ -226,7 +226,6 @@
 
     <ListView
         android:id="@+id/drawer_list"
-        android:entries="@array/menù"
         android:background="#ffeeeeee"
         android:layout_width="200dp"
         android:layout_gravity="left|start"

@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,9 +45,10 @@ public class LiveActivity extends AppCompatActivity{
 
 
     private DrawerLayout drawerLayout;
-    private ListView listView;
+    private ListView mDrawerList;
     private String mActivityTitle;
     private ActionBarDrawerToggle mDrawerToggle;
+    private ArrayAdapter<String> mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +56,17 @@ public class LiveActivity extends AppCompatActivity{
         setContentView(R.layout.live_activity);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
-        listView = (ListView) findViewById(R.id.drawer_list);
+        mDrawerList = (ListView) findViewById(R.id.drawer_list);
+        mDrawerList.setOnItemClickListener(new selectItem());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
 
+        addDrawerItems();
         setupDrawer();
         displayForFp(0);
         displayForVis(0);
+
     }
 
 
@@ -78,6 +83,20 @@ public class LiveActivity extends AppCompatActivity{
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        boolean drawerOpen = drawerLayout.isDrawerOpen(mDrawerList);
+
+        for (int index = 0; index < menu.size(); index++){
+            MenuItem menuItem = menu.getItem(index);
+            if (menuItem != null){
+                menuItem.setVisible(!drawerOpen);
+            }
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
@@ -88,9 +107,10 @@ public class LiveActivity extends AppCompatActivity{
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
+
+    /** Gestione degli oggetti a schermo **/
 
     public void resethome (EditText team){
         EditText teamhome = (EditText) findViewById(R.id.team_home_text);
@@ -174,6 +194,12 @@ public class LiveActivity extends AppCompatActivity{
 
     /** Oggetto Drawer **/
 
+    private void addDrawerItems(){
+        String [] menu = {"Live !", "Storico partite", "Ecc.."};
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, menu);
+        mDrawerList.setAdapter(mAdapter);
+    }
+
     private void setupDrawer(){
         mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close) {
             public void onDrawerOpened(View drawerView){
@@ -190,5 +216,27 @@ public class LiveActivity extends AppCompatActivity{
         };
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.setDrawerListener(mDrawerToggle);
+    }
+
+    /** Gestione elementi nel Drawer List **/
+
+    private class selectItem implements ListView.OnItemClickListener{
+
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id){
+            switch (pos) {
+                case 0: {
+                    Intent live = new Intent(LiveActivity.this, LiveActivity.class);
+                    startActivity(live);
+                    break;
+                }
+                case 1: {
+                    Intent hist = new Intent(LiveActivity.this, HistoryActivity.class);
+                    startActivity(hist);
+                    break;
+                }
+            }
+            drawerLayout.closeDrawer(mDrawerList);
+        }
     }
 }

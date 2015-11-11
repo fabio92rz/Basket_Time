@@ -27,6 +27,8 @@
             android:name=".LiveActivity"></activity>
         <activity
             android:name=".RegisterActivity"></activity>
+        <activity
+            android:name=".HistoryActivity"></activity>
     </application>
 
 </manifest>
