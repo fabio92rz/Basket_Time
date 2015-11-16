@@ -69,6 +69,11 @@ public class LiveActivity extends AppCompatActivity{
 
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        overridePendingTransition(0, 0);
+    }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState){
@@ -124,7 +129,10 @@ public class LiveActivity extends AppCompatActivity{
 
     public void stream (View v){
         Button start = (Button) findViewById(R.id.start_button);
+    }
 
+    public void stopStream (View v){
+        Button stop = (Button) findViewById(R.id.stop_button);
     }
 
     public void displayForFp(int score) {
