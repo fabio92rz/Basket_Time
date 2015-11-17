@@ -12,21 +12,21 @@
 
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/linear_layout0"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="24dp"
+            android:gravity="center">
 
             <EditText
                 android:id="@+id/team_home_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="35dp"
-                android:layout_marginRight="10dp"
                 android:background="#00000000"
                 android:hint="Team Home"
+                android:layout_marginLeft="20dp"
                 android:inputType="textCapWords"
-                android:paddingTop="32dp"
                 android:textColor="#039be5"
                 android:textColorHint="#039be5"
                 android:textSize="22sp" />
@@ -35,7 +35,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="32dp"
                 android:text="0"
                 android:textSize="26sp" />
 
@@ -43,7 +42,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="32dp"
                 android:text="-"
                 android:textSize="26sp" />
 
@@ -52,7 +50,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_marginTop="32dp"
                 android:text="0"
                 android:textSize="26sp" />
 
@@ -60,13 +57,10 @@
                 android:id="@+id/team_visitors_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="24dp"
+                android:layout_marginRight="20dp"
                 android:background="#00000000"
                 android:hint="Team Visitor"
                 android:inputType="textCapWords"
-                android:paddingTop="32dp"
                 android:textColor="#F44336"
                 android:textColorHint="#F44336"
                 android:textSize="22sp" />
@@ -78,25 +72,24 @@
             android:layout_height="1dp"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
-            android:layout_marginTop="28dp"
             android:background="@android:color/black" />
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="24dp"
+            android:gravity="center">
+
 
             <EditText
                 android:id="@+id/team_home_text1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="35dp"
-                android:layout_marginRight="10dp"
                 android:background="#00000000"
                 android:hint="Team Home"
+                android:layout_marginLeft="20dp"
                 android:inputType="textCapWords"
-                android:paddingTop="32dp"
                 android:textColor="#039be5"
                 android:textColorHint="#039be5"
                 android:textSize="22sp" />
@@ -105,7 +98,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="32dp"
                 android:text="0"
                 android:textSize="26sp" />
 
@@ -113,7 +105,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="32dp"
                 android:text="-"
                 android:textSize="26sp" />
 
@@ -122,7 +113,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_marginTop="32dp"
                 android:text="0"
                 android:textSize="26sp" />
 
@@ -130,13 +120,10 @@
                 android:id="@+id/team_visitors_text1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="24dp"
+                android:layout_marginRight="20dp"
                 android:background="#00000000"
                 android:hint="Team Visitor"
                 android:inputType="textCapWords"
-                android:paddingTop="32dp"
                 android:textColor="#F44336"
                 android:textColorHint="#F44336"
                 android:textSize="22sp" />
@@ -148,24 +135,23 @@
             android:layout_height="1dp"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
-            android:layout_marginTop="28dp"
             android:background="@android:color/black" />
+
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="24dp">
 
             <EditText
                 android:id="@+id/team_home_text2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="35dp"
-                android:layout_marginRight="10dp"
                 android:background="#00000000"
                 android:hint="Team Home"
+                android:layout_marginLeft="20dp"
                 android:inputType="textCapWords"
-                android:paddingTop="32dp"
                 android:textColor="#039be5"
                 android:textColorHint="#039be5"
                 android:textSize="22sp" />
@@ -174,7 +160,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="32dp"
                 android:text="0"
                 android:textSize="26sp" />
 
@@ -182,7 +167,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="32dp"
                 android:text="-"
                 android:textSize="26sp" />
 
@@ -191,7 +175,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_marginTop="32dp"
                 android:text="0"
                 android:textSize="26sp" />
 
@@ -199,13 +182,10 @@
                 android:id="@+id/team_visitors_text2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="24dp"
+                android:layout_marginRight="20dp"
                 android:background="#00000000"
                 android:hint="Team Visitor"
                 android:inputType="textCapWords"
-                android:paddingTop="32dp"
                 android:textColor="#F44336"
                 android:textColorHint="#F44336"
                 android:textSize="22sp" />
@@ -217,7 +197,6 @@
             android:layout_height="1dp"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
-            android:layout_marginTop="28dp"
             android:background="@android:color/black" />
 
     </LinearLayout>

@@ -3,6 +3,7 @@ package com.example.android.baskettime;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 /**
@@ -25,11 +27,13 @@ public class HistoryActivity extends AppCompatActivity {
     private String mActivityTitle;
     private ActionBarDrawerToggle mDrawerToggle;
     private ArrayAdapter<String> mAdapter;
+    private LinearLayout mLayout0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+        mLayout0 = (LinearLayout) findViewById(R.id.linear_layout0);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
         mDrawerList = (ListView) findViewById(R.id.drawer_list);
@@ -37,14 +41,16 @@ public class HistoryActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+
         addDrawerItems();
         setupDrawer();
-    }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        overridePendingTransition(0, 0);
+        mLayout0.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HistoryActivity.this, Popup0Activity.class));
+            }
+        });
     }
 
     @Override
@@ -111,7 +117,7 @@ public class HistoryActivity extends AppCompatActivity {
         drawerLayout.setDrawerListener(mDrawerToggle);
     }
 
-    /** Gestione elementi nel Drawer List **/
+    /** Gestione scelta nel Drawer List **/
 
     private class selectItem implements ListView.OnItemClickListener{
 

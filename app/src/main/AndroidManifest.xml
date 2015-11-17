@@ -29,6 +29,10 @@
             android:name=".RegisterActivity"></activity>
         <activity
             android:name=".HistoryActivity"></activity>
+        <activity
+            android:name=".Popup0Activity"
+            android:theme="@style/AppTheme.CustomTheme">
+        </activity>
 
     </application>
 

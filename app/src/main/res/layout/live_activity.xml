@@ -157,7 +157,7 @@
                         android:id="@+id/minus_button_2"
                         android:layout_width="52dp"
                         android:layout_height="60dp"
-                        android:onClick="subOneVis"
+                        android:onClick="subOnePointVis"
                         android:text="-" />
 
                     <TextView

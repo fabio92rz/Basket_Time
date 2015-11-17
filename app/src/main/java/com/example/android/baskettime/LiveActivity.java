@@ -36,12 +36,9 @@ import java.io.ByteArrayOutputStream;
 
 public class LiveActivity extends AppCompatActivity{
 
-    int scoreTeamFp = 0;
-    int scoreTeamVis = 0;
-    int quarter = 1;
-    Button start;
-    EditText teamhome;
-    EditText teamvis;
+    int scoreTeamHm = 0, scoreTeamVis = 0, quarter = 1;
+    Button start, plus, minus;
+    EditText teamhome, teamvis;
 
 
     private DrawerLayout drawerLayout;
@@ -64,7 +61,7 @@ public class LiveActivity extends AppCompatActivity{
 
         addDrawerItems();
         setupDrawer();
-        displayForFp(0);
+        displayForHm(0);
         displayForVis(0);
 
     }
@@ -117,12 +114,9 @@ public class LiveActivity extends AppCompatActivity{
 
     /** Gestione degli oggetti a schermo **/
 
-    public void resethome (EditText team){
+    public void reset (EditText team, EditText team1){
         EditText teamhome = (EditText) findViewById(R.id.team_home_text);
         teamhome.setText(null);
-    }
-
-    public void resetvisit (EditText team){
         EditText teamVis = (EditText) findViewById(R.id.team_visitors_text);
         teamVis.setText(null);
     }
@@ -135,7 +129,7 @@ public class LiveActivity extends AppCompatActivity{
         Button stop = (Button) findViewById(R.id.stop_button);
     }
 
-    public void displayForFp(int score) {
+    public void displayForHm(int score) {
         TextView scoreView = (TextView) findViewById(R.id.score_team_home);
         scoreView.setText(String.valueOf(score));
     }
@@ -152,13 +146,27 @@ public class LiveActivity extends AppCompatActivity{
 
     /** Gestione Live **/
 
+
+
     public void addOnePoint(View v) {
-        scoreTeamFp += 1;
-        displayForFp(scoreTeamFp);
+        scoreTeamHm += 1;
+        displayForHm(scoreTeamHm);
     }
 
-    public void addOnePointVis(View v) {
+    public void addOnePointVis (View v){
         scoreTeamVis += 1;
+        displayForVis(scoreTeamVis);
+    }
+
+    public void subOne(View v) {
+        if (scoreTeamHm > 0)
+            scoreTeamHm -= 1;
+        displayForHm(scoreTeamHm);
+    }
+
+    public void subOnePointVis (View v){
+        if (scoreTeamVis > 0)
+            scoreTeamVis -= 1;
         displayForVis(scoreTeamVis);
     }
 
@@ -166,18 +174,6 @@ public class LiveActivity extends AppCompatActivity{
         if (quarter >= 1 && quarter <= 3)
             quarter += 1;
         displayForQuarter(quarter + "°");
-    }
-
-    public void subOne(View v) {
-        if (scoreTeamFp > 0)
-            scoreTeamFp -= 1;
-        displayForFp(scoreTeamFp);
-    }
-
-    public void subOneVis(View v) {
-        if (scoreTeamVis > 0)
-            scoreTeamVis -= 1;
-        displayForVis(scoreTeamVis);
     }
 
     public void subOneQuart(View v) {
@@ -189,13 +185,12 @@ public class LiveActivity extends AppCompatActivity{
     /** Reset Punteggi **/
 
     public void resetScore(View v){
-        scoreTeamFp=0;
+        scoreTeamHm=0;
         scoreTeamVis=0;
         quarter = 1;
 
-        resethome(teamhome);
-        resetvisit(teamvis);
-        displayForFp(scoreTeamFp);
+        reset(teamhome, teamvis);
+        displayForHm(scoreTeamHm);
         displayForVis(scoreTeamVis);
         displayForQuarter(quarter + "°");
     }
