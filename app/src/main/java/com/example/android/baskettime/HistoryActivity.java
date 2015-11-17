@@ -25,15 +25,15 @@ public class HistoryActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private ListView mDrawerList;
     private String mActivityTitle;
+    private View mLayout0;
     private ActionBarDrawerToggle mDrawerToggle;
     private ArrayAdapter<String> mAdapter;
-    private LinearLayout mLayout0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
-        mLayout0 = (LinearLayout) findViewById(R.id.linear_layout0);
+        mLayout0 = findViewById(R.id.linear_layout0);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
         mDrawerList = (ListView) findViewById(R.id.drawer_list);
