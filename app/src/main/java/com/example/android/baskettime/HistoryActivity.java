@@ -25,7 +25,7 @@ public class HistoryActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private ListView mDrawerList;
     private String mActivityTitle;
-    private View mLayout0;
+    private View mLayout0, mLayout1, mLayout2;
     private ActionBarDrawerToggle mDrawerToggle;
     private ArrayAdapter<String> mAdapter;
 
@@ -34,6 +34,8 @@ public class HistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
         mLayout0 = findViewById(R.id.linear_layout0);
+        mLayout1 = findViewById(R.id.linear_layout1);
+        mLayout2 = findViewById(R.id.linear_layout2);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mActivityTitle = getTitle().toString();
         mDrawerList = (ListView) findViewById(R.id.drawer_list);
@@ -45,13 +47,31 @@ public class HistoryActivity extends AppCompatActivity {
         addDrawerItems();
         setupDrawer();
 
+        /** Layout con Popup **/
+
         mLayout0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(HistoryActivity.this, Popup0Activity.class));
             }
         });
+
+        mLayout1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HistoryActivity.this, Popup0Activity.class));
+            }
+        });
+
+        mLayout2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(HistoryActivity.this, Popup0Activity.class));
+            }
+        });
     }
+
+    /** Gestione Toggle del Drawer **/
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState){
@@ -64,6 +84,8 @@ public class HistoryActivity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
+
+    /** Indice del drawer **/
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
@@ -92,6 +114,8 @@ public class HistoryActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    /** Aggiunta elementi a Drawer **/
 
     private void addDrawerItems(){
         String [] menu = {"Live !", "Storico partite", "Ecc.."};

@@ -5,19 +5,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:id="@+id/rel_layout1">
 
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/pallone2"
+            android:layout_marginLeft="73dp"
+            android:layout_marginTop="10dp" />
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/pallone2"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="73dp"
+            android:layout_marginTop="10dp" />
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/linear_layout0"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="24dp"
-            android:gravity="center">
+            android:paddingTop="60dp"
+            android:paddingBottom="20dp"
+            android:gravity="center"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
 
             <EditText
                 android:id="@+id/team_home_text"
@@ -25,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:background="#00000000"
                 android:hint="Team Home"
-                android:layout_marginLeft="20dp"
+                android:layout_marginRight="5dp"
                 android:inputType="textCapWords"
                 android:textColor="#039be5"
                 android:textColorHint="#039be5"
@@ -34,7 +52,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="5dp"
                 android:text="0"
                 android:textSize="26sp" />
 
@@ -57,9 +75,9 @@
                 android:id="@+id/team_visitors_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
                 android:background="#00000000"
                 android:hint="Team Visitor"
+                android:layout_marginLeft="5dp"
                 android:inputType="textCapWords"
                 android:textColor="#F44336"
                 android:textColorHint="#F44336"
@@ -68,18 +86,40 @@
         </LinearLayout>
 
         <View
+            android:id="@+id/view0"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
-            android:background="@android:color/black" />
+            android:background="@android:color/black"
+            android:layout_below="@id/linear_layout0"/>
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/pallone2"
+            android:layout_below="@id/view0"
+            android:layout_marginLeft="73dp"
+            android:layout_marginTop="10dp" />
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/pallone2"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/view0"
+            android:layout_marginRight="73dp"
+            android:layout_marginTop="10dp" />
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/linear_layout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="24dp"
-            android:gravity="center">
+            android:paddingTop="60dp"
+            android:paddingBottom="20dp"
+            android:gravity="center"
+            android:layout_below="@id/linear_layout0">
 
 
             <EditText
@@ -88,7 +128,7 @@
                 android:layout_height="wrap_content"
                 android:background="#00000000"
                 android:hint="Team Home"
-                android:layout_marginLeft="20dp"
+                android:layout_marginRight="5dp"
                 android:inputType="textCapWords"
                 android:textColor="#039be5"
                 android:textColorHint="#039be5"
@@ -97,7 +137,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="5dp"
                 android:text="0"
                 android:textSize="26sp" />
 
@@ -120,9 +160,9 @@
                 android:id="@+id/team_visitors_text1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
                 android:background="#00000000"
                 android:hint="Team Visitor"
+                android:layout_marginLeft="5dp"
                 android:inputType="textCapWords"
                 android:textColor="#F44336"
                 android:textColorHint="#F44336"
@@ -131,18 +171,40 @@
         </LinearLayout>
 
         <View
+            android:id="@+id/view1"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
-            android:background="@android:color/black" />
+            android:background="@android:color/black"
+            android:layout_below="@id/linear_layout1"/>
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/pallone2"
+            android:layout_below="@id/view1"
+            android:layout_marginLeft="73dp"
+            android:layout_marginTop="10dp" />
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/pallone2"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/view1"
+            android:layout_marginRight="73dp"
+            android:layout_marginTop="10dp" />
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/linear_layout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:padding="24dp">
+            android:paddingTop="60dp"
+            android:paddingBottom="20dp"
+            android:layout_below="@id/linear_layout1" >
 
             <EditText
                 android:id="@+id/team_home_text2"
@@ -150,7 +212,7 @@
                 android:layout_height="wrap_content"
                 android:background="#00000000"
                 android:hint="Team Home"
-                android:layout_marginLeft="20dp"
+                android:layout_marginRight="5dp"
                 android:inputType="textCapWords"
                 android:textColor="#039be5"
                 android:textColorHint="#039be5"
@@ -159,7 +221,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="5dp"
                 android:text="0"
                 android:textSize="26sp" />
 
@@ -182,9 +244,9 @@
                 android:id="@+id/team_visitors_text2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
                 android:background="#00000000"
                 android:hint="Team Visitor"
+                android:layout_marginLeft="5dp"
                 android:inputType="textCapWords"
                 android:textColor="#F44336"
                 android:textColorHint="#F44336"
@@ -197,9 +259,10 @@
             android:layout_height="1dp"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
-            android:background="@android:color/black" />
+            android:background="@android:color/black"
+            android:layout_below="@id/linear_layout2"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/drawer_list"
