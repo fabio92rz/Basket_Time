@@ -11,19 +11,19 @@
         android:id="@+id/rel_layout1">
 
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/pallone2"
-            android:layout_marginLeft="73dp"
-            android:layout_marginTop="10dp" />
+            android:layout_marginLeft="80dp"
+            android:layout_marginTop="20dp" />
 
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/pallone2"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="73dp"
-            android:layout_marginTop="10dp" />
+            android:layout_marginRight="80dp"
+            android:layout_marginTop="20dp" />
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/linear_layout0"
@@ -53,6 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
+                android:layout_gravity="center_horizontal"
                 android:text="0"
                 android:textSize="26sp" />
 
@@ -60,14 +61,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_gravity="center_horizontal"
                 android:text="-"
                 android:textSize="26sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
+                android:layout_gravity="center_horizontal"
                 android:text="0"
                 android:textSize="26sp" />
 
@@ -95,21 +98,21 @@
             android:layout_below="@id/linear_layout0"/>
 
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/pallone2"
             android:layout_below="@id/view0"
-            android:layout_marginLeft="73dp"
-            android:layout_marginTop="10dp" />
+            android:layout_marginLeft="80dp"
+            android:layout_marginTop="20dp" />
 
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/pallone2"
             android:layout_alignParentRight="true"
             android:layout_below="@id/view0"
-            android:layout_marginRight="73dp"
-            android:layout_marginTop="10dp" />
+            android:layout_marginRight="80dp"
+            android:layout_marginTop="20dp" />
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/linear_layout1"
@@ -138,6 +141,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
+                android:layout_gravity="center_horizontal"
                 android:text="0"
                 android:textSize="26sp" />
 
@@ -145,14 +149,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_gravity="center_horizontal"
                 android:text="-"
                 android:textSize="26sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
+                android:layout_gravity="center_horizontal"
                 android:text="0"
                 android:textSize="26sp" />
 
@@ -180,21 +186,21 @@
             android:layout_below="@id/linear_layout1"/>
 
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/pallone2"
             android:layout_below="@id/view1"
-            android:layout_marginLeft="73dp"
-            android:layout_marginTop="10dp" />
+            android:layout_marginLeft="80dp"
+            android:layout_marginTop="20dp" />
 
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/pallone2"
             android:layout_alignParentRight="true"
             android:layout_below="@id/view1"
-            android:layout_marginRight="73dp"
-            android:layout_marginTop="10dp" />
+            android:layout_marginRight="80dp"
+            android:layout_marginTop="20dp" />
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/linear_layout2"
@@ -222,6 +228,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
+                android:layout_gravity="center_horizontal"
                 android:text="0"
                 android:textSize="26sp" />
 
@@ -229,14 +236,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_gravity="center_horizontal"
                 android:text="-"
                 android:textSize="26sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
+                android:layout_gravity="center_horizontal"
                 android:text="0"
                 android:textSize="26sp" />
 

@@ -4,8 +4,8 @@
 
 
     <stroke
-        android:width="1dip"
-        android:color="@android:color/background_dark" />
+        android:width="2dip"
+        android:color="#039be5" />
 
     <solid
         android:color="#FFFFFF" />
