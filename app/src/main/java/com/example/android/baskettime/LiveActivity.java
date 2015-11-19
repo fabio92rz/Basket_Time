@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import java.lang.String;
@@ -43,6 +44,7 @@ public class LiveActivity extends AppCompatActivity{
 
     private DrawerLayout drawerLayout;
     private ListView mDrawerList;
+    private LinearLayout mDrawerLayout;
     private String mActivityTitle;
     private ActionBarDrawerToggle mDrawerToggle;
     private ArrayAdapter<String> mAdapter;
@@ -52,9 +54,12 @@ public class LiveActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.live_activity);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = (LinearLayout) findViewById(R.id.drawer_linear);
         mActivityTitle = getTitle().toString();
         mDrawerList = (ListView) findViewById(R.id.drawer_list);
         mDrawerList.setOnItemClickListener(new selectItem());
+
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -86,7 +91,7 @@ public class LiveActivity extends AppCompatActivity{
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean drawerOpen = drawerLayout.isDrawerOpen(mDrawerList);
+        boolean drawerOpen = drawerLayout.isDrawerOpen(mDrawerLayout);
 
         for (int index = 0; index < menu.size(); index++){
             MenuItem menuItem = menu.getItem(index);
@@ -239,7 +244,7 @@ public class LiveActivity extends AppCompatActivity{
                     break;
                 }
             }
-            drawerLayout.closeDrawer(mDrawerList);
+            drawerLayout.closeDrawer(mDrawerLayout);
         }
     }
 }

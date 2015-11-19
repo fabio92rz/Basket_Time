@@ -24,6 +24,7 @@ public class HistoryActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
     private ListView mDrawerList;
+    private LinearLayout mDrawerLayout;
     private String mActivityTitle;
     private View mLayout0, mLayout1, mLayout2;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -37,6 +38,7 @@ public class HistoryActivity extends AppCompatActivity {
         mLayout1 = findViewById(R.id.linear_layout1);
         mLayout2 = findViewById(R.id.linear_layout2);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = (LinearLayout) findViewById(R.id.drawer_linear);
         mActivityTitle = getTitle().toString();
         mDrawerList = (ListView) findViewById(R.id.drawer_list);
         mDrawerList.setOnItemClickListener(new selectItem());
@@ -89,7 +91,7 @@ public class HistoryActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean drawerOpen = drawerLayout.isDrawerOpen(mDrawerList);
+        boolean drawerOpen = drawerLayout.isDrawerOpen(mDrawerLayout);
 
         for (int index = 0; index < menu.size(); index++){
             MenuItem menuItem = menu.getItem(index);
@@ -159,7 +161,7 @@ public class HistoryActivity extends AppCompatActivity {
                     break;
                 }
             }
-            drawerLayout.closeDrawer(mDrawerList);
+            drawerLayout.closeDrawer(mDrawerLayout);
         }
     }
 }
