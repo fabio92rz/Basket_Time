@@ -223,7 +223,7 @@
 
         </RelativeLayout>
     </ScrollView>
-    
+
     <LinearLayout
         android:id="@+id/drawer_linear"
         android:layout_width="250dp"

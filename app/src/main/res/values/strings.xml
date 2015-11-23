@@ -2,6 +2,7 @@
     <string-array name="menù">
         <item>Live!</item>
         <item>Storico Partite</item>
+        <item>Ecc..</item>
     </string-array>
 
     <string name="app_name">Basket Time</string>
