@@ -273,7 +273,7 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/drawer_linear"
         android:layout_width="250dp"
         android:layout_height="match_parent"
@@ -292,5 +292,5 @@
             android:layout_gravity="left|start"
             android:background="#ffffff" />
 
-    </RelativeLayout>
+    </LinearLayout>
 </android.support.v4.widget.DrawerLayout>

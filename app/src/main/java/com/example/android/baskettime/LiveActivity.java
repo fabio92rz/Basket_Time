@@ -34,13 +34,12 @@ import android.view.WindowManager;
 import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 
 public class LiveActivity extends AppCompatActivity{
 
     int scoreTeamHm = 0, scoreTeamVis = 0, quarter = 1;
-    Button start, plus, minus;
     EditText teamhome, teamvis;
-
 
     private DrawerLayout drawerLayout;
     private ListView mDrawerList;
@@ -53,13 +52,12 @@ public class LiveActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.live_activity);
+
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.drawer_list);
         mDrawerLayout = (LinearLayout) findViewById(R.id.drawer_linear);
         mActivityTitle = getTitle().toString();
-        mDrawerList = (ListView) findViewById(R.id.drawer_list);
         mDrawerList.setOnItemClickListener(new selectItem());
-
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
