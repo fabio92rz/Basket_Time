@@ -3,6 +3,7 @@ package com.example.android.baskettime;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBarActivity;
@@ -22,13 +23,16 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import java.lang.String;
 import java.io.BufferedInputStream;
 import java.io.IOException;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
+import android.support.v7.widget.Toolbar;
 
 
 import org.w3c.dom.Text;
@@ -36,34 +40,83 @@ import org.w3c.dom.Text;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
-public class LiveActivity extends AppCompatActivity{
+public class LiveActivity extends AppCompatActivity {
 
     int scoreTeamHm = 0, scoreTeamVis = 0, quarter = 1;
     EditText teamhome, teamvis;
 
+    private Toolbar toolbar;
+    private NavigationView navigationView;
     private DrawerLayout drawerLayout;
-    private ListView mDrawerList;
-    private LinearLayout mDrawerLayout;
-    private String mActivityTitle;
-    private ActionBarDrawerToggle mDrawerToggle;
-    private ArrayAdapter<String> mAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.live_activity);
 
+        //Inizializzo la Toolbar e la inserisco nell'actionbar
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        //Inizializzo la NavigationView, utilizzata per il drawer
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
+
+        //Imposto la NavigationView con un clicklistener per gestire gli eventi della navigazione del menù **/
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+
+            //Questo metodo gestisce i click della navigazione
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+
+                //Controlla se l'elemento è segnato o no, sennò lo segna
+                if (menuItem.isChecked()) menuItem.setChecked(false);
+                else menuItem.setChecked(true);
+
+                //Chiude il drawer dopo un click
+                drawerLayout.closeDrawers();
+
+                //Controlla quale click è stato fatto e esegue la giusta operazione
+                switch (menuItem.getItemId()) {
+
+                    case R.id.live:
+                        Intent live = new Intent(LiveActivity.this, LiveActivity.class);
+                        startActivity(live);
+                        break;
+
+                    case R.id.storico_partite:
+                        Intent history = new Intent(LiveActivity.this, HistoryActivity.class);
+                        startActivity(history);
+                        break;
+                }
+                return true;
+            }
+        });
+
+        //Inizializza il drawer layout e il Toggle
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.drawer_list);
-        mDrawerLayout = (LinearLayout) findViewById(R.id.drawer_linear);
-        mActivityTitle = getTitle().toString();
-        mDrawerList.setOnItemClickListener(new selectItem());
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.openDrawer, R.string.closeDrawer) {
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+
+                super.onDrawerClosed(drawerView);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+
+                super.onDrawerClosed(drawerView);
+            }
+        };
+
+        //Imposto il toggle e lo indirizzio al drawer
+        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+
+        //Chiamo syncState per far comparire il toggle
+        actionBarDrawerToggle.syncState();
 
 
-        addDrawerItems();
-        setupDrawer();
         displayForHm(0);
         displayForVis(0);
 
@@ -76,27 +129,25 @@ public class LiveActivity extends AppCompatActivity{
     }
 
     @Override
-    protected void onPostCreate(Bundle savedInstanceState){
+    protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
+
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig){
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return false;
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
+
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean drawerOpen = drawerLayout.isDrawerOpen(mDrawerLayout);
-
-        for (int index = 0; index < menu.size(); index++){
-            MenuItem menuItem = menu.getItem(index);
-            if (menuItem != null){
-                menuItem.setVisible(!drawerOpen);
-            }
-        }
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -105,30 +156,28 @@ public class LiveActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
+
         if (id == R.id.action_settings) {
             return true;
         }
 
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 
-    /** Gestione degli oggetti a schermo **/
+    //Gestione degli oggetti a schermo
 
-    public void reset (EditText team, EditText team1){
+    public void reset(EditText team, EditText team1) {
         EditText teamhome = (EditText) findViewById(R.id.team_home_text);
         teamhome.setText(null);
         EditText teamVis = (EditText) findViewById(R.id.team_visitors_text);
         teamVis.setText(null);
     }
 
-    public void stream (View v){
+    public void stream(View v) {
         Button start = (Button) findViewById(R.id.start_button);
     }
 
-    public void stopStream (View v){
+    public void stopStream(View v) {
         Button stop = (Button) findViewById(R.id.stop_button);
     }
 
@@ -147,16 +196,14 @@ public class LiveActivity extends AppCompatActivity{
         quarterView.setText(String.valueOf(quart));
     }
 
-    /** Gestione Live **/
-
-
+    //Gestione Live
 
     public void addOnePoint(View v) {
         scoreTeamHm += 1;
         displayForHm(scoreTeamHm);
     }
 
-    public void addOnePointVis (View v){
+    public void addOnePointVis(View v) {
         scoreTeamVis += 1;
         displayForVis(scoreTeamVis);
     }
@@ -167,7 +214,7 @@ public class LiveActivity extends AppCompatActivity{
         displayForHm(scoreTeamHm);
     }
 
-    public void subOnePointVis (View v){
+    public void subOnePointVis(View v) {
         if (scoreTeamVis > 0)
             scoreTeamVis -= 1;
         displayForVis(scoreTeamVis);
@@ -185,64 +232,16 @@ public class LiveActivity extends AppCompatActivity{
         displayForQuarter(quarter + "°");
     }
 
-    /** Reset Punteggi **/
+    //Reset Punteggi
 
-    public void resetScore(View v){
-        scoreTeamHm=0;
-        scoreTeamVis=0;
+    public void resetScore(View v) {
+        scoreTeamHm = 0;
+        scoreTeamVis = 0;
         quarter = 1;
 
         reset(teamhome, teamvis);
         displayForHm(scoreTeamHm);
         displayForVis(scoreTeamVis);
         displayForQuarter(quarter + "°");
-    }
-
-    /** Oggetto Drawer **/
-
-    private void addDrawerItems(){
-        String [] menu = {"Live !", "Storico partite", "Ecc.."};
-        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, menu);
-        mDrawerList.setAdapter(mAdapter);
-    }
-
-    private void setupDrawer(){
-        mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close) {
-            public void onDrawerOpened(View drawerView){
-                super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle("Account Personale");
-                invalidateOptionsMenu();
-            }
-            public void onDrawerClosed(View view){
-                super.onDrawerClosed(view);
-                getSupportActionBar().setTitle(mActivityTitle);
-                invalidateOptionsMenu();
-            }
-
-        };
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
-        drawerLayout.setDrawerListener(mDrawerToggle);
-    }
-
-    /** Gestione elementi nel Drawer List **/
-
-    private class selectItem implements ListView.OnItemClickListener{
-
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id){
-            switch (pos) {
-                case 0: {
-                    Intent live = new Intent(LiveActivity.this, LiveActivity.class);
-                    startActivity(live);
-                    break;
-                }
-                case 1: {
-                    Intent hist = new Intent(LiveActivity.this, HistoryActivity.class);
-                    startActivity(hist);
-                    break;
-                }
-            }
-            drawerLayout.closeDrawer(mDrawerLayout);
-        }
     }
 }

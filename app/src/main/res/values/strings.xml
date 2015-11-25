@@ -10,4 +10,18 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="title_activity_activity_register">activity_register</string>
+
+    <string name="navigation_item_1">Home</string>
+    <string name="navigation_item_2">Events</string>
+    <string name="starred_string">Starred</string>
+    <string name="live_string">Live!</string>
+    <string name="history_string">Storico Partite</string>
+    <string name="ecc_string">Ecc...</string>
+    <string name="subheader">Subheader</string>
+    <string name="trash_string">Trash</string>
+    <string name="all_mail_string">All mails</string>
+    <string name="spam_string">Spams</string>
+    <string name="closeDrawer">Navigation View Closed </string>
+    <string name="openDrawer">Navigation View </string>
+
 </resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/live"
+            android:checked="false"
+            android:icon="@drawable/live"
+            android:title="@string/live_string" />
+
+        <item
+            android:id="@+id/storico_partite"
+            android:checked="false"
+            android:icon="@drawable/tabella"
+            android:title="@string/history_string" />
+
+        <item
+            android:id="@+id/ecc"
+            android:checked="false"
+            android:title="@string/ecc_string" />
+
+    </group>
+</menu>
