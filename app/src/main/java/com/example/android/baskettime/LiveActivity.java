@@ -278,7 +278,7 @@ public class LiveActivity extends AppCompatActivity {
                         //Ruoto l'immagine, in verticale non risulta giusta l'orientazione
                         imgView.setPivotX(imgView.getWidth() / 2);
                         imgView.setPivotY(imgView.getHeight() / 2);
-                        //TODO Aggiungere l'eccezione per il landascape
+                        //TODO Aggiungere l'eccezione per il landscape
                         imgView.setRotation(270);
 
                     } catch (FileNotFoundException e) {
