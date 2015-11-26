@@ -1,20 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:id="@+id/rel_layout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/tool_bar" />
+
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginLeft="80dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="78dp"
             android:src="@drawable/pallone2" />
 
         <ImageView
@@ -22,10 +28,11 @@
             android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="80dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="78dp"
             android:src="@drawable/pallone2" />
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+        <LinearLayout
             android:id="@+id/linear_layout0"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,9 +40,10 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:gravity="center"
+            android:layout_below="@id/toolbar"
             android:orientation="horizontal"
             android:paddingBottom="20dp"
-            android:paddingTop="60dp">
+            android:layout_marginTop="120dp">
 
             <EditText
                 android:id="@+id/team_home_text"
@@ -273,24 +281,13 @@
 
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/drawer_linear"
-        android:layout_width="250dp"
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navigation_view"
         android:layout_height="match_parent"
+        android:layout_width="wrap_content"
         android:layout_gravity="start"
-        android:orientation="vertical">
+        app:headerLayout="@layout/header"
+        app:menu="@menu/drawer"
+        />
 
-        <ImageView
-            android:layout_width="250dp"
-            android:layout_height="170dp"
-            android:background="@drawable/material2" />
-
-        <ListView
-            android:id="@+id/drawer_list"
-            android:layout_width="250dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="left|start"
-            android:background="#ffffff" />
-
-    </LinearLayout>
 </android.support.v4.widget.DrawerLayout>

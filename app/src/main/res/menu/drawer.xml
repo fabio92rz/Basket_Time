@@ -6,13 +6,13 @@
         <item
             android:id="@+id/live"
             android:checked="false"
-            android:icon="@drawable/live"
+            android:icon="@drawable/gamepad_variant"
             android:title="@string/live_string" />
 
         <item
             android:id="@+id/storico_partite"
             android:checked="false"
-            android:icon="@drawable/tabella"
+            android:icon="@drawable/calendar_blank"
             android:title="@string/history_string" />
 
         <item

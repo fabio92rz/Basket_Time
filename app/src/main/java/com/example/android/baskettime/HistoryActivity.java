@@ -1,55 +1,121 @@
 package com.example.android.baskettime;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 /**
  * Created by fabio on 11/11/2015.
  */
 public class HistoryActivity extends AppCompatActivity {
 
-    private DrawerLayout drawerLayout;
-    private ListView mDrawerList;
-    private LinearLayout mDrawerLayout;
-    private String mActivityTitle;
+
     private View mLayout0, mLayout1, mLayout2;
-    private ActionBarDrawerToggle mDrawerToggle;
-    private ArrayAdapter<String> mAdapter;
+
+    private Toolbar toolbar;
+    private NavigationView navigationView;
+    protected DrawerLayout drawerLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+        setTitle("Storico Partite");
+
+        //Inizializzo la Toolbar e la inserisco nell'actionbar
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        //Inizializzo la NavigationView, utilizzata per il drawer
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
+
+        //Imposto la NavigationView con un clicklistener per gestire gli eventi della navigazione del menù **/
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+
+            //Questo metodo gestisce i click della navigazione
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+
+                //Controlla se l'elemento è segnato o no, sennò lo segna
+                if (menuItem.isChecked()) menuItem.setChecked(false);
+                else menuItem.setChecked(true);
+
+                //Chiude il drawer dopo un click
+                drawerLayout.closeDrawers();
+
+                //Controlla quale click è stato fatto e esegue la giusta operazione
+                switch (menuItem.getItemId()) {
+
+                    case R.id.live:
+                        Intent live = new Intent(HistoryActivity.this, LiveActivity.class);
+                        startActivity(live);
+                        break;
+
+                    case R.id.storico_partite:
+                        Intent history = new Intent(HistoryActivity.this, HistoryActivity.class);
+                        startActivity(history);
+                        break;
+                }
+                return true;
+            }
+        });
+
+        //Inizializza il drawer layout e il Toggle
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.openDrawer, R.string.closeDrawer) {
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+
+                super.onDrawerClosed(drawerView);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+
+                super.onDrawerClosed(drawerView);
+            }
+        };
+
+        //Imposto il toggle e lo indirizzio al drawer
+        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+
+        //Chiamo syncState per far comparire il toggle
+        actionBarDrawerToggle.syncState();
+
+        //Inizializzo i tre layout
         mLayout0 = findViewById(R.id.linear_layout0);
         mLayout1 = findViewById(R.id.linear_layout1);
         mLayout2 = findViewById(R.id.linear_layout2);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerLayout = (LinearLayout) findViewById(R.id.drawer_linear);
-        mActivityTitle = getTitle().toString();
-        mDrawerList = (ListView) findViewById(R.id.drawer_list);
-        mDrawerList.setOnItemClickListener(new selectItem());
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
 
 
-        addDrawerItems();
-        setupDrawer();
-
-        /** Layout con Popup **/
+        //Imposto il click per il layout per aprire il popup
 
         mLayout0.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,97 +139,14 @@ public class HistoryActivity extends AppCompatActivity {
         });
     }
 
-    /** Gestione Toggle del Drawer **/
 
+    //Elimina gli effetti di transizione
     @Override
-    protected void onPostCreate(Bundle savedInstanceState){
-        super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
+    public void onPause() {
+        super.onPause();
+        overridePendingTransition(0, 0);
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig){
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    /** Indice del drawer **/
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean drawerOpen = drawerLayout.isDrawerOpen(mDrawerLayout);
-
-        for (int index = 0; index < menu.size(); index++){
-            MenuItem menuItem = menu.getItem(index);
-            if (menuItem != null){
-                menuItem.setVisible(!drawerOpen);
-            }
-        }
-
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    /** Aggiunta elementi a Drawer **/
-
-    private void addDrawerItems(){
-        String [] menu = {"Live !", "Storico partite", "Ecc.."};
-        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, menu);
-        mDrawerList.setAdapter(mAdapter);
-    }
-
-    private void setupDrawer(){
-        mDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close) {
-            public void onDrawerOpened(View drawerView){
-                super.onDrawerOpened(drawerView);
-                getSupportActionBar().setTitle("Account Personale");
-                invalidateOptionsMenu();
-            }
-            public void onDrawerClosed(View view){
-                super.onDrawerClosed(view);
-                getSupportActionBar().setTitle(mActivityTitle);
-                invalidateOptionsMenu();
-            }
-
-        };
-        mDrawerToggle.setDrawerIndicatorEnabled(true);
-        drawerLayout.setDrawerListener(mDrawerToggle);
-    }
-
-    /** Gestione scelta nel Drawer List **/
-
-    private class selectItem implements ListView.OnItemClickListener{
-
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id){
-            switch (pos) {
-                case 0: {
-                    Intent live = new Intent(HistoryActivity.this, LiveActivity.class);
-                    startActivity(live);
-                    break;
-                }
-                case 1: {
-                    Intent hist = new Intent(HistoryActivity.this, HistoryActivity.class);
-                    startActivity(hist);
-                    break;
-                }
-            }
-            drawerLayout.closeDrawer(mDrawerLayout);
-        }
-    }
 }
 
 
