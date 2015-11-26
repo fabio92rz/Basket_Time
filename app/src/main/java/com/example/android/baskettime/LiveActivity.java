@@ -275,6 +275,12 @@ public class LiveActivity extends AppCompatActivity {
                         //Imposto l'immagine come immagine profilo dopo aver decodificato la stringa
                         imgView.setImageBitmap(decodeUri(selectedImage));
 
+                        //Ruoto l'immagine, in verticale non risulta giusta l'orientazione
+                        imgView.setPivotX(imgView.getWidth() / 2);
+                        imgView.setPivotY(imgView.getHeight() / 2);
+                        //TODO Aggiungere l'eccezione per il landascape
+                        imgView.setRotation(270);
+
                     } catch (FileNotFoundException e) {
 
                         //In caso di errore
@@ -309,8 +315,7 @@ public class LiveActivity extends AppCompatActivity {
 
         BitmapFactory.Options o2 = new BitmapFactory.Options();
         o2.inSampleSize = scale;
-        return BitmapFactory.decodeStream(
-                getContentResolver().openInputStream(selectedImage), null, o2);
+        return BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o2);
     }
 
 }

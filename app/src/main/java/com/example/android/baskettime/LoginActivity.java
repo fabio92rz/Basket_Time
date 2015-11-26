@@ -56,7 +56,7 @@ public class LoginActivity extends Activity {
             public void onClick(View v) {
                 Intent login = new Intent(LoginActivity.this, LiveActivity.class);
                 startActivity(login);
-                Toast succ = Toast.makeText(LoginActivity.this, "Login Effettuato!", Toast.LENGTH_SHORT);
+                Toast succ = Toast.makeText(LoginActivity.this, "Login Effettuato!", Toast.LENGTH_LONG);
                 succ.show();
             }
         });
