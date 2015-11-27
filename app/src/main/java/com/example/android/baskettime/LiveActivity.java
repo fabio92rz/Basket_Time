@@ -30,6 +30,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.String;
 import java.io.BufferedInputStream;
@@ -48,7 +50,7 @@ import android.graphics.Matrix;
 
 public class LiveActivity extends AppCompatActivity {
 
-    int scoreTeamHm = 0, scoreTeamVis = 0, quarter = 1;
+    int scoreTeamHm = 0, scoreTeamVis = 0, quarter = 1, imageHeight, imageWidth;
     EditText teamhome, teamvis;
     private static int RESULT_LOAD_IMG = 1;
     String imgDecodableString;
@@ -261,6 +263,14 @@ public class LiveActivity extends AppCompatActivity {
         startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
     }
 
+    public void getIMGSize(Uri uri){
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(new File(uri.getPath()).getAbsolutePath(),options);
+        imageHeight = options.outHeight;
+        imageWidth = options.outWidth;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
@@ -271,15 +281,20 @@ public class LiveActivity extends AppCompatActivity {
                     try {
                         //Inizializzo l'immagine
                         CircleImageView imgView = (CircleImageView) findViewById(R.id.profile_image);
+                        getIMGSize(selectedImage);
 
-                        //Imposto l'immagine come immagine profilo dopo aver decodificato la stringa
-                        imgView.setImageBitmap(decodeUri(selectedImage));
+                        if (imageWidth > imageHeight){
+                            //Ruoto l'immagine, in verticale non risulta giusta l'orientamento
+                            imgView.setImageBitmap(decodeUri(selectedImage));
+                            imgView.setPivotX(imgView.getWidth() / 2);
+                            imgView.setPivotY(imgView.getHeight() / 2);
+                            imgView.setRotation(270);
 
-                        //Ruoto l'immagine, in verticale non risulta giusta l'orientazione
-                        imgView.setPivotX(imgView.getWidth() / 2);
-                        imgView.setPivotY(imgView.getHeight() / 2);
-                        //TODO Aggiungere l'eccezione per il landscape
-                        imgView.setRotation(270);
+                        }
+                        else {
+                            //Imposto l'immagine come immagine profilo dopo aver decodificato la stringa
+                            imgView.setImageBitmap(decodeUri(selectedImage));
+                        }
 
                     } catch (FileNotFoundException e) {
 
@@ -317,5 +332,4 @@ public class LiveActivity extends AppCompatActivity {
         o2.inSampleSize = scale;
         return BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o2);
     }
-
 }
