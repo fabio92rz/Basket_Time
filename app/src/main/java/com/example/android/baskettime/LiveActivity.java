@@ -283,18 +283,12 @@ public class LiveActivity extends AppCompatActivity {
                         CircleImageView imgView = (CircleImageView) findViewById(R.id.profile_image);
                         getIMGSize(selectedImage);
 
-                        if (imageWidth > imageHeight){
-                            //Ruoto l'immagine, in verticale non risulta giusta l'orientamento
-                            imgView.setImageBitmap(decodeUri(selectedImage));
-                            imgView.setPivotX(imgView.getWidth() / 2);
-                            imgView.setPivotY(imgView.getHeight() / 2);
-                            imgView.setRotation(270);
+                        //Ruoto l'immagine, in verticale non risulta giusta l'orientamento
+                        imgView.setImageBitmap(decodeUri(selectedImage));
+                        imgView.setPivotX(imgView.getWidth() / 2);
+                        imgView.setPivotY(imgView.getHeight() / 2);
+                        imgView.setRotation(270);
 
-                        }
-                        else {
-                            //Imposto l'immagine come immagine profilo dopo aver decodificato la stringa
-                            imgView.setImageBitmap(decodeUri(selectedImage));
-                        }
 
                     } catch (FileNotFoundException e) {
 
