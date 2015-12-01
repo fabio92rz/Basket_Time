@@ -22,9 +22,9 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email"
-        android:id="@+id/email_text2"
-        android:inputType="textEmailAddress"
+        android:hint="Inserisci il tuo Nome"
+        android:id="@+id/name_text2"
+        android:inputType="textPersonName"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:textColor="#FFFFFF"
@@ -34,9 +34,9 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
-        android:id="@+id/pass_text2"
-        android:inputType="textPassword"
+        android:hint="Inserisci il tuo Cognome"
+        android:id="@+id/surname_text2"
+        android:inputType="textPersonName"
         android:layout_marginBottom="16dp"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"
@@ -45,8 +45,19 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Ripeti Password"
-        android:id="@+id/pass_text3"
+        android:hint="Inserisci una Email"
+        android:id="@+id/email_text2"
+        android:inputType="textEmailAddress"
+        android:layout_marginBottom="16dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:backgroundTint="#FFFFFF" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Inserisci una Password"
+        android:id="@+id/pass_text2"
         android:inputType="textPassword"
         android:layout_marginBottom="16dp"
         android:textColor="#FFFFFF"
