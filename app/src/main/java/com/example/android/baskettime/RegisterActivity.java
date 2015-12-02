@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -14,11 +15,12 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 
 /**
  * Created by fabio on 11/11/2015.
  */
-public class RegisterActivity extends Activity implements View.OnClickListener {
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText etName;
     private EditText etSurname;
@@ -32,7 +34,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_register);
 
         etName = (EditText) findViewById(R.id.name_text2);
@@ -62,46 +64,41 @@ public class RegisterActivity extends Activity implements View.OnClickListener {
     }
 
     private void register(String name, String surname, String email, String password) {
-        String urlSuffix = "?name="+name+"&surname="+surname+"&email="+email+"&password="+password;
-        class RegisterUser extends AsyncTask<String, Void, String>{
+        class RegisterUser extends AsyncTask<String, Void, String> {
 
             ProgressDialog loading;
+            RegisterUserActivity ruc = new RegisterUserActivity();
 
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                loading = ProgressDialog.show(RegisterActivity.this, "Attendere, prego...",null, true, true);
+                loading = ProgressDialog.show(RegisterActivity.this, "Attendere, prego...", null, true, true);
             }
 
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
                 loading.dismiss();
-                Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
             }
 
             @Override
             protected String doInBackground(String... params) {
-                String s = params[0];
-                BufferedReader bufferedReader = null;
-                try {
-                    URL url = new URL(REGISTER_URL+s);
-                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                    bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
-                    String result;
+                HashMap<String, String> data = new HashMap<String, String>();
+                data.put("name", params[0]);
+                data.put("surname", params[1]);
+                data.put("email", params[2]);
+                data.put("password", params[3]);
 
-                    result = bufferedReader.readLine();
+                String result = ruc.sendPostRequest(REGISTER_URL, data);
 
-                    return result;
-                }catch(Exception e){
-                    return null;
-                }
+                return result;
             }
         }
 
         RegisterUser ru = new RegisterUser();
-        ru.execute(urlSuffix);
+        ru.execute(name, surname, email, password);
     }
 }
