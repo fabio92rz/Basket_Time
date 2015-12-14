@@ -35,8 +35,7 @@ public class RegisterUserActivity {
 
 
             OutputStream os = conn.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(
-                    new OutputStreamWriter(os, "UTF-8"));
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
             writer.write(getPostDataString(postDataParams));
 
             writer.flush();
@@ -48,7 +47,7 @@ public class RegisterUserActivity {
                 BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 response = br.readLine();
             } else {
-                response = "Error Registering";
+                response = "Errore di registrazione";
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -57,7 +56,7 @@ public class RegisterUserActivity {
         return response;
     }
 
-    private String getPostDataString(HashMap<String, String> params) throws UnsupportedEncodingException {
+    private String getPostDataString(HashMap <String, String> params) throws UnsupportedEncodingException {
         StringBuilder result = new StringBuilder();
         boolean first = true;
         for (Map.Entry<String, String> entry : params.entrySet()) {

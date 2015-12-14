@@ -34,7 +34,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_register);
 
         etName = (EditText) findViewById(R.id.name_text2);
@@ -43,6 +42,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         etPassword = (EditText) findViewById(R.id.pass_text2);
 
         buttonRegister = (Button) findViewById(R.id.login_butt2);
+        buttonRegister.setOnClickListener(this);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         class RegisterUser extends AsyncTask<String, Void, String> {
 
             ProgressDialog loading;
-            RegisterUserActivity ruc = new RegisterUserActivity();
+            RegisterUserActivity Rua = new RegisterUserActivity();
 
 
             @Override
@@ -80,7 +80,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
                 loading.dismiss();
-                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Registrazione Effettuata", Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -92,7 +92,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 data.put("email", params[2]);
                 data.put("password", params[3]);
 
-                String result = ruc.sendPostRequest(REGISTER_URL, data);
+                String result = Rua.sendPostRequest(REGISTER_URL, data);
 
                 return result;
             }

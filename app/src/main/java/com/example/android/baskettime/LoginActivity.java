@@ -20,6 +20,8 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 import android.annotation.SuppressLint;
@@ -41,28 +43,33 @@ import android.widget.Toast;
 
 import junit.framework.TestCase;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+
+    public static final String EMAIL = "EMAIL";
+    public static final String PASSWORD = "PASSWORD";
+    private static final String LOGIN_URL = "http://95.85.23.84/login.php";
+
+    private EditText eTEmail;
+    private EditText eTPassword;
+
+    private Button loginButton;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.login_activity);
 
-        Button login = (Button) findViewById(R.id.login_butt);
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent login = new Intent(LoginActivity.this, LiveActivity.class);
-                startActivity(login);
-                Toast succ = Toast.makeText(LoginActivity.this, "Login Effettuato!", Toast.LENGTH_LONG);
-                succ.show();
-            }
-        });
+        eTEmail = (EditText) findViewById(R.id.email_text);
+        eTPassword = (EditText) findViewById(R.id.pass_text);
+
+        loginButton = (Button) findViewById(R.id.login_butt);
+        loginButton.setOnClickListener(this);
+
 
         TextView signup = (TextView) findViewById(R.id.crea_ora);
         signup.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 Intent signup = new Intent(LoginActivity.this, RegisterActivity.class);
@@ -70,5 +77,57 @@ public class LoginActivity extends Activity {
             }
         });
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == loginButton){
+            login();
+        }
+    }
+
+    private void login(){
+        String email = eTEmail.getText().toString().trim();
+        String password = eTPassword.getText().toString().trim();
+        userLogin(email, password);
+    }
+
+    private void userLogin(final String email, final String password){
+        class LoginUser extends AsyncTask <String, Void, String> {
+            ProgressDialog loading;
+
+            @Override
+            protected void onPreExecute(){
+                super.onPreExecute();
+                loading = ProgressDialog.show(LoginActivity.this, "Attendere, prego...", null, true, true);
+            }
+
+            @Override
+            protected void onPostExecute(String s){
+                super.onPostExecute(s);
+                loading.dismiss();
+
+                if (s.equalsIgnoreCase("success")){
+                    Intent intent = new Intent(LoginActivity.this, LiveActivity.class);
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(LoginActivity.this, "Login non effettuato", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            protected String doInBackground(String... params){
+                HashMap<String, String> data = new HashMap<>();
+                data.put("email", params[0]);
+                data.put("password", params[1]);
+
+                RegisterUserActivity rua = new RegisterUserActivity();
+                String result = rua.sendPostRequest(LOGIN_URL, data);
+
+                return result.trim();
+            }
+        }
+        LoginUser lu = new LoginUser();
+        lu.execute(email, password);
     }
 }
