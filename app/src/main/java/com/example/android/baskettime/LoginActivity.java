@@ -107,7 +107,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 super.onPostExecute(s);
                 loading.dismiss();
 
-                if (s.equalsIgnoreCase("success")){
+                if (s.trim().equalsIgnoreCase("success")){
                     Intent intent = new Intent(LoginActivity.this, LiveActivity.class);
                     startActivity(intent);
                 }else{
@@ -124,7 +124,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 RegisterUserActivity rua = new RegisterUserActivity();
                 String result = rua.sendPostRequest(LOGIN_URL, data);
 
-                return result.trim();
+                return result;
             }
         }
         LoginUser lu = new LoginUser();
