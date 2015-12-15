@@ -5,6 +5,7 @@ package com.example.android.baskettime;
  */
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
@@ -45,8 +46,7 @@ import junit.framework.TestCase;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static final String EMAIL = "EMAIL";
-    public static final String PASSWORD = "PASSWORD";
+
     private static final String LOGIN_URL = "http://95.85.23.84/login.php";
 
     private EditText eTEmail;
@@ -79,13 +79,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    @Override
-    public void onClick(View v) {
-        if (v == loginButton){
-            login();
-        }
-    }
-
     private void login(){
         String email = eTEmail.getText().toString().trim();
         String password = eTPassword.getText().toString().trim();
@@ -107,7 +100,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 super.onPostExecute(s);
                 loading.dismiss();
 
-                if (s.trim().equalsIgnoreCase("success")){
+                Log.d("Login Activity", "LoginActivity.getString()" + s);
+
+                if (s.equalsIgnoreCase("success")){
                     Intent intent = new Intent(LoginActivity.this, LiveActivity.class);
                     startActivity(intent);
                 }else{
@@ -123,11 +118,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 RegisterUserActivity rua = new RegisterUserActivity();
                 String result = rua.sendPostRequest(LOGIN_URL, data);
+                Log.d("Login Activity", "LoginActivity.getString()" + result);
 
                 return result;
             }
         }
         LoginUser lu = new LoginUser();
         lu.execute(email, password);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == loginButton){
+            login();
+        }
     }
 }

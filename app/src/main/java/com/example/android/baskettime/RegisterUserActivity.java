@@ -1,5 +1,7 @@
 package com.example.android.baskettime;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
@@ -44,14 +46,23 @@ public class RegisterUserActivity {
             int responseCode = conn.getResponseCode();
 
             if (responseCode == HttpsURLConnection.HTTP_OK) {
+                StringBuilder finalString = new StringBuilder();
+
                 BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                response = br.readLine();
+                while ((response = br.readLine()) != null) {
+
+                    finalString.append(response);
+                }
+                response = finalString.toString();
+                Log.d("Register user Activity", "getString()" + response);
+
             } else {
                 response = "Errore di registrazione";
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Log.d("Register user Activity", "getString()" + response);
 
         return response;
     }
