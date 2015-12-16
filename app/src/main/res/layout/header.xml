@@ -21,28 +21,28 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Fabio Rizzo "
         android:textSize="16sp"
         android:textColor="#FFF"
         android:textStyle="bold"
         android:gravity="left"
         android:paddingBottom="4dp"
-        android:id="@+id/username"
-        android:layout_above="@+id/email"
+        android:text="Nome e Cognome "
+        android:id="@+id/username_header"
+        android:layout_above="@+id/email_header"
         android:layout_alignLeft="@+id/profile_image"
         android:layout_alignStart="@+id/profile_image" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="fabio92rz@gmail.com"
-        android:id="@+id/email"
+        android:id="@+id/email_header"
+        android:text="Indirizzo Email"
         android:gravity="left"
         android:layout_marginBottom="8dp"
         android:textSize="16sp"
         android:textColor="#fff"
         android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/username"
-        android:layout_alignStart="@+id/username" />
+        android:layout_alignLeft="@+id/username_header"
+        android:layout_alignStart="@+id/username_header" />
 
 </RelativeLayout>

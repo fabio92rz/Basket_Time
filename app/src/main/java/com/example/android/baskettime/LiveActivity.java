@@ -1,7 +1,10 @@
 package com.example.android.baskettime;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -11,6 +14,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -36,25 +40,40 @@ import java.io.FileNotFoundException;
 import java.lang.String;
 import java.io.BufferedInputStream;
 import java.io.IOException;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
+
 import org.w3c.dom.Text;
+
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+
 import de.hdodenhof.circleimageview.CircleImageView;
+
 import android.graphics.Matrix;
 
-public class LiveActivity extends AppCompatActivity {
+public class LiveActivity extends AppCompatActivity implements View.OnClickListener {
 
     int scoreTeamHm = 0, scoreTeamVis = 0, quarter = 1, imageHeight, imageWidth;
     EditText teamhome, teamvis;
+
+    //TextView per i dati dell'utente
+    private TextView tvName_surname;
+    private TextView tvEmail;
+
+    //Bottone per il logout
+    private Button logoutButton;
+
+    //Variabili per lo scaling dell'immagine
     private static int RESULT_LOAD_IMG = 1;
     String imgDecodableString;
 
+    //Varibili per la Navigation View
     private Toolbar toolbar;
     private NavigationView navigationView;
     protected DrawerLayout drawerLayout;
@@ -68,6 +87,21 @@ public class LiveActivity extends AppCompatActivity {
         //Inizializzo la Toolbar e la inserisco nell'actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //Inizializzo le TextView
+        tvName_surname = (TextView) findViewById(R.id.username_header);
+        tvEmail = (TextView) findViewById(R.id.email_header);
+
+        //Inizializzo il Bottone per il logout
+        logoutButton = (Button) findViewById(R.id.logout_button);
+        logoutButton.setOnClickListener(this);
+
+        //Catturo i dati e li inserisco nell'header
+        SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        String email = sharedPreferences.getString(ConfigActivity.EMAIL_SHARED_PREF, "Not Available");
+
+        //Mostro la mail dell'utente loggato
+        //tvEmail.setText(email);
 
         //Inizializzo la NavigationView, utilizzata per il drawer
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -263,10 +297,10 @@ public class LiveActivity extends AppCompatActivity {
         startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
     }
 
-    public void getIMGSize(Uri uri){
+    public void getIMGSize(Uri uri) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(new File(uri.getPath()).getAbsolutePath(),options);
+        BitmapFactory.decodeFile(new File(uri.getPath()).getAbsolutePath(), options);
         imageHeight = options.outHeight;
         imageWidth = options.outWidth;
     }
@@ -325,5 +359,57 @@ public class LiveActivity extends AppCompatActivity {
         BitmapFactory.Options o2 = new BitmapFactory.Options();
         o2.inSampleSize = scale;
         return BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o2);
+    }
+
+    //Funzione Logout
+    private void logout() {
+        //Credo un dialogo di allerta per confermare il logout
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage("Sei sicuro di voler uscire?");
+        alertDialogBuilder.setPositiveButton("Si",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+
+                        //Rimuovo le SharedPreference
+                        SharedPreferences preferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+
+                        //Prendo l'editor
+                        SharedPreferences.Editor editor = preferences.edit();
+
+                        //Setto il valore Booleano a Falso
+                        editor.putBoolean(ConfigActivity.LOGGEDIN_SHARED_PREF, false);
+
+                        //Metto un valore vuto nella mail
+                        editor.putString(ConfigActivity.EMAIL_SHARED_PREF, "");
+
+                        //Salvo le SharedPreference
+                        editor.commit();
+
+                        //Faccio partire la LoginActivity
+                        Intent intent = new Intent(LiveActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
+        alertDialogBuilder.setNegativeButton("No",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+
+                    }
+                });
+
+        //Showing the alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == logoutButton) {
+            logout();
+        }
     }
 }

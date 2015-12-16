@@ -3,8 +3,11 @@ package com.example.android.baskettime;
 /**
  * Created by fabio on 11/11/2015.
  */
+
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DownloadManager;
+import android.content.SharedPreferences;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -23,6 +26,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import android.annotation.SuppressLint;
@@ -42,17 +46,25 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import junit.framework.TestCase;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-
-    private static final String LOGIN_URL = "http://95.85.23.84/login.php";
-
+    //Definisco le Views ed il pulsante
     private EditText eTEmail;
     private EditText eTPassword;
-
     private Button loginButton;
+
+    //Definisco la variabile Booleana e la setto false
+    private boolean loggedIn = false;
 
 
     @Override
@@ -60,9 +72,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
 
-        eTEmail = (EditText) findViewById(R.id.email_text);
-        eTPassword = (EditText) findViewById(R.id.pass_text);
+        //Inizializzo le Views
+        eTEmail = (EditText) findViewById(R.id.login_email_text);
+        eTPassword = (EditText) findViewById(R.id.login_pass_text);
 
+        //Inizializzo il bottone e setto il ClickListener
         loginButton = (Button) findViewById(R.id.login_butt);
         loginButton.setOnClickListener(this);
 
@@ -79,57 +93,92 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    private void login(){
-        String email = eTEmail.getText().toString().trim();
-        String password = eTPassword.getText().toString().trim();
-        userLogin(email, password);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //In onResume catturo i valori dalle SharedPreference
+        SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+
+        //Catturo il valore booleano dalle SharedPreference
+        loggedIn = sharedPreferences.getBoolean(ConfigActivity.LOGGEDIN_SHARED_PREF, false);
+
+        //Se diventa vero
+        if (loggedIn) {
+            //Lo faccio passare dalla LoginActivity alla LiveActivity
+            Intent live = new Intent(LoginActivity.this, LiveActivity.class);
+            startActivity(live);
+        }
     }
 
-    private void userLogin(final String email, final String password){
-        class LoginUser extends AsyncTask <String, Void, String> {
-            ProgressDialog loading;
+    private void login() {
+        //Prendo i valori dalle EditText
+        final String email = eTEmail.getText().toString().trim();
+        final String password = eTPassword.getText().toString().trim();
 
+        //Inizializzo il popup di caricamento
+        final ProgressDialog loading;
+        loading = ProgressDialog.show(LoginActivity.this, "Attendere prego...", null, true, true );
+
+        //Creo la string request
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, ConfigActivity.LOGIN_URL, new Response.Listener<String>() {
             @Override
-            protected void onPreExecute(){
-                super.onPreExecute();
-                loading = ProgressDialog.show(LoginActivity.this, "Attendere, prego...", null, true, true);
-            }
+            public void onResponse(String response) {
 
-            @Override
-            protected void onPostExecute(String s){
-                super.onPostExecute(s);
-                loading.dismiss();
+                //Se riceviamo success dal server
+                if (response.equalsIgnoreCase(ConfigActivity.LOGIN_SUCCESS)) {
 
-                Log.d("Login Activity", "LoginActivity.getString()" + s);
+                    //Creo una Shared Preference
+                    SharedPreferences sharedPreferences = LoginActivity.this.getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
-                if (s.equalsIgnoreCase("success")){
-                    Intent intent = new Intent(LoginActivity.this, LiveActivity.class);
-                    startActivity(intent);
-                }else{
-                    Toast.makeText(LoginActivity.this, "Login non effettuato", Toast.LENGTH_LONG).show();
+                    //Creo un editor per conservare i valori di SharedPreference
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                    //Aggiungo i valori all'editor
+                    editor.putBoolean(ConfigActivity.LOGGEDIN_SHARED_PREF, true);
+                    editor.putString(ConfigActivity.EMAIL_SHARED_PREF, email);
+
+                    //Salvo i valori
+                    editor.commit();
+
+                    //Tolgo il popup di caricamento
+                    loading.dismiss();
+
+                    //Lancio Live Activity
+                    Intent live = new Intent(LoginActivity.this, LiveActivity.class);
+                    startActivity(live);
+                } else {
+                    //Se la risposta del server non è Success stampa un messaggi di errore su toast
+                    Toast.makeText(LoginActivity.this, "Username o Password errate", Toast.LENGTH_LONG).show();
                 }
             }
-
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //Per gestire eventuali errori
+                    }
+                }) {
             @Override
-            protected String doInBackground(String... params){
-                HashMap<String, String> data = new HashMap<>();
-                data.put("email", params[0]);
-                data.put("password", params[1]);
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
 
-                RegisterUserActivity rua = new RegisterUserActivity();
-                String result = rua.sendPostRequest(LOGIN_URL, data);
-                Log.d("Login Activity", "LoginActivity.getString()" + result);
+                //Aggiungo i parametri alla richiesta
+                params.put(ConfigActivity.KEY_EMAIL, email);
+                params.put(ConfigActivity.KEY_PASSWORD, password);
 
-                return result;
+                //Ritorno i paramentri
+                return params;
             }
-        }
-        LoginUser lu = new LoginUser();
-        lu.execute(email, password);
+        };
+
+        //Aggiungo le string request alla coda
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 
     @Override
     public void onClick(View v) {
-        if (v == loginButton){
+        if (v == loginButton) {
             login();
         }
     }
