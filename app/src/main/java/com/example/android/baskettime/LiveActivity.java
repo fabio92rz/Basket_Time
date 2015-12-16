@@ -21,6 +21,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.graphics.PorterDuff;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +35,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.File;
@@ -84,13 +87,12 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.live_activity);
 
+        //Creo un inflater per inflazionare il layout dell'header
+        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
         //Inizializzo la Toolbar e la inserisco nell'actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        //Inizializzo le TextView
-        tvName_surname = (TextView) findViewById(R.id.username_header);
-        tvEmail = (TextView) findViewById(R.id.email_header);
 
         //Inizializzo il Bottone per il logout
         logoutButton = (Button) findViewById(R.id.logout_button);
@@ -99,12 +101,20 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         //Catturo i dati e li inserisco nell'header
         SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         String email = sharedPreferences.getString(ConfigActivity.EMAIL_SHARED_PREF, "Not Available");
-
-        //Mostro la mail dell'utente loggato
-        //tvEmail.setText(email);
+        Log.d("Live Activity", "getString()" + email);
 
         //Inizializzo la NavigationView, utilizzata per il drawer
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
+
+        //Inflaziono i layout in modo tale da mostralo nella Navigation View
+        View vi = inflater.inflate(R.layout.header, navigationView, false );
+
+        //Inizializzo ed imposto la mail della persona loggata
+        tvEmail = (TextView)vi.findViewById(R.id.email_header);
+        tvEmail.setText(email);
+
+        //Aggiungo la View
+        navigationView.addHeaderView(vi);
 
         //Imposto la NavigationView con un clicklistener per gestire gli eventi della navigazione del menù **/
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {

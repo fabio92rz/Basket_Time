@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="190dp"
     android:background="@drawable/material2"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/header_rel_layout">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_height="60dp"

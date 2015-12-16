@@ -8,7 +8,7 @@ public class ConfigActivity {
     //Url a login2.php
     public static final String LOGIN_URL = "http://95.85.23.84/prova.php";
 
-    //Keys per Email e Password come definito nel file login2.php
+    //Keys per Email e Password come definito nel file prova.php
     public static final String KEY_EMAIL = "email";
     public static final String KEY_PASSWORD = "password";
 

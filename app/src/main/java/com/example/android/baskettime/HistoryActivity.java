@@ -2,7 +2,9 @@ package com.example.android.baskettime;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
@@ -13,6 +15,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -24,15 +27,24 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 /**
  * Created by fabio on 11/11/2015.
  */
-public class HistoryActivity extends AppCompatActivity {
+public class HistoryActivity extends AppCompatActivity implements View.OnClickListener {
+
+    //TextView per i dati dell'utente
+    private TextView tvName_surname;
+    private TextView tvEmail;
+
+    //Bottone per il logout
+    private Button logoutButton;
 
 
     private View mLayout0, mLayout1, mLayout2;
@@ -48,12 +60,33 @@ public class HistoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_history);
         setTitle("Storico Partite");
 
+        //Creo un inflater per inflazionare il layout dell'header
+        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        //Inizializzo il Bottone per il logout
+        logoutButton = (Button) findViewById(R.id.logout_button);
+        logoutButton.setOnClickListener(this);
+
         //Inizializzo la Toolbar e la inserisco nell'actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //Catturo i dati e li inserisco nell'header
+        SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        String email = sharedPreferences.getString(ConfigActivity.EMAIL_SHARED_PREF, "Not Available");
+
         //Inizializzo la NavigationView, utilizzata per il drawer
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
+
+        //Inflaziono i layout in modo tale da mostralo nella Navigation View
+        View vi = inflater.inflate(R.layout.header, navigationView, false );
+
+        //Inizializzo ed imposto la mail della persona loggata
+        tvEmail = (TextView)vi.findViewById(R.id.email_header);
+        tvEmail.setText(email);
+
+        //Aggiungo la View
+        navigationView.addHeaderView(vi);
 
         //Imposto la NavigationView con un clicklistener per gestire gli eventi della navigazione del menù **/
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -139,6 +172,51 @@ public class HistoryActivity extends AppCompatActivity {
         });
     }
 
+    //Funzione Logout
+    private void logout() {
+        //Credo un dialogo di allerta per confermare il logout
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage("Sei sicuro di voler uscire?");
+        alertDialogBuilder.setPositiveButton("Si",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+
+                        //Rimuovo le SharedPreference
+                        SharedPreferences preferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+
+                        //Prendo l'editor
+                        SharedPreferences.Editor editor = preferences.edit();
+
+                        //Setto il valore Booleano a Falso
+                        editor.putBoolean(ConfigActivity.LOGGEDIN_SHARED_PREF, false);
+
+                        //Metto un valore vuto nella mail
+                        editor.putString(ConfigActivity.EMAIL_SHARED_PREF, "");
+
+                        //Salvo le SharedPreference
+                        editor.commit();
+
+                        //Faccio partire la LoginActivity
+                        Intent intent = new Intent(HistoryActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
+        alertDialogBuilder.setNegativeButton("No",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+
+                    }
+                });
+
+        //Showing the alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+
+    }
+
 
     //Elimina gli effetti di transizione
     @Override
@@ -147,6 +225,12 @@ public class HistoryActivity extends AppCompatActivity {
         overridePendingTransition(0, 0);
     }
 
+    @Override
+    public void onClick(View v) {
+        if (v == logoutButton) {
+            logout();
+        }
+    }
 }
 
 
