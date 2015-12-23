@@ -25,6 +25,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -55,6 +61,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import junit.framework.TestCase;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -127,6 +137,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 //Se riceviamo success dal server
                 if (response.equalsIgnoreCase(ConfigActivity.LOGIN_SUCCESS)) {
 
+                    //downloadJSON(response);
+
                     //Creo una Shared Preference
                     SharedPreferences sharedPreferences = LoginActivity.this.getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
@@ -180,6 +192,37 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         if (v == loginButton) {
             login();
+        }
+    }
+
+    private void downloadJSON(String username){
+
+        String JSON_URL = "http://95.85.23.84/prova2.php" + username;
+
+        try {
+            HttpURLConnection conn = (HttpURLConnection) new URL(JSON_URL).openConnection();
+            InputStream is = conn.getInputStream();
+            BufferedReader r = new BufferedReader(new InputStreamReader(is));
+            StringBuilder sb = new StringBuilder();
+
+            for (String line = r.readLine(); line != null; line = r.readLine()){
+                sb.append(line);
+            }
+
+            JSONArray jsonArray = new JSONArray(sb.toString());
+            for (int i = 0; i<jsonArray.length(); i++){
+
+                JSONObject object = jsonArray.getJSONObject(i);
+                String name = object.getString("name");
+                String surname = object.getString("surname");
+                Log.d("Login Activity", "name String" + name);
+                Log.d("Login Activity", "name String" + surname);
+            }
+
+        } catch (IOException e){
+            e.printStackTrace();
+        } catch (JSONException e){
+            e.printStackTrace();
         }
     }
 }
