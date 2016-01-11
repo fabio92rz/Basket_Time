@@ -7,7 +7,7 @@
         <item name="colorPrimaryDark">#0277bd</item>
         <item name="windowActionBar">false</item>
         <item name="android:windowActionModeOverlay">true</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">#039be5</item>
     </style>
 
     <style name="white" parent="android:style/Widget.EditText">

@@ -10,12 +10,16 @@ import android.app.DownloadManager;
 import android.content.SharedPreferences;
 import android.nfc.Tag;
 import android.os.Bundle;
+import android.os.Message;
 import android.provider.ContactsContract;
+import android.renderscript.ScriptGroup;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.JsonReader;
+import android.util.JsonToken;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,7 +35,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -115,7 +121,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //Se diventa vero
         if (loggedIn) {
             //Lo faccio passare dalla LoginActivity alla LiveActivity
-            Intent live = new Intent(LoginActivity.this, LiveActivity.class);
+            Intent live = new Intent(LoginActivity.this, HistoryActivity.class);
             startActivity(live);
         }
     }
@@ -125,9 +131,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         final String email = eTEmail.getText().toString().trim();
         final String password = eTPassword.getText().toString().trim();
 
+
         //Inizializzo il popup di caricamento
         final ProgressDialog loading;
-        loading = ProgressDialog.show(LoginActivity.this, "Attendere prego...", null, true, true );
+        loading = ProgressDialog.show(LoginActivity.this, "Attendere prego...", null, true, true);
 
         //Creo la string request
         StringRequest stringRequest = new StringRequest(Request.Method.POST, ConfigActivity.LOGIN_URL, new Response.Listener<String>() {
@@ -136,8 +143,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 //Se riceviamo success dal server
                 if (response.equalsIgnoreCase(ConfigActivity.LOGIN_SUCCESS)) {
-
-                    //downloadJSON(response);
 
                     //Creo una Shared Preference
                     SharedPreferences sharedPreferences = LoginActivity.this.getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
@@ -156,7 +161,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     loading.dismiss();
 
                     //Lancio Live Activity
-                    Intent live = new Intent(LoginActivity.this, LiveActivity.class);
+                    Intent live = new Intent(LoginActivity.this, HistoryActivity.class);
                     startActivity(live);
                 } else {
                     //Se la risposta del server non è Success stampa un messaggi di errore su toast
@@ -195,34 +200,80 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void downloadJSON(String username){
-
-        String JSON_URL = "http://95.85.23.84/prova2.php" + username;
-
+    /**public List readJsonStream(InputStream in) throws IOException {
+        JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
         try {
-            HttpURLConnection conn = (HttpURLConnection) new URL(JSON_URL).openConnection();
-            InputStream is = conn.getInputStream();
-            BufferedReader r = new BufferedReader(new InputStreamReader(is));
-            StringBuilder sb = new StringBuilder();
-
-            for (String line = r.readLine(); line != null; line = r.readLine()){
-                sb.append(line);
-            }
-
-            JSONArray jsonArray = new JSONArray(sb.toString());
-            for (int i = 0; i<jsonArray.length(); i++){
-
-                JSONObject object = jsonArray.getJSONObject(i);
-                String name = object.getString("name");
-                String surname = object.getString("surname");
-                Log.d("Login Activity", "name String" + name);
-                Log.d("Login Activity", "name String" + surname);
-            }
-
-        } catch (IOException e){
-            e.printStackTrace();
-        } catch (JSONException e){
-            e.printStackTrace();
+            return readMessagesArray(reader);
+        } finally {
+            reader.close();
         }
     }
+
+    public List readMessagesArray(JsonReader reader) throws IOException {
+
+        List messages = new ArrayList();
+        reader.beginArray();
+
+        while (reader.hasNext()) {
+
+            messages.add(readMessage(reader));
+        }
+        reader.endArray();
+        return messages;
+    }
+
+    public Message readMessage(JsonReader reader) throws IOException {
+
+        long id = -1;
+        String status = null;
+        Data data = null;
+
+        reader.beginObject();
+        while (reader.hasNext()) {
+
+            String jsonkey = reader.nextName();
+            if (jsonkey.equals("status")) {
+                status = reader.nextString();
+
+            } else if (jsonkey.equals("data")) {
+
+                data = readData(reader);
+
+            } else {
+                reader.skipValue();
+            }
+        }
+        reader.endObject();
+        return new Message();
+    }
+
+    public Data readData(JsonReader reader) throws IOException {
+        String username = null;
+        String userSurname = null;
+        String userEmail = null;
+        String userPassword = null;
+
+        reader.beginObject();
+        while (reader.hasNext()) {
+
+            String jsonKey = reader.nextName();
+            if (jsonKey.equals("name")) {
+                username = reader.nextString();
+
+            } else if (jsonKey.equals("surname")) {
+                userSurname = reader.nextString();
+
+            } else if (jsonKey.equals("email")) {
+                userEmail = reader.nextString();
+
+            } else if (jsonKey.equals("password")) {
+                userPassword = reader.nextString();
+            } else {
+
+                reader.skipValue();
+            }
+        }
+        reader.endObject();
+        return new Data(username, userSurname, userEmail, userPassword);
+    }**/
 }

@@ -12,6 +12,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -45,6 +46,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
     //Bottone per il logout
     private Button logoutButton;
+    private FloatingActionButton newgame;
 
 
     private View mLayout0, mLayout1, mLayout2;
@@ -65,7 +67,10 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
         //Inizializzo il Bottone per il logout
         logoutButton = (Button) findViewById(R.id.logout_button);
+        newgame = (FloatingActionButton) findViewById(R.id.new_game);
         logoutButton.setOnClickListener(this);
+        newgame.setOnClickListener(this);
+
 
         //Inizializzo la Toolbar e la inserisco nell'actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -172,6 +177,8 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         });
     }
 
+
+
     //Funzione Logout
     private void logout() {
         //Credo un dialogo di allerta per confermare il logout
@@ -222,13 +229,17 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onPause() {
         super.onPause();
-        overridePendingTransition(0, 0);
     }
 
     @Override
     public void onClick(View v) {
         if (v == logoutButton) {
             logout();
+        }
+
+        if (v == newgame){
+            Intent newgame = new Intent(HistoryActivity.this, NewGameActivity.class);
+            startActivity(newgame);
         }
     }
 }
