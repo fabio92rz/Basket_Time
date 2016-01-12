@@ -33,6 +33,8 @@
         <activity
             android:name=".NewGameActivity"></activity>
         <activity
+            android:name=".ChampActivity"></activity>
+        <activity
             android:name=".Popup0Activity"
             android:theme="@style/AppTheme.CustomTheme">
         </activity>

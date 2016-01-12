@@ -70,6 +70,8 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/insert_button"
+        android:background="@drawable/custom_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Ok !"

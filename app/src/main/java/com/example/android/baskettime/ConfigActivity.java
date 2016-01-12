@@ -5,9 +5,10 @@ package com.example.android.baskettime;
  */
 public class ConfigActivity {
 
-    //Url a login2.php
+    //Url vari
     public static final String LOGIN_URL = "http://95.85.23.84/prova.php";
     public static final String JSON_URL = "http://95.85.23.84/prova2.php";
+    public static final String INSERT_URL = "http://95.85.24.84/insertGames.php";
 
     //Keys per Email e Password come definito nel file prova.php
     public static final String KEY_EMAIL = "email";

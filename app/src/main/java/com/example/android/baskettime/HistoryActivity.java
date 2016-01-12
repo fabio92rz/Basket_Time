@@ -119,6 +119,10 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                         Intent history = new Intent(HistoryActivity.this, HistoryActivity.class);
                         startActivity(history);
                         break;
+
+                    case R.id.insert_championship:
+                        Intent championship = new Intent(HistoryActivity.this, ChampActivity.class);
+                        startActivity(championship);
                 }
                 return true;
             }

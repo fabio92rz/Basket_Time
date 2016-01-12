@@ -183,12 +183,6 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return false;
@@ -299,7 +293,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         displayForQuarter(quarter + "°");
     }
 
-    public void loadImagefromGallery(View view) {
+    /**public void loadImagefromGallery(View view) {
 
         //Creo l'intento per aprire un'applicazione di gestione d'immagini
         Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -369,7 +363,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         BitmapFactory.Options o2 = new BitmapFactory.Options();
         o2.inSampleSize = scale;
         return BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o2);
-    }
+    }**/
 
     //Funzione Logout
     private void logout() {

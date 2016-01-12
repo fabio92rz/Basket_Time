@@ -2,7 +2,7 @@
     <string-array name="menù">
         <item>Live!</item>
         <item>Storico Partite</item>
-        <item>Ecc..</item>
+        <item>Inserisci Campionato</item>
     </string-array>
 
     <string name="app_name">Basket Time</string>
@@ -16,7 +16,7 @@
     <string name="starred_string">Starred</string>
     <string name="live_string">Live!</string>
     <string name="history_string">Storico Partite</string>
-    <string name="ecc_string">Ecc...</string>
+    <string name="insert_string">Inserisci Nuovo Campionato</string>
     <string name="subheader">Subheader</string>
     <string name="trash_string">Trash</string>
     <string name="all_mail_string">All mails</string>
