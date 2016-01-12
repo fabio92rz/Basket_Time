@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <include
@@ -9,61 +10,71 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Home"
-            android:textSize="25sp"
-            android:paddingLeft="70dp"
-            android:paddingTop="30dp"
-            android:textColor="#039be5"
-            android:paddingBottom="30dp"/>
-
-
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Visitor"
-            android:textColor="#F44336"
-            android:textSize="25sp"
-            android:paddingTop="30dp"
-            android:gravity="end"
-            android:paddingRight="70dp"
-            android:paddingBottom="30dp"
-            />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
-        <Spinner
-        android:id="@+id/spinner_home"
-        android:layout_width="130dp"
-        android:layout_height="30dp" />
-
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="-"
-            android:textSize="40dp" />
+            android:orientation="vertical">
 
-        <Spinner
-        android:id="@+id/spinner_visitor"
-        android:layout_width="130dp"
-        android:layout_height="30dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Team Home"
+                android:textSize="20dp"
+                android:paddingTop="80dp"
+                android:paddingLeft="40dp"
+                android:textColor="#039be5"
+                android:paddingBottom="30dp" />
 
+            <Spinner
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:layout_gravity="center" />
+        </LinearLayout>
 
+        <View
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/black"
+            android:layout_marginTop="70dp"
+            android:layout_marginBottom="250dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Team Visitor"
+                android:textSize="20dp"
+                android:paddingTop="80dp"
+                android:paddingRight="40dp"
+                android:textColor="#F44336"
+                android:paddingBottom="30dp" />
+
+            <Spinner
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp" />
+        </LinearLayout>
     </LinearLayout>
 
-
-
-
-
-
-
-</LinearLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ok !"
+        android:textAllCaps="false"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="170dp"/>
+</RelativeLayout>
