@@ -1,73 +1,106 @@
 package com.example.android.baskettime;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 
 /**
  * Created by Fabio on 12/01/2016.
  */
-public class ChampActivity extends AppCompatActivity {
+public class ChampActivity extends AppCompatActivity implements View.OnClickListener {
 
     Toolbar mtoolbar;
-    Spinner numTeam;
+    FloatingActionButton newTeam;
+    Button newChamp;
     LinearLayout champLayout;
-
-    private String [] arraySpinner;
+    EditText firstTeam;
+    EditText newChampionship;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle InsanceState) {
+        super.onCreate(InsanceState);
         setContentView(R.layout.activity_champ);
         setTitle("  Nuovo Torneo");
-
-        this.arraySpinner = new String[]{
-                "1", "2", "3"
-        };
 
         mtoolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mtoolbar);
 
-        champLayout = (LinearLayout)findViewById (R.id.linear_champ);
+        newChampionship = (EditText) findViewById(R.id.champ_text);
+        firstTeam = (EditText) findViewById(R.id.team1_text);
+        newTeam = (FloatingActionButton) findViewById(R.id.new_team);
+        newChamp = (Button) findViewById(R.id.new_champion);
+        champLayout = (LinearLayout) findViewById(R.id.linear_champ);
 
-        numTeam = (Spinner) findViewById(R.id.num_team);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item, arraySpinner);
-        numTeam.setAdapter(adapter);
+        newChamp.setOnClickListener(this);
+        newTeam.setOnClickListener(this);
 
-        numTeam.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 
-                switch (position) {
-
-                    case 0:
-                        EditText et = new EditText(getBaseContext());
-                        et.setLayoutParams(
-                                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                                        LinearLayout.LayoutParams.WRAP_CONTENT));
-                        et.setText("Inserisci squadra!");
-                        champLayout.addView(et);
-                        Toast.makeText(parentView.getContext(), "Numero 1", Toast.LENGTH_LONG).show();
-                        break;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
-            }
-
-        });
     }
 
+    private void addChampionship() {
 
+        final String championship = newChampionship.getText().toString().trim();
+        final String team = firstTeam.getText().toString().trim();
+
+        class addChampionship extends AsyncTask<Void, Void, String>{
+
+            @Override
+            protected void onPreExecute() {}
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                Toast.makeText(ChampActivity.this, s, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            protected String doInBackground(Void... v){
+
+                HashMap<String, String> params = new HashMap<>();
+                params.put(ConfigActivity.KEY_CHAMP, championship);
+                params.put(ConfigActivity.KEY_TEAM, team);
+
+                RequestHandler requestHandler = new RequestHandler();
+                String res = requestHandler.sendPostRequest(ConfigActivity.INSERT_URL, params);
+                return res;
+            }
+        }
+
+        addChampionship ac = new addChampionship();
+        ac.execute();
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        if (v == newTeam) {
+            EditText team2 = new EditText(getBaseContext());
+            team2.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            team2.setHint("Inserisci squadra");
+            team2.setHintTextColor(Color.parseColor("#000000"));
+            champLayout.addView(team2);
+        }
+
+        if (v == newChamp) {
+            addChampionship();
+        }
+    }
 }

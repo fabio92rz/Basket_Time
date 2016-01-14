@@ -8,11 +8,13 @@ public class ConfigActivity {
     //Url vari
     public static final String LOGIN_URL = "http://95.85.23.84/prova.php";
     public static final String JSON_URL = "http://95.85.23.84/prova2.php";
-    public static final String INSERT_URL = "http://95.85.24.84/insertGames.php";
+    public static final String INSERT_URL = "http://95.85.23.84/insertChamp.php";
 
     //Keys per Email e Password come definito nel file prova.php
     public static final String KEY_EMAIL = "email";
     public static final String KEY_PASSWORD = "password";
+    public static final String KEY_CHAMP = "championship";
+    public static final String KEY_TEAM = "team";
 
     //Se il Server risponde e quindi il login è andato bene
     public static final String LOGIN_SUCCESS = "success";
