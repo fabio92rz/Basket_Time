@@ -32,6 +32,7 @@
                 android:paddingBottom="30dp" />
 
             <Spinner
+                android:id="@+id/spinner_team_home"
                 android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:paddingTop="20dp"
@@ -63,6 +64,7 @@
                 android:paddingBottom="30dp" />
 
             <Spinner
+                android:id="@+id/spinner_team_visitor"
                 android:layout_width="140dp"
                 android:layout_height="wrap_content"
                 android:paddingTop="20dp" />

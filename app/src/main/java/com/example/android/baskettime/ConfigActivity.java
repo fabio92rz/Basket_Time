@@ -9,6 +9,7 @@ public class ConfigActivity {
     public static final String LOGIN_URL = "http://95.85.23.84/prova.php";
     public static final String JSON_URL = "http://95.85.23.84/prova2.php";
     public static final String INSERT_URL = "http://95.85.23.84/insertChamp.php";
+    public static final String GET_TEAMS_URL = "http://95.85.23.84/getTeams.php";
 
     //Keys per Email e Password come definito nel file prova.php
     public static final String KEY_EMAIL = "email";
@@ -33,7 +34,7 @@ public class ConfigActivity {
 
     public static final String JSON_ARRAY = "success";
     public static final String TAG_ID = "id";
-    public static final String TAG_NAME = "name";
-    public static final String TAG_SURNAME = "surname";
+    public static final String TAG_TEAM = "team";
+    public static final String TAG_ARENA = "arena";
 
 }
