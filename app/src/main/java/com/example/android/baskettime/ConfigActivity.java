@@ -11,6 +11,12 @@ public class ConfigActivity {
     public static final String INSERT_URL = "http://95.85.23.84/insertChamp.php";
     public static final String GET_TEAMS_URL = "http://95.85.23.84/getTeams.php";
 
+    //Tag JSON
+    public static final String JSON_ARRAY = "result";
+    public static final String TAG_ID = "id";
+    public static final String TAG_TEAM = "name";
+    public static final String TAG_ARENA = "arena";
+
     //Keys per Email e Password come definito nel file prova.php
     public static final String KEY_EMAIL = "email";
     public static final String KEY_PASSWORD = "password";
@@ -29,12 +35,5 @@ public class ConfigActivity {
 
     //Userò questa variabile booleana nelle Shared Preference pre seguire se l'utente è dentro o no
     public static final String LOGGEDIN_SHARED_PREF = "loggedin";
-
-    //Tag JSON
-
-    public static final String JSON_ARRAY = "success";
-    public static final String TAG_ID = "id";
-    public static final String TAG_TEAM = "team";
-    public static final String TAG_ARENA = "arena";
 
 }

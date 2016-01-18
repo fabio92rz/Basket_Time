@@ -34,9 +34,9 @@
             <Spinner
                 android:id="@+id/spinner_team_home"
                 android:layout_width="160dp"
-                android:layout_height="wrap_content"
-                android:paddingTop="20dp"
-                android:layout_gravity="center" />
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:paddingTop="20dp" />
         </LinearLayout>
 
         <View
@@ -45,7 +45,7 @@
             android:background="@android:color/black"
             android:layout_marginTop="70dp"
             android:layout_marginBottom="250dp"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="20dp"/>
 
         <LinearLayout
@@ -65,9 +65,8 @@
 
             <Spinner
                 android:id="@+id/spinner_team_visitor"
-                android:layout_width="140dp"
-                android:layout_height="wrap_content"
-                android:paddingTop="20dp" />
+                android:layout_width="130dp"
+                android:layout_height="50dp"/>
         </LinearLayout>
     </LinearLayout>
 

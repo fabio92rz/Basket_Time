@@ -3,6 +3,7 @@ package com.example.android.baskettime;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -32,22 +33,26 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
     private Spinner spinnerHome;
     private Spinner spinnerVisitor;
 
-    private ArrayList<String> teams;
+    private ArrayList<String> teamHome;
+    private ArrayList<String> teamVisitor;
 
     private JSONArray result;
-    private NewGameActivity onItemSelectedListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newgame);
-        setTitle("  Nuova Partita");
+        setTitle("Nuova Partita");
 
         mtoolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mtoolbar);
-        
-        teams = new ArrayList<String>();
-        
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        teamHome = new ArrayList<String>();
+        teamVisitor = new ArrayList<String>();
+
+
         spinnerHome = (Spinner) findViewById(R.id.spinner_team_home);
         spinnerVisitor = (Spinner)findViewById(R.id.spinner_team_visitor);
 
@@ -95,13 +100,15 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
             try {
                 JSONObject json = j.getJSONObject(i);
 
-                teams.add(json.getString(ConfigActivity.TAG_TEAM));
+                teamHome.add(json.getString(ConfigActivity.TAG_TEAM));
+                teamVisitor.add(json.getString(ConfigActivity.TAG_TEAM));
             }catch (JSONException e){
                 e.printStackTrace();
             }
         }
 
-        spinnerHome.setAdapter(new ArrayAdapter<String>(NewGameActivity.this, android.R.layout.simple_spinner_dropdown_item, teams));
+        spinnerVisitor.setAdapter(new ArrayAdapter<String>(NewGameActivity.this, android.R.layout.simple_spinner_dropdown_item, teamHome));
+        spinnerHome.setAdapter(new ArrayAdapter<String>(NewGameActivity.this, android.R.layout.simple_spinner_dropdown_item, teamVisitor));
     }
 
     @Override
