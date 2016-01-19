@@ -92,7 +92,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 data.put("email", params[2]);
                 data.put("password", params[3]);
 
-                String result = Rua.sendPostRequest(REGISTER_URL, data);
+                String result = Rua.sendPostRequest(ConfigActivity.REGISTER_URL, data);
 
                 return result;
             }
