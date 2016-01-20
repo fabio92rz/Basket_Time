@@ -144,7 +144,7 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         if (v == insertButton) {
-            addGame();
+
         }
     }
 
@@ -153,7 +153,7 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
         Spinner spinner = (Spinner) parent;
         if (spinner.getId() == R.id.spinner_team_home) {
 
-            String teamHome = parent.getItemAtPosition(position).toString();
+            String teamHome = getHomeTeam(position);
         }
 
 
@@ -170,41 +170,4 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-
-    public void addGame() {
-
-        final String teamHome = spinnerHome.getSelectedItem().toString();
-        final String teamVisitor = spinnerVisitor.getSelectedItem().toString();
-        final String homeResult = "0";
-        final String visitorResult = "0";
-
-
-        Log.d("Valore teamHome", "teamHome=" + teamHome);
-
-        class addTeamHome extends AsyncTask<Void, Void, String>{
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                Toast.makeText(NewGameActivity.this, s, Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            protected String doInBackground(Void... v) {
-                HashMap<String, String> params = new HashMap<>();
-                params.put(ConfigActivity.KEY_HOME_TEAM, teamHome);
-                params.put(ConfigActivity.KEY_HOME_VISITOR, teamVisitor);
-                params.put(ConfigActivity.KEY_SCORE_HOME, homeResult);
-                params.put(ConfigActivity.KEY_HOME_VISITOR, visitorResult);
-
-                RequestHandler requestHandler = new RequestHandler();
-                String res = requestHandler.sendPostRequest(ConfigActivity.INSERT_GAME, params);
-                return res;
-            }
-        }
-
-        addTeamHome at = new addTeamHome();
-        at.execute();
-    }
-
 }

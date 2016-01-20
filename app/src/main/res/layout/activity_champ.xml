@@ -31,7 +31,8 @@
             <EditText
                 android:id="@+id/champ_text"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -42,7 +43,8 @@
             <EditText
                 android:id="@+id/team1_text"
                 android:layout_width="250dp"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords"/>
 
         </LinearLayout>
     </LinearLayout>

@@ -7,7 +7,8 @@ public class ConfigActivity {
 
     //Url vari
     public static final String LOGIN_URL = "http://95.85.23.84/prova2.php";
-    public static final String INSERT_URL = "http://95.85.23.84/insertChamp.php";
+    public static final String INSERT_CHAMP = "http://95.85.23.84/insertChamp2.php";
+    public static final String INSERT_TEAMS = "http://95.85.23.84/insertTeams.php";
     public static final String GET_TEAMS_URL = "http://95.85.23.84/getTeams.php";
     public static final String INSERT_GAME = "http://95.85.23.84/insertGames.php";
     public static final String REGISTER_URL = "http://95.85.23.84/register.php";

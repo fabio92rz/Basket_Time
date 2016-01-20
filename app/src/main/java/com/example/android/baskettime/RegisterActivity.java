@@ -29,8 +29,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private Button buttonRegister;
 
-    private static final String REGISTER_URL = "http://95.85.23.84/register.php";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +78,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
                 loading.dismiss();
-                Toast.makeText(getApplicationContext(), "Registrazione Effettuata", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
             }
 
             @Override

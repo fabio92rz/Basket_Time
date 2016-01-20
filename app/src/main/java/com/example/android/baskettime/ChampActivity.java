@@ -2,12 +2,17 @@ package com.example.android.baskettime;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -32,16 +37,19 @@ public class ChampActivity extends AppCompatActivity implements View.OnClickList
     Button newChamp;
     LinearLayout champLayout;
     EditText firstTeam;
+    EditText team2;
     EditText newChampionship;
 
     @Override
     protected void onCreate(Bundle InsanceState) {
         super.onCreate(InsanceState);
         setContentView(R.layout.activity_champ);
-        setTitle("  Nuovo Torneo");
+        setTitle("Nuovo Torneo");
 
         mtoolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mtoolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         newChampionship = (EditText) findViewById(R.id.champ_text);
         firstTeam = (EditText) findViewById(R.id.team1_text);
@@ -55,10 +63,29 @@ public class ChampActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    @Override
+    public void onClick(View v) {
+
+        if (v == newTeam) {
+            team2 = new EditText(getBaseContext());
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(1000, LinearLayout.LayoutParams.WRAP_CONTENT);
+            team2.setTextColor(Color.parseColor("#000000"));
+            team2.setLayoutParams(layoutParams);
+            changeEditTextUnderlineColor(team2);
+            team2.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+            champLayout.addView(team2);
+
+        }
+
+        if (v == newChamp) {
+            addChampionship();
+            addTeams();
+        }
+    }
+
     private void addChampionship() {
 
         final String championship = newChampionship.getText().toString().trim();
-        final String team = firstTeam.getText().toString().trim();
 
         class addChampionship extends AsyncTask<Void, Void, String>{
 
@@ -76,10 +103,9 @@ public class ChampActivity extends AppCompatActivity implements View.OnClickList
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(ConfigActivity.KEY_CHAMP, championship);
-                params.put(ConfigActivity.KEY_TEAM, team);
 
                 RequestHandler requestHandler = new RequestHandler();
-                String res = requestHandler.sendPostRequest(ConfigActivity.INSERT_URL, params);
+                String res = requestHandler.sendPostRequest(ConfigActivity.INSERT_CHAMP, params);
                 return res;
             }
         }
@@ -88,19 +114,45 @@ public class ChampActivity extends AppCompatActivity implements View.OnClickList
         ac.execute();
     }
 
-    @Override
-    public void onClick(View v) {
+    private void addTeams() {
 
-        if (v == newTeam) {
-            EditText team2 = new EditText(getBaseContext());
-            team2.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-            team2.setHint("Inserisci squadra");
-            team2.setHintTextColor(Color.parseColor("#000000"));
-            champLayout.addView(team2);
+        final String team = firstTeam.getText().toString().trim();
+
+        class addTeams extends AsyncTask<Void, Void, String>{
+
+            @Override
+            protected void onPreExecute() {}
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                Toast.makeText(ChampActivity.this, s, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            protected String doInBackground(Void... v){
+
+                HashMap<String, String> params = new HashMap<>();
+                params.put(ConfigActivity.KEY_TEAM, team);
+
+                RequestHandler requestHandler = new RequestHandler();
+                String res = requestHandler.sendPostRequest(ConfigActivity.INSERT_TEAMS, params);
+                return res;
+            }
         }
 
-        if (v == newChamp) {
-            addChampionship();
+        addTeams at = new addTeams();
+        at.execute();
+    }
+
+    public static void changeEditTextUnderlineColor(EditText editText) {
+        int color = Color.parseColor("#757575");
+        Drawable drawable = editText.getBackground();
+        drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            editText.setBackground(drawable);
+        } else {
+            editText.setCompoundDrawables(null, null, drawable, null);
         }
     }
 }
