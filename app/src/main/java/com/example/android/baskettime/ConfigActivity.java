@@ -10,7 +10,8 @@ public class ConfigActivity {
     public static final String INSERT_CHAMP = "http://95.85.23.84/insertChamp2.php";
     public static final String INSERT_TEAMS = "http://95.85.23.84/insertTeams.php";
     public static final String GET_TEAMS_URL = "http://95.85.23.84/getTeams.php";
-    public static final String INSERT_GAME = "http://95.85.23.84/insertGames.php";
+    public static final String INSERT_HOME = "http://95.85.23.84/insertHome.php";
+    public static final String INSERT_VISITOR = "http://95.85.23.84/insertVisitor.php";
     public static final String REGISTER_URL = "http://95.85.23.84/register.php";
 
     //Tag JSON
@@ -25,7 +26,7 @@ public class ConfigActivity {
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_CHAMP = "championship";
     public static final String KEY_TEAM = "team";
-    public static final String KEY_HOME_VISITOR = "id_home_visitor";
+    public static final String KEY_VISITOR_TEAM = "id_home_visitor";
     public static final String KEY_HOME_TEAM = "id_home_team";
     public static final String KEY_SCORE_HOME = "final_score_home";
     public static final String KEY_SCORE_VISITOR = "final_score_visitor";
