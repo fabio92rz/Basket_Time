@@ -1,10 +1,12 @@
 package com.example.android.baskettime;
 
+import android.app.ActionBar;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -37,8 +39,7 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
 
     Toolbar mtoolbar;
     Button insertButton;
-    TextView prova;
-    TextView prova2;
+
     private Spinner spinnerHome;
     private Spinner spinnerVisitor;
 
@@ -54,8 +55,7 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
         setTitle("Nuova Partita");
 
         mtoolbar = (Toolbar) findViewById(R.id.toolbar);
-        prova = (TextView) findViewById(R.id.prova);
-        prova2 = (TextView) findViewById(R.id.prova1);
+
         setSupportActionBar(mtoolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -63,46 +63,30 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
         teamHome = new ArrayList<String>();
         teamVisitor = new ArrayList<String>();
 
+        insertButton = (Button) findViewById(R.id.insert_button);
         spinnerHome = (Spinner) findViewById(R.id.spinner_team_home);
         spinnerVisitor = (Spinner) findViewById(R.id.spinner_team_visitor);
 
+        insertButton.setOnClickListener(this);
         spinnerHome.setOnItemSelectedListener(this);
         spinnerVisitor.setOnItemSelectedListener(this);
 
-        insertButton = (Button) findViewById(R.id.insert_button);
 
         getData();
 
-        insertButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                final String idhome = String.valueOf(spinnerHome.getSelectedItemId());
-                //final String idvisitor = String.valueOf(spinnerVisitor.getId());
-                Log.i("idhome", "getstring" + idhome);
-
-                class insertHome extends AsyncTask<Void, Void, String> {
-
-                    @Override
-                    protected String doInBackground(Void... params) {
-
-                        HashMap<String, String> param = new HashMap<>();
-                        param.put(ConfigActivity.KEY_HOME_TEAM, idhome);
-                        //param.put(ConfigActivity.KEY_VISITOR_TEAM, idvisitor);
-
-                        RequestHandler requestHandler = new RequestHandler();
-                        String res = requestHandler.sendPostRequest(ConfigActivity.INSERT_HOME, param);
-
-                        return res;
-                    }
-                }
-
-                insertHome ih = new insertHome();
-                ih.execute();
-
-            }
-        });
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+
+                this.finish();
+
+        }
+        return true;
+    }
+
 
     private void getData() {
         StringRequest stringRequest = new StringRequest(ConfigActivity.GET_TEAMS_URL,
@@ -153,7 +137,9 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
 
 
     private int getID(int position) {
+
         int id = 0;
+
         try {
             JSONObject json = result.getJSONObject(position);
             id = json.getInt(ConfigActivity.TAG_ID);
@@ -168,67 +154,58 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-    }
+        if (v == insertButton) {
 
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            insertTeams();
 
-        /**Spinner spinner = (Spinner) parent;
-        if (spinner.getId() == R.id.spinner_team_home) {
-
-            int idhome = getID(position);
-            final String idHome = "";
-            idHome.valueOf(idhome);
-
-            insertButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    insertHome(idHome);
-
-                }
-            });
-
-        } else if (spinner.getId() == R.id.spinner_team_visitor) {
-
-            int idvisitor = getID(position);
-            final String idVisitor = "";
-            idVisitor.valueOf(idvisitor);
-
-            insertButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    insertVisitor(idVisitor);
-
-                }
-            });
-
-        }**/
-    }
-
-
-    public void onNothingSelected(AdapterView<?> parent) {
+        }
 
     }
 
+    private void insertTeams() {
 
-    private void insertVisitor(final String idvisitor) {
+        final String idhome = String.valueOf(spinnerHome.getSelectedItemId());
+        final String idvisitor = String.valueOf(spinnerVisitor.getSelectedItemId());
+        Log.i("idhome", "getstring" + idhome);
+        Log.i("idVisitor", "getstring" + idvisitor);
 
-        class insertVisitor extends AsyncTask<Void, Void, String> {
+        class insertTeams extends AsyncTask<Void, Void, String> {
+
+            @Override
+            protected void onPreExecute() {
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                Toast.makeText(NewGameActivity.this, s, Toast.LENGTH_LONG).show();
+            }
 
             @Override
             protected String doInBackground(Void... params) {
 
                 HashMap<String, String> param = new HashMap<>();
+                param.put(ConfigActivity.KEY_HOME_TEAM, idhome);
                 param.put(ConfigActivity.KEY_VISITOR_TEAM, idvisitor);
 
                 RequestHandler requestHandler = new RequestHandler();
-                String res = requestHandler.sendPostRequest(ConfigActivity.INSERT_HOME, param);
+                String res = requestHandler.sendPostRequest(ConfigActivity.INSERT_GAMES, param);
 
                 return res;
             }
         }
 
-        insertVisitor iv = new insertVisitor();
-        iv.execute();
+        insertTeams it = new insertTeams();
+        it.execute();
+
+    }
+
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 
 }
