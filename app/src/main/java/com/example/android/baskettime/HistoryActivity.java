@@ -1,6 +1,8 @@
 package com.example.android.baskettime;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +12,7 @@ import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
@@ -19,6 +22,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.Slide;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,11 +60,13 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
     protected DrawerLayout drawerLayout;
 
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
         setTitle("Storico Partite");
+
 
         //Creo un inflater per inflazionare il layout dell'header
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -179,6 +185,8 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                 startActivity(new Intent(HistoryActivity.this, Popup0Activity.class));
             }
         });
+
+
     }
 
 
@@ -243,7 +251,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
         if (v == newgame){
             Intent newgame = new Intent(HistoryActivity.this, NewGameActivity.class);
-            startActivity(newgame);
+            startActivity(newgame, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
         }
     }
 }

@@ -21,6 +21,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.graphics.PorterDuff;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Config;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -51,6 +52,9 @@ import android.view.WindowManager;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
@@ -60,17 +64,25 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import android.graphics.Matrix;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 public class LiveActivity extends AppCompatActivity implements View.OnClickListener {
 
     int scoreTeamHm = 0, scoreTeamVis = 0, quarter = 1, imageHeight, imageWidth;
-    EditText teamhome, teamvis;
 
     //TextView per i dati dell'utente
     private TextView tvName_surname;
     private TextView tvEmail;
+    private TextView teamhome;
+    private TextView teamvis;
 
     //Bottone per il logout
     private Button logoutButton;
+    private JSONArray result;
 
     //Variabili per lo scaling dell'immagine
     private static int RESULT_LOAD_IMG = 1;
@@ -81,14 +93,18 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
     private NavigationView navigationView;
     protected DrawerLayout drawerLayout;
 
+    private String teamHome = "";
+    private String teamVisitor = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.live_activity);
+        setTitle("Partita Live !");
 
         //Creo un inflater per inflazionare il layout dell'header
-        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         //Inizializzo la Toolbar e la inserisco nell'actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -97,6 +113,10 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         //Inizializzo il Bottone per il logout
         logoutButton = (Button) findViewById(R.id.logout_button);
         logoutButton.setOnClickListener(this);
+
+        //Inizializzo le textView
+        teamhome = (TextView) findViewById(R.id.team_home_text);
+        teamvis = (TextView) findViewById(R.id.team_visitors_text);
 
         //Catturo i dati e li inserisco nell'header
         SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
@@ -107,10 +127,10 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
         //Inflaziono i layout in modo tale da mostralo nella Navigation View
-        View vi = inflater.inflate(R.layout.header, navigationView, false );
+        View vi = inflater.inflate(R.layout.header, navigationView, false);
 
         //Inizializzo ed imposto la mail della persona loggata
-        tvEmail = (TextView)vi.findViewById(R.id.email_header);
+        tvEmail = (TextView) vi.findViewById(R.id.email_header);
         tvEmail.setText(email);
 
         //Aggiungo la View
@@ -176,10 +196,44 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    private void getGames() {
+        StringRequest stringRequest = new StringRequest(ConfigActivity.GET_GAME,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        JSONObject j = null;
+                        try {
+                            j = new JSONObject(response);
+
+                            result = j.getJSONArray(ConfigActivity.JSON_GAMES_ARRAY);
+                            getTeams(result);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                });
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        requestQueue.add(stringRequest);
+    }
+
+    public void getTeams(JSONArray j){
+
+        //Estrapolare i team.
+    }
+
+
     @Override
     public void onPause() {
         super.onPause();
-        overridePendingTransition(0, 0);
     }
 
     @Override
@@ -213,13 +267,6 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     //Gestione degli oggetti a schermo
-
-    public void reset(EditText team, EditText team1) {
-        EditText teamhome = (EditText) findViewById(R.id.team_home_text);
-        teamhome.setText(null);
-        EditText teamVis = (EditText) findViewById(R.id.team_visitors_text);
-        teamVis.setText(null);
-    }
 
     public void stream(View v) {
         Button start = (Button) findViewById(R.id.start_button);
@@ -287,83 +334,83 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         scoreTeamVis = 0;
         quarter = 1;
 
-        reset(teamhome, teamvis);
         displayForHm(scoreTeamHm);
         displayForVis(scoreTeamVis);
         displayForQuarter(quarter + "°");
     }
 
-    /**public void loadImagefromGallery(View view) {
-
-        //Creo l'intento per aprire un'applicazione di gestione d'immagini
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        //Lancio l'intento
-        startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
-    }
-
-    public void getIMGSize(Uri uri) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(new File(uri.getPath()).getAbsolutePath(), options);
-        imageHeight = options.outHeight;
-        imageWidth = options.outWidth;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
-        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-        switch (requestCode) {
-            case 1:
-                if (resultCode == RESULT_OK) {
-                    Uri selectedImage = imageReturnedIntent.getData();
-                    try {
-                        //Inizializzo l'immagine
-                        CircleImageView imgView = (CircleImageView) findViewById(R.id.profile_image);
-                        getIMGSize(selectedImage);
-
-                        //Ruoto l'immagine, in verticale non risulta giusta l'orientamento
-                        imgView.setImageBitmap(decodeUri(selectedImage));
-                        imgView.setPivotX(imgView.getWidth() / 2);
-                        imgView.setPivotY(imgView.getHeight() / 2);
-                        imgView.setRotation(270);
-
-
-                    } catch (FileNotFoundException e) {
-
-                        //In caso di errore
-                        e.printStackTrace();
-                    }
-
-                }
-        }
-    }
-
-    private Bitmap decodeUri(Uri selectedImage) throws FileNotFoundException {
-
-        //Metodo per scaling dell'immagine
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-        BitmapFactory.decodeStream(
-                getContentResolver().openInputStream(selectedImage), null, o);
-
-        //Massima dimensione consentita
-        final int REQUIRED_SIZE = 100;
-
-        int width_tmp = o.outWidth, height_tmp = o.outHeight;
-        int scale = 1;
-        while (true) {
-            if (width_tmp / 2 < REQUIRED_SIZE || height_tmp / 2 < REQUIRED_SIZE) {
-                break;
-            }
-            width_tmp /= 2;
-            height_tmp /= 2;
-            scale *= 2;
-        }
-
-        BitmapFactory.Options o2 = new BitmapFactory.Options();
-        o2.inSampleSize = scale;
-        return BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o2);
-    }**/
+    /**
+     * public void loadImagefromGallery(View view) {
+     * <p/>
+     * //Creo l'intento per aprire un'applicazione di gestione d'immagini
+     * Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+     * //Lancio l'intento
+     * startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
+     * }
+     * <p/>
+     * public void getIMGSize(Uri uri) {
+     * BitmapFactory.Options options = new BitmapFactory.Options();
+     * options.inJustDecodeBounds = true;
+     * BitmapFactory.decodeFile(new File(uri.getPath()).getAbsolutePath(), options);
+     * imageHeight = options.outHeight;
+     * imageWidth = options.outWidth;
+     * }
+     *
+     * @Override protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+     * super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+     * switch (requestCode) {
+     * case 1:
+     * if (resultCode == RESULT_OK) {
+     * Uri selectedImage = imageReturnedIntent.getData();
+     * try {
+     * //Inizializzo l'immagine
+     * CircleImageView imgView = (CircleImageView) findViewById(R.id.profile_image);
+     * getIMGSize(selectedImage);
+     * <p/>
+     * //Ruoto l'immagine, in verticale non risulta giusta l'orientamento
+     * imgView.setImageBitmap(decodeUri(selectedImage));
+     * imgView.setPivotX(imgView.getWidth() / 2);
+     * imgView.setPivotY(imgView.getHeight() / 2);
+     * imgView.setRotation(270);
+     * <p/>
+     * <p/>
+     * } catch (FileNotFoundException e) {
+     * <p/>
+     * //In caso di errore
+     * e.printStackTrace();
+     * }
+     * <p/>
+     * }
+     * }
+     * }
+     * <p/>
+     * private Bitmap decodeUri(Uri selectedImage) throws FileNotFoundException {
+     * <p/>
+     * //Metodo per scaling dell'immagine
+     * BitmapFactory.Options o = new BitmapFactory.Options();
+     * o.inJustDecodeBounds = true;
+     * BitmapFactory.decodeStream(
+     * getContentResolver().openInputStream(selectedImage), null, o);
+     * <p/>
+     * //Massima dimensione consentita
+     * final int REQUIRED_SIZE = 100;
+     * <p/>
+     * int width_tmp = o.outWidth, height_tmp = o.outHeight;
+     * int scale = 1;
+     * while (true) {
+     * if (width_tmp / 2 < REQUIRED_SIZE || height_tmp / 2 < REQUIRED_SIZE) {
+     * break;
+     * }
+     * width_tmp /= 2;
+     * height_tmp /= 2;
+     * scale *= 2;
+     * }
+     * <p/>
+     * BitmapFactory.Options o2 = new BitmapFactory.Options();
+     * o2.inSampleSize = scale;
+     * return BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o2);
+     * }
+     **/
 
     //Funzione Logout
     private void logout() {

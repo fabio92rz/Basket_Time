@@ -83,17 +83,14 @@
                     android:layout_marginTop="16dp"
                     android:background="@android:color/black" />
 
-                <EditText
+                <TextView
                     android:id="@+id/team_home_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:background="#00000000"
-                    android:hint="Team Home"
-                    android:inputType="textCapWords"
                     android:padding="12dp"
                     android:textColor="#039be5"
-                    android:textColorHint="#039be5"
                     android:textSize="22sp" />
 
                 <LinearLayout
@@ -138,17 +135,14 @@
                     android:layout_marginTop="16dp"
                     android:background="@android:color/black" />
 
-                <EditText
+                <TextView
                     android:id="@+id/team_visitors_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:background="#00000000"
-                    android:hint="Team Visitor"
-                    android:inputType="textCapWords"
                     android:padding="12dp"
                     android:textColor="#F44336"
-                    android:textColorHint="#F44336"
                     android:textSize="22sp" />
 
                 <LinearLayout

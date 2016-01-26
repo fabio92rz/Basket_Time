@@ -10,11 +10,13 @@ public class ConfigActivity {
     public static final String INSERT_CHAMP = "http://95.85.23.84/insertChamp2.php";
     public static final String INSERT_TEAMS = "http://95.85.23.84/insertTeams.php";
     public static final String GET_TEAMS_URL = "http://95.85.23.84/getTeams.php";
+    public static final String GET_GAME = "http://95.85.23.84/getGames.php";
     public static final String INSERT_GAMES = "http://95.85.23.84/insertGames.php";
     public static final String REGISTER_URL = "http://95.85.23.84/register.php";
 
     //Tag JSON
     public static final String JSON_ARRAY = "result";
+    public static final String JSON_GAMES_ARRAY = "games";
     public static final String TAG_ID = "id";
     public static final String TAG_HOME_TEAM = "name";
     public static final String TAG_VISITOR_TEAM = "name";

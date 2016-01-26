@@ -1,6 +1,8 @@
 package com.example.android.baskettime;
 
 import android.app.ActionBar;
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -87,7 +90,6 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
         return true;
     }
 
-
     private void getData() {
         StringRequest stringRequest = new StringRequest(ConfigActivity.GET_TEAMS_URL,
                 new Response.Listener<String>() {
@@ -140,6 +142,7 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
 
         int id = 0;
 
+
         try {
             JSONObject json = result.getJSONObject(position);
             id = json.getInt(ConfigActivity.TAG_ID);
@@ -148,8 +151,8 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
 
             e.printStackTrace();
         }
+            return id;
 
-        return id;
     }
 
     @Override
@@ -157,17 +160,20 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
         if (v == insertButton) {
 
             insertTeams();
+            Intent livegame = new Intent(NewGameActivity.this, LiveActivity.class);
+            startActivity(livegame, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+
 
         }
-
     }
 
     private void insertTeams() {
 
-        final String idhome = String.valueOf(spinnerHome.getSelectedItemId());
-        final String idvisitor = String.valueOf(spinnerVisitor.getSelectedItemId());
+        final String idhome = String.valueOf(getID((int) spinnerHome.getSelectedItemId()));
+        final String idvisitor = String.valueOf(getID((int) spinnerVisitor.getSelectedItemId()));
         Log.i("idhome", "getstring" + idhome);
         Log.i("idVisitor", "getstring" + idvisitor);
+
 
         class insertTeams extends AsyncTask<Void, Void, String> {
 
@@ -178,7 +184,6 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-                Toast.makeText(NewGameActivity.this, s, Toast.LENGTH_LONG).show();
             }
 
             @Override
