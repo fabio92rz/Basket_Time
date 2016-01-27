@@ -1,31 +1,25 @@
 package com.example.android.baskettime;
 
-import android.app.ActionBar;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -161,6 +155,7 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
 
             insertTeams();
             Intent livegame = new Intent(NewGameActivity.this, LiveActivity.class);
+            //livegame.putExtra();
             startActivity(livegame, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
 
 
@@ -177,6 +172,7 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
 
         class insertTeams extends AsyncTask<Void, Void, String> {
 
+
             @Override
             protected void onPreExecute() {
             }
@@ -184,6 +180,7 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
+
             }
 
             @Override
@@ -195,9 +192,24 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
 
                 RequestHandler requestHandler = new RequestHandler();
                 String res = requestHandler.sendPostRequest(ConfigActivity.INSERT_GAMES, param);
+                JSONObject j = null;
+                JSONArray response = null;
+                try {
+
+                    j = new JSONObject(res);
+                    response = j.getJSONArray("result");
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Log.d("Prova json id", "response =" + response);
 
                 return res;
+
             }
+
         }
 
         insertTeams it = new insertTeams();
@@ -205,12 +217,13 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
     }
 
+    @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-
 }

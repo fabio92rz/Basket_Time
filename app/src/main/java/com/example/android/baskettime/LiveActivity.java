@@ -194,41 +194,10 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         displayForHm(0);
         displayForVis(0);
 
+
     }
 
-    private void getGames() {
-        StringRequest stringRequest = new StringRequest(ConfigActivity.GET_GAME,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
 
-                        JSONObject j = null;
-                        try {
-                            j = new JSONObject(response);
-
-                            result = j.getJSONArray(ConfigActivity.JSON_GAMES_ARRAY);
-                            getTeams(result);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                    }
-                });
-
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-
-        requestQueue.add(stringRequest);
-    }
-
-    public void getTeams(JSONArray j){
-
-        //Estrapolare i team.
-    }
 
 
     @Override

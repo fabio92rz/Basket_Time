@@ -37,7 +37,6 @@ public class ChampActivity extends AppCompatActivity implements View.OnClickList
     Button newChamp;
     LinearLayout champLayout;
     EditText firstTeam;
-    EditText team2;
     EditText newChampionship;
 
     @Override
@@ -67,58 +66,28 @@ public class ChampActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
 
         if (v == newTeam) {
-            team2 = new EditText(getBaseContext());
+            firstTeam = new EditText(getBaseContext());
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(1000, LinearLayout.LayoutParams.WRAP_CONTENT);
-            team2.setTextColor(Color.parseColor("#000000"));
-            team2.setLayoutParams(layoutParams);
-            changeEditTextUnderlineColor(team2);
-            team2.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
-            champLayout.addView(team2);
 
+            firstTeam.setTextColor(Color.parseColor("#000000"));
+            firstTeam.setLayoutParams(layoutParams);
+            changeEditTextUnderlineColor(firstTeam);
+            firstTeam.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+            champLayout.addView(firstTeam);
         }
 
         if (v == newChamp) {
-            addChampionship();
             addTeams();
         }
-    }
-
-    private void addChampionship() {
-
-        final String championship = newChampionship.getText().toString().trim();
-
-        class addChampionship extends AsyncTask<Void, Void, String>{
-
-            @Override
-            protected void onPreExecute() {}
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                Toast.makeText(ChampActivity.this, s, Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            protected String doInBackground(Void... v){
-
-                HashMap<String, String> params = new HashMap<>();
-                params.put(ConfigActivity.KEY_CHAMP, championship);
-
-                RequestHandler requestHandler = new RequestHandler();
-                String res = requestHandler.sendPostRequest(ConfigActivity.INSERT_CHAMP, params);
-                return res;
-            }
-        }
-
-        addChampionship ac = new addChampionship();
-        ac.execute();
     }
 
     private void addTeams() {
 
         final String team = firstTeam.getText().toString().trim();
+        //final String team1 = team2.getText().toString().trim();
+        final String championship = newChampionship.getText().toString().trim();
 
-        class addTeams extends AsyncTask<Void, Void, String>{
+        class addTeams extends AsyncTask<String, Void, String>{
 
             @Override
             protected void onPreExecute() {}
@@ -130,10 +99,12 @@ public class ChampActivity extends AppCompatActivity implements View.OnClickList
             }
 
             @Override
-            protected String doInBackground(Void... v){
+            protected String doInBackground(String... v){
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(ConfigActivity.KEY_TEAM, team);
+                //params.put(ConfigActivity.KEY_TEAM2, team1);
+                params.put(ConfigActivity.KEY_CHAMP, championship);
 
                 RequestHandler requestHandler = new RequestHandler();
                 String res = requestHandler.sendPostRequest(ConfigActivity.INSERT_TEAMS, params);
