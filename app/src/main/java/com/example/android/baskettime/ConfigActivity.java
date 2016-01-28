@@ -19,6 +19,8 @@ public class ConfigActivity {
     public static final String JSON_GAMES_ARRAY = "games";
     public static final String TAG_ID = "id";
     public static final String TAG_ID_GAME = "id";
+    public static final String TAG_CURRENT_GAME = "result";
+    public static final String TAG_CURRENT_ID ="id_game";
     public static final String TAG_HOME_TEAM = "name";
     public static final String TAG_VISITOR_TEAM = "name";
     public static final String TAG_ARENA = "arena";
@@ -41,6 +43,7 @@ public class ConfigActivity {
     //Keys per le Shared Preferences
     //Questo sarà il nome delle nostre Shared Preferences
     public static final String SHARED_PREF_NAME = "Dati Personali";
+    public static final String ID_GAME = "id_game";
 
     //Questo verrà usato per conservare l'email dell'utente corrente
     public static final String EMAIL_SHARED_PREF = "email";

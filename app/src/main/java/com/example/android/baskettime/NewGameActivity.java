@@ -1,7 +1,10 @@
 package com.example.android.baskettime;
 
 import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -42,6 +45,8 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
 
     private ArrayList<String> teamHome;
     private ArrayList<String> teamVisitor;
+
+    int id_game;
 
     private JSONArray result;
 
@@ -145,21 +150,8 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
 
             e.printStackTrace();
         }
-            return id;
+        return id;
 
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v == insertButton) {
-
-            insertTeams();
-            Intent livegame = new Intent(NewGameActivity.this, LiveActivity.class);
-            //livegame.putExtra();
-            startActivity(livegame, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
-
-
-        }
     }
 
     private void insertTeams() {
@@ -181,6 +173,10 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
 
+                Intent livegame = new Intent(NewGameActivity.this, LiveActivity.class);
+                startActivity(livegame);
+                overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+
             }
 
             @Override
@@ -192,19 +188,27 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
 
                 RequestHandler requestHandler = new RequestHandler();
                 String res = requestHandler.sendPostRequest(ConfigActivity.INSERT_GAMES, param);
+
                 JSONObject j = null;
-                JSONArray response = null;
+                JSONObject gameDetails = null;
+
                 try {
 
                     j = new JSONObject(res);
-                    response = j.getJSONArray("result");
+                    gameDetails = j.getJSONObject(ConfigActivity.TAG_CURRENT_GAME);
+                    id_game = gameDetails.getInt(ConfigActivity.TAG_CURRENT_ID);
 
+                    SharedPreferences sharedPreferences = NewGameActivity.this.getSharedPreferences(ConfigActivity.TAG_ID_GAME, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                    editor.putInt(ConfigActivity.ID_GAME, id_game);
+                    Log.d("NewGameActivity", "id_game" + id_game);
+
+                    editor.commit();
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-                Log.d("Prova json id", "response =" + response);
 
                 return res;
 
@@ -215,6 +219,19 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
         insertTeams it = new insertTeams();
         it.execute();
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == insertButton) {
+
+            insertTeams();
+
+
+            //livegame.putExtra("CurrentGameID", id_game);
+            //Log.d("on post execute", "id del game" + id_game);
+
+        }
     }
 
     @Override

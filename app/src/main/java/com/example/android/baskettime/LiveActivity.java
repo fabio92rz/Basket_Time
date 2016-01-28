@@ -123,6 +123,10 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         String email = sharedPreferences.getString(ConfigActivity.EMAIL_SHARED_PREF, "Not Available");
         Log.d("Live Activity", "getString()" + email);
 
+        SharedPreferences sharedPreferences1 = getSharedPreferences(ConfigActivity.TAG_ID_GAME, Context.MODE_PRIVATE);
+        int id_game = sharedPreferences1.getInt(ConfigActivity.ID_GAME, 0);
+        Log.d("Live Activity", "valore id_game" + id_game);
+
         //Inizializzo la NavigationView, utilizzata per il drawer
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
@@ -193,7 +197,6 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
         displayForHm(0);
         displayForVis(0);
-
 
     }
 
