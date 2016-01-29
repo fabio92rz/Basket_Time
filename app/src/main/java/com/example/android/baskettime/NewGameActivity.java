@@ -227,10 +227,6 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
 
             insertTeams();
 
-
-            //livegame.putExtra("CurrentGameID", id_game);
-            //Log.d("on post execute", "id del game" + id_game);
-
         }
     }
 

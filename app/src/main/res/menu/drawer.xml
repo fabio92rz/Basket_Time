@@ -18,6 +18,7 @@
         <item
             android:id="@+id/insert_championship"
             android:checked="false"
+            android:icon="@drawable/football"
             android:title="@string/insert_string" />
 
     </group>

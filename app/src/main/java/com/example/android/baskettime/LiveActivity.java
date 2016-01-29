@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -59,6 +60,7 @@ import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -75,14 +77,11 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
     int scoreTeamHm = 0, scoreTeamVis = 0, quarter = 1, imageHeight, imageWidth;
 
     //TextView per i dati dell'utente
-    private TextView tvName_surname;
     private TextView tvEmail;
-    private TextView teamhome;
-    private TextView teamvis;
 
     //Bottone per il logout
     private Button logoutButton;
-    private JSONArray result;
+    private Button updateResult;
 
     //Variabili per lo scaling dell'immagine
     private static int RESULT_LOAD_IMG = 1;
@@ -95,6 +94,13 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
     private String teamHome = "";
     private String teamVisitor = "";
+    private TextView teamhome;
+    private TextView teamvis;
+    private TextView quarterView;
+    private TextView scoreView;
+    private TextView scoreViewVisitor;
+
+
 
 
     @Override
@@ -112,7 +118,9 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
         //Inizializzo il Bottone per il logout
         logoutButton = (Button) findViewById(R.id.logout_button);
+        updateResult = (Button) findViewById(R.id.start_button);
         logoutButton.setOnClickListener(this);
+        updateResult.setOnClickListener(this);
 
         //Inizializzo le textView
         teamhome = (TextView) findViewById(R.id.team_home_text);
@@ -123,10 +131,6 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         String email = sharedPreferences.getString(ConfigActivity.EMAIL_SHARED_PREF, "Not Available");
         Log.d("Live Activity", "getString()" + email);
 
-        SharedPreferences sharedPreferences1 = getSharedPreferences(ConfigActivity.TAG_ID_GAME, Context.MODE_PRIVATE);
-        int id_game = sharedPreferences1.getInt(ConfigActivity.ID_GAME, 0);
-        Log.d("Live Activity", "valore id_game" + id_game);
-
         //Inizializzo la NavigationView, utilizzata per il drawer
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
@@ -136,6 +140,15 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         //Inizializzo ed imposto la mail della persona loggata
         tvEmail = (TextView) vi.findViewById(R.id.email_header);
         tvEmail.setText(email);
+
+        quarterView = (TextView) findViewById(R.id.quarto_textView);
+        quarterView.setText(String.valueOf(quarter));
+
+        scoreView = (TextView) findViewById(R.id.score_team_home);
+        scoreView.setText(String.valueOf(scoreTeamHm));
+
+        scoreViewVisitor = (TextView) findViewById(R.id.score_team_visitor);
+        scoreView.setText(String.valueOf(scoreTeamVis));
 
         //Aggiungo la View
         navigationView.addHeaderView(vi);
@@ -194,13 +207,116 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         //Chiamo syncState per far comparire il toggle
         actionBarDrawerToggle.syncState();
 
-
-        displayForHm(0);
-        displayForVis(0);
+        getMatch();
 
     }
 
+    private void getMatch() {
 
+        SharedPreferences sharedPreferences1 = getSharedPreferences(ConfigActivity.TAG_ID_GAME, Context.MODE_PRIVATE);
+        final String id_game = String.valueOf(sharedPreferences1.getInt(ConfigActivity.ID_GAME, 0));
+        Log.d("Live Activity", "valore id_game" + id_game);
+
+        class getMatch extends AsyncTask<Void, Void, String> {
+
+
+            @Override
+            protected String doInBackground(Void... params) {
+
+                HashMap<String, String> param = new HashMap<>();
+                param.put(ConfigActivity.KEY_MATCH_ID, id_game);
+
+                RequestHandler requestHandler = new RequestHandler();
+                String res = requestHandler.sendPostRequest(ConfigActivity.GET_GAME, param);
+
+                JSONObject jsonObject = null;
+                JSONArray matchDetails = null;
+
+                try {
+
+                    jsonObject = new JSONObject(res);
+                    matchDetails = jsonObject.getJSONArray(ConfigActivity.JSON_GAMES_TAG);
+
+                    for (int i = 0; i < matchDetails.length(); i++) {
+
+                        try {
+
+                            JSONObject json = matchDetails.getJSONObject(i);
+
+                            teamHome = json.getString(ConfigActivity.TAG_CURRENT_TEAM_HOME);
+                            teamVisitor = json.getString(ConfigActivity.TAG_CURRENT_TEAM_VISITOR);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                return res;
+            }
+
+            @Override
+            protected void onPreExecute() {
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+
+                teamhome.setText(teamHome);
+                teamvis.setText(teamVisitor);
+
+            }
+        }
+
+        getMatch gt = new getMatch();
+        gt.execute();
+    }
+
+    private void insertQuarter(){
+
+        SharedPreferences sharedPreferences1 = getSharedPreferences(ConfigActivity.TAG_ID_GAME, Context.MODE_PRIVATE);
+
+        final String getQuarter = String.valueOf(quarterView.getText().toString());
+        final String getHomeScore = String.valueOf(scoreView.getText().toString());
+        final String getVisitorScore = String.valueOf(scoreViewVisitor.getText().toString());
+        final String id_game = String.valueOf(sharedPreferences1.getInt(ConfigActivity.ID_GAME, 0));
+
+        Log.d("String get quarter", "=" + getQuarter);
+
+        class insertQuarter extends AsyncTask<Void, Void, String>{
+
+
+            @Override
+            protected String doInBackground(Void... params) {
+
+                HashMap<String, String> param = new HashMap<>();
+                param.put(ConfigActivity.KEY_SCORE_QUARTER, getQuarter);
+                param.put(ConfigActivity.KEY_SCORE_HOME_TEAM, getHomeScore);
+                param.put(ConfigActivity.KEY_SCORE_VISITOR_TEAM, getVisitorScore);
+                param.put(ConfigActivity.KEY_ID_CURRENT_MATCH, id_game);
+
+
+                RequestHandler requestHandler = new RequestHandler();
+                String res = requestHandler.sendPostRequest(ConfigActivity.INSERT_QUARTER, param);
+
+                return res;
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+
+            }
+        }
+
+        insertQuarter iq = new insertQuarter();
+        iq.execute();
+    }
 
 
     @Override
@@ -238,65 +354,40 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         return super.onOptionsItemSelected(item);
     }
 
-    //Gestione degli oggetti a schermo
-
-    public void stream(View v) {
-        Button start = (Button) findViewById(R.id.start_button);
-    }
-
-    public void stopStream(View v) {
-        Button stop = (Button) findViewById(R.id.stop_button);
-    }
-
-    public void displayForHm(int score) {
-        TextView scoreView = (TextView) findViewById(R.id.score_team_home);
-        scoreView.setText(String.valueOf(score));
-    }
-
-    public void displayForVis(int score) {
-        TextView scoreView = (TextView) findViewById(R.id.score_team_visitor);
-        scoreView.setText(String.valueOf(score));
-    }
-
-    public void displayForQuarter(String quart) {
-        TextView quarterView = (TextView) findViewById(R.id.quarto_textView);
-        quarterView.setText(String.valueOf(quart));
-    }
-
     //Gestione Live
 
     public void addOnePoint(View v) {
         scoreTeamHm += 1;
-        displayForHm(scoreTeamHm);
+        scoreView.setText(String.valueOf(scoreTeamHm));
     }
 
     public void addOnePointVis(View v) {
         scoreTeamVis += 1;
-        displayForVis(scoreTeamVis);
+        scoreViewVisitor.setText(String.valueOf(scoreTeamVis));
     }
 
     public void subOne(View v) {
         if (scoreTeamHm > 0)
             scoreTeamHm -= 1;
-        displayForHm(scoreTeamHm);
+            scoreView.setText(String.valueOf(scoreTeamHm));
     }
 
     public void subOnePointVis(View v) {
         if (scoreTeamVis > 0)
             scoreTeamVis -= 1;
-        displayForVis(scoreTeamVis);
+            scoreViewVisitor.setText(String.valueOf(scoreTeamVis));
     }
 
     public void addQuarter(View v) {
         if (quarter >= 1 && quarter <= 3)
             quarter += 1;
-        displayForQuarter(quarter + "°");
+            quarterView.setText(String.valueOf(quarter));
     }
 
     public void subOneQuart(View v) {
         if (quarter > 1)
             quarter -= 1;
-        displayForQuarter(quarter + "°");
+            quarterView.setText(String.valueOf(quarter));
     }
 
     //Reset Punteggi
@@ -306,9 +397,65 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         scoreTeamVis = 0;
         quarter = 1;
 
-        displayForHm(scoreTeamHm);
-        displayForVis(scoreTeamVis);
-        displayForQuarter(quarter + "°");
+        scoreView.setText(String.valueOf(scoreTeamHm));
+        scoreViewVisitor.setText(String.valueOf(scoreTeamVis));
+        quarterView.setText(String.valueOf(quarter));
+    }
+
+    //Funzione Logout
+    private void logout() {
+        //Credo un dialogo di allerta per confermare il logout
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage("Sei sicuro di voler uscire?");
+        alertDialogBuilder.setPositiveButton("Si",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+
+                        //Rimuovo le SharedPreference
+                        SharedPreferences preferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+
+                        //Prendo l'editor
+                        SharedPreferences.Editor editor = preferences.edit();
+
+                        //Setto il valore Booleano a Falso
+                        editor.putBoolean(ConfigActivity.LOGGEDIN_SHARED_PREF, false);
+
+                        //Metto un valore vuto nella mail
+                        editor.putString(ConfigActivity.EMAIL_SHARED_PREF, "");
+
+                        //Salvo le SharedPreference
+                        editor.commit();
+
+                        //Faccio partire la LoginActivity
+                        Intent intent = new Intent(LiveActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
+        alertDialogBuilder.setNegativeButton("No",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+
+                    }
+                });
+
+        //Showing the alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == logoutButton) {
+            logout();
+        }
+
+        if (v == updateResult){
+            insertQuarter();
+        }
     }
 
     /**
@@ -383,56 +530,4 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
      * return BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o2);
      * }
      **/
-
-    //Funzione Logout
-    private void logout() {
-        //Credo un dialogo di allerta per confermare il logout
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage("Sei sicuro di voler uscire?");
-        alertDialogBuilder.setPositiveButton("Si",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-
-                        //Rimuovo le SharedPreference
-                        SharedPreferences preferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
-
-                        //Prendo l'editor
-                        SharedPreferences.Editor editor = preferences.edit();
-
-                        //Setto il valore Booleano a Falso
-                        editor.putBoolean(ConfigActivity.LOGGEDIN_SHARED_PREF, false);
-
-                        //Metto un valore vuto nella mail
-                        editor.putString(ConfigActivity.EMAIL_SHARED_PREF, "");
-
-                        //Salvo le SharedPreference
-                        editor.commit();
-
-                        //Faccio partire la LoginActivity
-                        Intent intent = new Intent(LiveActivity.this, LoginActivity.class);
-                        startActivity(intent);
-                    }
-                });
-
-        alertDialogBuilder.setNegativeButton("No",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-
-                    }
-                });
-
-        //Showing the alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v == logoutButton) {
-            logout();
-        }
-    }
 }

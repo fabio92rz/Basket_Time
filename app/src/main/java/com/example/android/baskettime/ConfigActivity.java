@@ -13,10 +13,14 @@ public class ConfigActivity {
     public static final String GET_GAME = "http://95.85.23.84/getGames.php";
     public static final String INSERT_GAMES = "http://95.85.23.84/insertGames.php";
     public static final String REGISTER_URL = "http://95.85.23.84/register.php";
+    public static final String INSERT_QUARTER = "http://95.85.23.84/insertQuarter.php";
 
     //Tag JSON
     public static final String JSON_ARRAY = "result";
     public static final String JSON_GAMES_ARRAY = "games";
+    public static final String JSON_GAMES_TAG= "games";
+    public static final String TAG_CURRENT_TEAM_HOME = "teamHome";
+    public static final String TAG_CURRENT_TEAM_VISITOR = "teamVisitor";
     public static final String TAG_ID = "id";
     public static final String TAG_ID_GAME = "id";
     public static final String TAG_CURRENT_GAME = "result";
@@ -30,6 +34,7 @@ public class ConfigActivity {
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_CHAMP = "championship";
     public static final String KEY_TEAM = "team";
+    public static final String KEY_MATCH_ID = "id";
     public static final String KEY_TEAM2 = "team";
     public static final String KEY_VISITOR_TEAM = "id_home_visitor";
     public static final String KEY_HOME_TEAM = "id_home_team";
@@ -50,5 +55,12 @@ public class ConfigActivity {
 
     //Userò questa variabile booleana nelle Shared Preference pre seguire se l'utente è dentro o no
     public static final String LOGGEDIN_SHARED_PREF = "loggedin";
+
+    //Chiavi per l'inserimento dei quarti
+    public static final String KEY_SCORE_HOME_TEAM = "score_home_team";
+    public static final String KEY_SCORE_VISITOR_TEAM = "score_visitor_team";
+    public static final String KEY_SCORE_QUARTER= "nquarter";
+    public static final String KEY_ID_CURRENT_MATCH = "id_game";
+
 
 }
