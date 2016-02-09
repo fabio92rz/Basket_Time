@@ -109,6 +109,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.live_activity);
         setTitle("Partita Live !");
 
+
         //Creo un inflater per inflazionare il layout dell'header
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -134,6 +135,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         //Inizializzo la NavigationView, utilizzata per il drawer
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
+
         //Inflaziono i layout in modo tale da mostralo nella Navigation View
         View vi = inflater.inflate(R.layout.header, navigationView, false);
 
@@ -142,7 +144,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         tvEmail.setText(email);
 
         quarterView = (TextView) findViewById(R.id.quarto_textView);
-        quarterView.setText(String.valueOf(quarter));
+        quarterView.setText(String.valueOf(quarter) + "°");
 
         scoreView = (TextView) findViewById(R.id.score_team_home);
         scoreView.setText(String.valueOf(scoreTeamHm));
@@ -173,11 +175,19 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
                     case R.id.live:
                         Intent live = new Intent(LiveActivity.this, LiveActivity.class);
                         startActivity(live);
+                        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
                         break;
 
                     case R.id.storico_partite:
                         Intent history = new Intent(LiveActivity.this, HistoryActivity.class);
                         startActivity(history);
+                        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                        break;
+
+                    case R.id.insert_championship:
+                        Intent championship = new Intent(LiveActivity.this, HistoryActivity.class);
+                        startActivity(championship);
+                        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
                         break;
                 }
                 return true;

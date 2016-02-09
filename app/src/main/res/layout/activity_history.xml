@@ -19,22 +19,6 @@
                 android:id="@+id/toolbar"
                 layout="@layout/tool_bar" />
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="80dp"
-                android:layout_marginTop="78dp"
-                android:src="@drawable/pallone2" />
-
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="80dp"
-                android:layout_marginTop="78dp"
-                android:src="@drawable/pallone2" />
-
-
             <LinearLayout
                 android:id="@+id/linear_layout0"
                 android:layout_width="match_parent"
@@ -43,24 +27,25 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_below="@id/toolbar"
-                android:layout_marginTop="120dp"
+                android:layout_marginTop="80dp"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingBottom="20dp">
 
-                <EditText
+
+
+                <TextView
                     android:id="@+id/team_home_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
                     android:background="#00000000"
-                    android:hint="Team Home"
-                    android:inputType="textCapWords"
                     android:textColor="#039be5"
                     android:textColorHint="#039be5"
                     android:textSize="22sp" />
 
                 <TextView
+                    android:id="@+id/homeScore"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -78,6 +63,7 @@
                     android:textSize="26sp" />
 
                 <TextView
+                    android:id="@+id/visitorScore"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -85,14 +71,12 @@
                     android:text="0"
                     android:textSize="26sp" />
 
-                <EditText
+                <TextView
                     android:id="@+id/team_visitors_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:background="#00000000"
-                    android:hint="Team Visitor"
-                    android:inputType="textCapWords"
                     android:textColor="#F44336"
                     android:textColorHint="#F44336"
                     android:textSize="22sp" />
@@ -108,23 +92,6 @@
                 android:layout_marginRight="32dp"
                 android:background="@android:color/black" />
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_below="@id/view0"
-                android:layout_marginLeft="80dp"
-                android:layout_marginTop="20dp"
-                android:src="@drawable/pallone2" />
-
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/view0"
-                android:layout_marginRight="80dp"
-                android:layout_marginTop="20dp"
-                android:src="@drawable/pallone2" />
-
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/linear_layout1"
                 android:layout_width="match_parent"
@@ -133,17 +100,15 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingBottom="20dp"
-                android:paddingTop="60dp">
+                android:paddingTop="30dp">
 
 
-                <EditText
+                <TextView
                     android:id="@+id/team_home_text1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
                     android:background="#00000000"
-                    android:hint="Team Home"
-                    android:inputType="textCapWords"
                     android:textColor="#039be5"
                     android:textColorHint="#039be5"
                     android:textSize="22sp" />
@@ -173,14 +138,12 @@
                     android:text="0"
                     android:textSize="26sp" />
 
-                <EditText
+                <TextView
                     android:id="@+id/team_visitors_text1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:background="#00000000"
-                    android:hint="Team Visitor"
-                    android:inputType="textCapWords"
                     android:textColor="#F44336"
                     android:textColorHint="#F44336"
                     android:textSize="22sp" />
@@ -196,23 +159,6 @@
                 android:layout_marginRight="32dp"
                 android:background="@android:color/black" />
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_below="@id/view1"
-                android:layout_marginLeft="80dp"
-                android:layout_marginTop="20dp"
-                android:src="@drawable/pallone2" />
-
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/view1"
-                android:layout_marginRight="80dp"
-                android:layout_marginTop="20dp"
-                android:src="@drawable/pallone2" />
-
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/linear_layout2"
                 android:layout_width="match_parent"
@@ -221,16 +167,14 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingBottom="20dp"
-                android:paddingTop="60dp">
+                android:paddingTop="30dp">
 
-                <EditText
+                <TextView
                     android:id="@+id/team_home_text2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
                     android:background="#00000000"
-                    android:hint="Team Home"
-                    android:inputType="textCapWords"
                     android:textColor="#039be5"
                     android:textColorHint="#039be5"
                     android:textSize="22sp" />
@@ -266,8 +210,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:background="#00000000"
-                    android:hint="Team Visitor"
-                    android:inputType="textCapWords"
                     android:textColor="#F44336"
                     android:textColorHint="#F44336"
                     android:textSize="22sp" />

@@ -7,7 +7,7 @@ public class ConfigActivity {
 
     //Url vari
     public static final String LOGIN_URL = "http://95.85.23.84/prova2.php";
-    //public static final String INSERT_CHAMP = "http://95.85.23.84/insertChamp2.php";
+    public static final String INSERT_CHAMP = "http://95.85.23.84/insertChamp2.php";
     public static final String INSERT_TEAMS = "http://95.85.23.84/insertTeams.php";
     public static final String GET_TEAMS_URL = "http://95.85.23.84/getTeams.php";
     public static final String GET_GAME = "http://95.85.23.84/getGames.php";
@@ -17,7 +17,6 @@ public class ConfigActivity {
 
     //Tag JSON
     public static final String JSON_ARRAY = "result";
-    public static final String JSON_GAMES_ARRAY = "games";
     public static final String JSON_GAMES_TAG= "games";
     public static final String TAG_CURRENT_TEAM_HOME = "teamHome";
     public static final String TAG_CURRENT_TEAM_VISITOR = "teamVisitor";

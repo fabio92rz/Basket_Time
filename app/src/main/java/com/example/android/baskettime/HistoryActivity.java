@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -23,6 +24,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,37 +41,60 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
 /**
  * Created by fabio on 11/11/2015.
  */
 public class HistoryActivity extends AppCompatActivity implements View.OnClickListener {
 
     //TextView per i dati dell'utente
-    private TextView tvName_surname;
     private TextView tvEmail;
+    private JSONArray games;
+    private TextView teamHome;
+    private TextView scoreHome;
+    private TextView scoreVisitor;
+    private TextView teamVisitor;
 
     //Bottone per il logout
     private Button logoutButton;
     private FloatingActionButton newgame;
 
 
-    private View mLayout0, mLayout1, mLayout2;
+    private LinearLayout mLayout0;
+    private LinearLayout mLayout1;
+    private LinearLayout mLayout2;
+    RelativeLayout header;
 
     private Toolbar toolbar;
     private NavigationView navigationView;
     protected DrawerLayout drawerLayout;
 
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
         setTitle("Storico Partite");
 
+        teamHome = (TextView) findViewById(R.id.team_home_text);
+        scoreHome = (TextView) findViewById(R.id.homeScore);
+        teamVisitor = (TextView) findViewById(R.id.team_visitors_text);
+        scoreVisitor = (TextView) findViewById(R.id.visitorScore);
+
 
         //Creo un inflater per inflazionare il layout dell'header
-        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         //Inizializzo il Bottone per il logout
         logoutButton = (Button) findViewById(R.id.logout_button);
@@ -90,10 +115,10 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
         //Inflaziono i layout in modo tale da mostralo nella Navigation View
-        View vi = inflater.inflate(R.layout.header, navigationView, false );
+        View vi = inflater.inflate(R.layout.header, navigationView, false);
 
         //Inizializzo ed imposto la mail della persona loggata
-        tvEmail = (TextView)vi.findViewById(R.id.email_header);
+        tvEmail = (TextView) vi.findViewById(R.id.email_header);
         tvEmail.setText(email);
 
         //Aggiungo la View
@@ -119,16 +144,19 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                     case R.id.live:
                         Intent live = new Intent(HistoryActivity.this, LiveActivity.class);
                         startActivity(live);
+                        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
                         break;
 
                     case R.id.storico_partite:
                         Intent history = new Intent(HistoryActivity.this, HistoryActivity.class);
                         startActivity(history);
+                        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
                         break;
 
                     case R.id.insert_championship:
                         Intent championship = new Intent(HistoryActivity.this, ChampActivity.class);
                         startActivity(championship);
+                        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
                 }
                 return true;
             }
@@ -158,9 +186,9 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         actionBarDrawerToggle.syncState();
 
         //Inizializzo i tre layout
-        mLayout0 = findViewById(R.id.linear_layout0);
-        mLayout1 = findViewById(R.id.linear_layout1);
-        mLayout2 = findViewById(R.id.linear_layout2);
+        mLayout0 = (LinearLayout) findViewById(R.id.linear_layout0);
+        mLayout1 = (LinearLayout) findViewById(R.id.linear_layout1);
+        mLayout2 = (LinearLayout) findViewById(R.id.linear_layout2);
 
 
         //Imposto il click per il layout per aprire il popup
@@ -186,9 +214,61 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
+        getGames();
+
 
     }
 
+    private void getGames() {
+        StringRequest stringRequest = new StringRequest(ConfigActivity.GET_GAME,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        JSONObject j = null;
+
+                        try {
+                            j = new JSONObject(response);
+                            games = j.getJSONArray(ConfigActivity.JSON_GAMES_TAG);
+                            String teamhome = "";
+                            String teamvis = "";
+
+                            for (int i = 0; i < games.length(); i++) {
+
+                                try {
+
+                                    JSONObject json = games.getJSONObject(i);
+
+                                    teamhome =json.getString(ConfigActivity.TAG_HOME_TEAM);
+                                    teamvis = json.getString(ConfigActivity.TAG_VISITOR_TEAM);
+
+                                    Log.d("TeamHome", "getString" + teamhome);
+                                    teamHome.setText(teamhome);
+                                    teamVisitor.setText(teamvis);
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                });
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        requestQueue.add(stringRequest);
+    }
 
 
     //Funzione Logout
@@ -249,9 +329,10 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
             logout();
         }
 
-        if (v == newgame){
+        if (v == newgame) {
             Intent newgame = new Intent(HistoryActivity.this, NewGameActivity.class);
-            startActivity(newgame, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            startActivity(newgame);
+            overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
         }
     }
 }

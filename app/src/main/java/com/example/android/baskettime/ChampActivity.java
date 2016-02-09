@@ -37,6 +37,7 @@ public class ChampActivity extends AppCompatActivity implements View.OnClickList
     Button newChamp;
     LinearLayout champLayout;
     EditText firstTeam;
+    EditText secondTeam;
     EditText newChampionship;
 
     @Override
@@ -66,14 +67,13 @@ public class ChampActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
 
         if (v == newTeam) {
-            firstTeam = new EditText(getBaseContext());
+            secondTeam = new EditText(getBaseContext());
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(1000, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-            firstTeam.setTextColor(Color.parseColor("#000000"));
-            firstTeam.setLayoutParams(layoutParams);
-            changeEditTextUnderlineColor(firstTeam);
-            firstTeam.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
-            champLayout.addView(firstTeam);
+            secondTeam.setTextColor(Color.parseColor("#000000"));
+            secondTeam.setLayoutParams(layoutParams);
+            changeEditTextUnderlineColor(secondTeam);
+            secondTeam.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+            champLayout.addView(secondTeam);
         }
 
         if (v == newChamp) {
@@ -84,7 +84,6 @@ public class ChampActivity extends AppCompatActivity implements View.OnClickList
     private void addTeams() {
 
         final String team = firstTeam.getText().toString().trim();
-        //final String team1 = team2.getText().toString().trim();
         final String championship = newChampionship.getText().toString().trim();
 
         class addTeams extends AsyncTask<String, Void, String>{
@@ -103,7 +102,6 @@ public class ChampActivity extends AppCompatActivity implements View.OnClickList
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(ConfigActivity.KEY_TEAM, team);
-                //params.put(ConfigActivity.KEY_TEAM2, team1);
                 params.put(ConfigActivity.KEY_CHAMP, championship);
 
                 RequestHandler requestHandler = new RequestHandler();
