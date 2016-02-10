@@ -11,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -61,6 +62,18 @@ public class ChampActivity extends AppCompatActivity implements View.OnClickList
         newTeam.setOnClickListener(this);
 
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+
+                this.finish();
+                overridePendingTransition(R.anim.push_out_right, R.anim.pull_in_left);
+
+        }
+        return true;
     }
 
     @Override

@@ -17,6 +17,7 @@
     <string name="live_string">Live!</string>
     <string name="history_string">Storico Partite</string>
     <string name="insert_string">Inserisci Nuovo Campionato</string>
+    <string name="prova_listview">Prova della listView</string>
     <string name="subheader">Subheader</string>
     <string name="trash_string">Trash</string>
     <string name="all_mail_string">All mails</string>

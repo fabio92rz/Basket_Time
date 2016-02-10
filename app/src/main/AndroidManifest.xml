@@ -35,6 +35,8 @@
         <activity
             android:name=".ChampActivity"></activity>
         <activity
+            android:name=".partitelive"></activity>
+        <activity
             android:name=".Popup0Activity"
             android:theme="@style/AppTheme.CustomTheme">
         </activity>

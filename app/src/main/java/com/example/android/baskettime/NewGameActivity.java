@@ -84,6 +84,7 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
             case android.R.id.home:
 
                 this.finish();
+                overridePendingTransition(R.anim.push_out_right, R.anim.pull_in_left);
 
         }
         return true;

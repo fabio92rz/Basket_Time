@@ -46,11 +46,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
+import java.io.File;
 import java.util.HashMap;
 
 /**
@@ -74,7 +77,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
     private LinearLayout mLayout0;
     private LinearLayout mLayout1;
     private LinearLayout mLayout2;
-    RelativeLayout header;
 
     private Toolbar toolbar;
     private NavigationView navigationView;
@@ -91,7 +93,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         scoreHome = (TextView) findViewById(R.id.homeScore);
         teamVisitor = (TextView) findViewById(R.id.team_visitors_text);
         scoreVisitor = (TextView) findViewById(R.id.visitorScore);
-
 
         //Creo un inflater per inflazionare il layout dell'header
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -116,6 +117,10 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
         //Inflaziono i layout in modo tale da mostralo nella Navigation View
         View vi = inflater.inflate(R.layout.header, navigationView, false);
+
+        ImageView background = (ImageView) vi.findViewById(R.id.header_image);
+        Picasso.with(this).load("http://i.imgur.com/bKFyqyE.jpg").into(background);
+
 
         //Inizializzo ed imposto la mail della persona loggata
         tvEmail = (TextView) vi.findViewById(R.id.email_header);
@@ -156,6 +161,11 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                     case R.id.insert_championship:
                         Intent championship = new Intent(HistoryActivity.this, ChampActivity.class);
                         startActivity(championship);
+                        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+
+                    case R.id.storico:
+                        Intent prova = new Intent(HistoryActivity.this, partitelive.class);
+                        startActivity(prova);
                         overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
                 }
                 return true;

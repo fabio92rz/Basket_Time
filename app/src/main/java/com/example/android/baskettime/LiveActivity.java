@@ -71,6 +71,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Picasso;
 
 public class LiveActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -139,6 +140,9 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         //Inflaziono i layout in modo tale da mostralo nella Navigation View
         View vi = inflater.inflate(R.layout.header, navigationView, false);
 
+        ImageView background = (ImageView) vi.findViewById(R.id.header_image);
+        Picasso.with(this).load("http://i.imgur.com/bKFyqyE.jpg").into(background);
+
         //Inizializzo ed imposto la mail della persona loggata
         tvEmail = (TextView) vi.findViewById(R.id.email_header);
         tvEmail.setText(email);
@@ -185,7 +189,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
                         break;
 
                     case R.id.insert_championship:
-                        Intent championship = new Intent(LiveActivity.this, HistoryActivity.class);
+                        Intent championship = new Intent(LiveActivity.this, ChampActivity.class);
                         startActivity(championship);
                         overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
                         break;
