@@ -12,16 +12,8 @@
 
     <ListView
         android:id="@+id/game_list"
-        android:layout_width="200dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"/>
-
-
-    <ListView
-        android:id="@+id/game_list2"
-        android:layout_width="200dp"
-        android:layout_height="match_parent"
-        android:layout_toRightOf="@+id/game_list"
         android:layout_below="@id/toolbar"/>
 
 </RelativeLayout>

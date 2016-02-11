@@ -163,10 +163,10 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                         startActivity(championship);
                         overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
 
-                    case R.id.storico:
+                    /**case R.id.storico:
                         Intent prova = new Intent(HistoryActivity.this, partitelive.class);
                         startActivity(prova);
-                        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);**/
                 }
                 return true;
             }

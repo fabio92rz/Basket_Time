@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ListView;
 
 import com.android.volley.RequestQueue;
@@ -30,7 +31,7 @@ public class partitelive extends AppCompatActivity implements View.OnClickListen
     ArrayList <String> livegamesHome;
     ArrayList <String> livegamesVisitor;
     ListView gameslist;
-    ListView gamelist2;
+    CustomList adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,6 @@ public class partitelive extends AppCompatActivity implements View.OnClickListen
         livegamesVisitor = new ArrayList<String>();
 
         gameslist = (ListView) findViewById(R.id.game_list);
-        gamelist2 = (ListView) findViewById(R.id.game_list2);
         getGames();
 
     }
@@ -66,18 +66,19 @@ public class partitelive extends AppCompatActivity implements View.OnClickListen
                                     livegamesHome.add(json.getString(ConfigActivity.TAG_HOME_TEAM));
                                     livegamesVisitor.add(json.getString(ConfigActivity.TAG_VISITOR_TEAM));
 
+                                    adapter = new CustomList(partitelive.this, livegamesHome, livegamesVisitor);
+
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                             }
 
-                            gameslist.setAdapter(new ArrayAdapter<String>(partitelive.this, android.R.layout.simple_list_item_1, livegamesHome));
-                            gamelist2.setAdapter(new ArrayAdapter<String>(partitelive.this, android.R.layout.simple_list_item_1, livegamesVisitor));
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+
+                        gameslist.setAdapter(adapter);
                     }
                 },
                 new Response.ErrorListener() {

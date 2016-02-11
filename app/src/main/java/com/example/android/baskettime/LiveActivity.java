@@ -395,13 +395,13 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
     public void addQuarter(View v) {
         if (quarter >= 1 && quarter <= 3)
             quarter += 1;
-            quarterView.setText(String.valueOf(quarter));
+            quarterView.setText(String.valueOf(quarter) + "°");
     }
 
     public void subOneQuart(View v) {
         if (quarter > 1)
             quarter -= 1;
-            quarterView.setText(String.valueOf(quarter));
+            quarterView.setText(String.valueOf(quarter)+ "°");
     }
 
     //Reset Punteggi
@@ -413,7 +413,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
         scoreView.setText(String.valueOf(scoreTeamHm));
         scoreViewVisitor.setText(String.valueOf(scoreTeamVis));
-        quarterView.setText(String.valueOf(quarter));
+        quarterView.setText(String.valueOf(quarter)+ "°");
     }
 
     //Funzione Logout
