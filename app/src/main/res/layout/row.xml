@@ -1,27 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/list_row_selector"
+    android:padding="8dp">
 
-    <TableRow>
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/teamHome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginBottom="10dp"
+            android:text="prova" />
 
-            <TextView
-                android:id="@+id/teamHome"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="prova"/>
+        <TextView
+            android:id="@+id/teamVis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="prova2"
+            android:layout_below="@id/teamHome"/>
 
-            <TextView
-                android:id="@+id/teamVis"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="prova2"/>
-        </LinearLayout>
-    </TableRow>
-</TableLayout>
+</RelativeLayout>

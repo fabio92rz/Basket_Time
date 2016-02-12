@@ -1,8 +1,11 @@
 package com.example.android.baskettime;
 
+import android.graphics.ColorFilter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
@@ -11,6 +14,7 @@ import android.widget.ListView;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -19,79 +23,77 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Fabio on 10/02/2016.
  */
 public class partitelive extends AppCompatActivity implements View.OnClickListener {
 
-
-
-    JSONArray games;
-    ArrayList <String> livegamesHome;
-    ArrayList <String> livegamesVisitor;
-    ListView gameslist;
-    CustomList adapter;
+    private List<Match> matchList = new ArrayList<Match>();
+    private ListView gameslist;
+    private CustomList adapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history2);
 
-        livegamesHome = new ArrayList<String>();
-        livegamesVisitor = new ArrayList<String>();
-
         gameslist = (ListView) findViewById(R.id.game_list);
-        getGames();
+        adapter = new CustomList(this, matchList);
+        gameslist.setAdapter(adapter);
 
-    }
+        StringRequest matchReq = new StringRequest(ConfigActivity.GET_GAME, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
 
-    private void getGames() {
-        StringRequest stringRequest = new StringRequest(ConfigActivity.GET_GAME,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
+                JSONObject j = null;
 
-                        JSONObject j = null;
+                    try {
 
-                        try {
-                            j = new JSONObject(response);
-                            games = j.getJSONArray(ConfigActivity.JSON_GAMES_TAG);
+                        j = new JSONObject(response);
+                        Match match = new Match();
 
-                            for (int i = 0; i < games.length(); i++) {
+                        JSONArray matches = j.getJSONArray(ConfigActivity.JSON_GAMES_TAG);
+                        ArrayList<String> teamHome = new ArrayList<String>();
+                        ArrayList<String> teamVis = new ArrayList<String>();
 
-                                try {
+                        for (int i = 0; i<matches.length(); i++){
 
-                                    JSONObject json = games.getJSONObject(i);
-                                    livegamesHome.add(json.getString(ConfigActivity.TAG_HOME_TEAM));
-                                    livegamesVisitor.add(json.getString(ConfigActivity.TAG_VISITOR_TEAM));
-
-                                    adapter = new CustomList(partitelive.this, livegamesHome, livegamesVisitor);
-
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            teamHome.add((String) matches.get(ConfigActivity.TAG_HOME_TEAM)));
+                            teamVis.add((String) matches.get(Integer.parseInt(ConfigActivity.TAG_VISITOR_TEAM)));
                         }
 
-                        gameslist.setAdapter(adapter);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+                        match.setHomeTeam(teamHome);
+                        match.setVisitorTeam(teamVis);
 
+                        matchList.add(match);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                });
+                }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
-        requestQueue.add(stringRequest);
+        requestQueue.add(matchReq);
+
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
 
     @Override
     public void onClick(View v) {

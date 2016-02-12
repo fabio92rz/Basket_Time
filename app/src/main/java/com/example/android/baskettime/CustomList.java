@@ -2,6 +2,7 @@ package com.example.android.baskettime;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,48 +11,66 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Fabio on 11/02/2016.
  */
 public class CustomList extends BaseAdapter {
+    private Activity activity;
+    private LayoutInflater inflater;
+    private List<Match> matchItems;
 
-    ArrayList<String> homeTeam;
-    ArrayList<String> visTeam;
-
-    Context mContext;
-    //constructor
-    public CustomList(Context mContext, ArrayList<String> homeTeam, ArrayList<String> visTeam) {
-        this.mContext = mContext;
-        this.homeTeam = homeTeam;
-        this.visTeam = visTeam;
+    public CustomList (Activity activity, List<Match> matchItems) {
+        this.activity = activity;
+        this.matchItems = matchItems;
     }
-
 
     @Override
     public int getCount() {
-        return 0;
+        return matchItems.size();
     }
 
-    public Object getItem(int i) {
-        return null;
+    @Override
+    public Object getItem(int location) {
+        return matchItems.get(location);
     }
 
+    @Override
     public long getItemId(int position) {
         return position;
     }
 
-    public View getView(int position, View arg1, ViewGroup viewGroup) {
-        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View row = inflater.inflate(R.layout.row, viewGroup, false);
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
 
-        TextView teamHome = (TextView) row.findViewById(R.id.teamHome);
-        TextView teamVis = (TextView) row.findViewById(R.id.teamVis);
+        if (inflater == null)
+            inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        if (convertView == null)
+            convertView = inflater.inflate(R.layout.row, null);
 
-        teamHome.setText(homeTeam.get(position));
-        teamVis.setText(visTeam.get(position));
+        TextView teamHome = (TextView) convertView.findViewById(R.id.teamHome);
+        TextView teamVis = (TextView) convertView.findViewById(R.id.teamVis);
 
+        // Prendo i dati dei march per la riga
+        Match m = matchItems.get(position);
 
-        return row;
+        // HomeTeam
+        String homeTeamStr = "";
+        for (String str : m.getHomeTeam()){
+            homeTeamStr += str + "/n";
+        }
+        teamHome.setText(homeTeamStr);
+
+        //VisitorTeam
+        String visTeamStr = "";
+        for (String str : m.getVisitorTeam()){
+            visTeamStr += str + "/n";
+        }
+        teamVis.setText(visTeamStr);
+
+        return convertView;
     }
+
 }
+
