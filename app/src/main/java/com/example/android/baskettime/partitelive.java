@@ -41,7 +41,7 @@ public class partitelive extends AppCompatActivity implements View.OnClickListen
 
         gameslist = (ListView) findViewById(R.id.game_list);
         adapter = new CustomList(this, matchList);
-        gameslist.setAdapter(adapter);
+
 
         StringRequest matchReq = new StringRequest(ConfigActivity.GET_GAME, new Response.Listener<String>() {
             @Override
@@ -52,7 +52,6 @@ public class partitelive extends AppCompatActivity implements View.OnClickListen
                     try {
 
                         j = new JSONObject(response);
-                        Match match = new Match();
 
                         JSONArray matches = j.getJSONArray(ConfigActivity.JSON_GAMES_TAG);
                         ArrayList<String> teamHome = new ArrayList<String>();
@@ -60,18 +59,28 @@ public class partitelive extends AppCompatActivity implements View.OnClickListen
 
                         for (int i = 0; i<matches.length(); i++){
 
-                            teamHome.add((String) matches.get(ConfigActivity.TAG_HOME_TEAM)));
-                            teamVis.add((String) matches.get(Integer.parseInt(ConfigActivity.TAG_VISITOR_TEAM)));
+                            JSONObject json = matches.getJSONObject(i);
+
+                            teamHome.add(json.getString(ConfigActivity.TAG_HOME_TEAM));
+                            teamVis.add(json.getString(ConfigActivity.TAG_VISITOR_TEAM));
+
+                            Log.d("prova match", "match =" + teamHome);
                         }
 
+                        Match match = new Match(teamHome, teamVis);
+
                         match.setHomeTeam(teamHome);
-                        match.setVisitorTeam(teamVis);
+                        match.setHomeTeam(teamVis);
 
                         matchList.add(match);
+
+                        Log.d("prova match", "match =" + matchList);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+
+                gameslist.setAdapter(adapter);
                 }
 
         }, new Response.ErrorListener() {

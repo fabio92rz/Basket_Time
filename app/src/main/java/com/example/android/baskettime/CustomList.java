@@ -58,14 +58,14 @@ public class CustomList extends BaseAdapter {
         // HomeTeam
         String homeTeamStr = "";
         for (String str : m.getHomeTeam()){
-            homeTeamStr += str + "/n";
+            homeTeamStr += str + " ";
         }
         teamHome.setText(homeTeamStr);
 
         //VisitorTeam
         String visTeamStr = "";
         for (String str : m.getVisitorTeam()){
-            visTeamStr += str + "/n";
+            visTeamStr += str + " ";
         }
         teamVis.setText(visTeamStr);
 

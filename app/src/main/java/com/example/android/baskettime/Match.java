@@ -11,10 +11,6 @@ public class Match {
     private ArrayList <String> homeTeam;
     private ArrayList <String> visitorTeam;
 
-    public Match(){
-
-    }
-
 
     public Match(ArrayList <String> homeTeam, ArrayList <String> visitorTeam){
 
