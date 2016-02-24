@@ -61,14 +61,14 @@ public class CustomList extends BaseAdapter {
         // HomeTeam
         String homeTeamStr = "";
         for (String str : m.getHomeTeam()){
-            homeTeamStr += str + " ";
+            homeTeamStr += str + "\n";
         }
         teamHome.setText(homeTeamStr);
 
         //VisitorTeam
         String visTeamStr = "";
         for (String str : m.getVisitorTeam()){
-            visTeamStr += str + " ";
+            visTeamStr += str + "\n";
         }
         teamVis.setText(visTeamStr);
 
@@ -81,7 +81,7 @@ public class CustomList extends BaseAdapter {
 
         //Prendo i risultati delle partite in trasferta
         String scoreVisstr = "";
-        for (Integer i : m.getScoreHome()){
+        for (Integer i : m.getScoreVisitors()){
             scoreVisstr += String.valueOf(i);
         }
         scoreVisitors.setText(scoreVisstr);

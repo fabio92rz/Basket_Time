@@ -322,6 +322,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
+                Toast.makeText(LiveActivity.this, "Update effettuato !", Toast.LENGTH_LONG).show();
 
             }
         }

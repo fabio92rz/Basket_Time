@@ -49,10 +49,12 @@ public class Match {
     }
 
     public ArrayList<Integer> getScoreVisitors() {
-        return scoreVisitors;
-    }
 
+        return scoreVisitors;
+
+    }
     public void setScoreVisitors(ArrayList<Integer> scoreVisitors) {
+
         this.scoreVisitors = scoreVisitors;
     }
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/list_row_selector"
     android:padding="8dp">
+
 
     <TableRow
         android:id="@+id/homeRow"
@@ -12,7 +12,7 @@
 
         <TextView
             android:id="@+id/teamHome"
-            android:layout_width="150dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:text="Messina"
@@ -27,16 +27,10 @@
             android:text="0"
             android:textColor="#000000"
             android:textSize="20sp" />
-    </TableRow>
-
-    <TableRow
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/homeRow">
 
         <TextView
             android:id="@+id/teamVis"
-            android:layout_width="150dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/teamHome"
             android:text="Catania"
@@ -52,7 +46,6 @@
             android:textColor="#000000"
             android:textSize="20sp" />
 
+
     </TableRow>
-
-
-</RelativeLayout>
+</TableLayout>

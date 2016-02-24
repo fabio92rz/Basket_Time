@@ -74,21 +74,22 @@ public class partitelive extends AppCompatActivity implements View.OnClickListen
 
                             JSONObject json = matches.getJSONObject(i);
 
-                            teamHome.add(json.getString(ConfigActivity.TAG_HOME_TEAM));
-                            teamVis.add(json.getString(ConfigActivity.TAG_VISITOR_TEAM));
-                            scoreTeamHome.add(json.getInt(ConfigActivity.TAG_SCORE_HOME));
-                            scoreTeamVis.add(json.getInt(ConfigActivity.TAG_VISITOR_TEAM));
+                            teamHome.add(json.getString(ConfigActivity.TAG_HOME_TEAM_ID));
+                            teamVis.add(json.getString(ConfigActivity.TAG_VISITOR_TEAM_ID));
+                            //scoreTeamHome.add(json.getInt(ConfigActivity.TAG_SCORE_HOME));
+                            //scoreTeamVis.add(json.getInt(ConfigActivity.TAG_SCORE_VISITOR));
 
 
                             Log.d("prova match", "match =" + teamHome);
+                            Log.d("prova score", "score = " + scoreTeamHome);
                         }
 
                         Match match = new Match(teamHome, teamVis, scoreTeamHome, scoreTeamVis);
 
                         match.setHomeTeam(teamHome);
                         match.setScoreHome(scoreTeamHome);
-                        match.setVisitorTeam(teamVis);
-                        match.setScoreVisitors(scoreTeamVis);
+                        //match.setVisitorTeam(teamVis);
+                        //match.setScoreVisitors(scoreTeamVis);
 
                         matchList.add(match);
 
@@ -99,6 +100,7 @@ public class partitelive extends AppCompatActivity implements View.OnClickListen
                     }
 
                 gameslist.setAdapter(adapter);
+
                 }
 
         }, new Response.ErrorListener() {

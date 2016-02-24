@@ -26,6 +26,8 @@ public class ConfigActivity {
     public static final String TAG_CURRENT_ID ="id_game";
     public static final String TAG_HOME_TEAM = "name";
     public static final String TAG_VISITOR_TEAM = "name";
+    public static final String TAG_HOME_TEAM_ID = "homeTeam";
+    public static final String TAG_VISITOR_TEAM_ID = "visitorTeam";
     public static final String TAG_ARENA = "arena";
 
     //Keys per Email e Password come definito nel file prova.php
