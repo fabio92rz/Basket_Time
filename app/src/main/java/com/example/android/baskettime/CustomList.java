@@ -50,7 +50,10 @@ public class CustomList extends BaseAdapter {
             convertView = inflater.inflate(R.layout.row, null);
 
         TextView teamHome = (TextView) convertView.findViewById(R.id.teamHome);
+        TextView scorehome = (TextView) convertView.findViewById(R.id.homeScore);
         TextView teamVis = (TextView) convertView.findViewById(R.id.teamVis);
+        TextView scoreVisitors = (TextView) convertView.findViewById(R.id.visitorScore);
+
 
         // Prendo i dati dei march per la riga
         Match m = matchItems.get(position);
@@ -68,6 +71,20 @@ public class CustomList extends BaseAdapter {
             visTeamStr += str + " ";
         }
         teamVis.setText(visTeamStr);
+
+        //Prendo i risultati delle partite casalinghe
+        String scoreHomestr = "";
+        for (Integer i : m.getScoreHome()){
+            scoreHomestr += String.valueOf(i);
+        }
+        scorehome.setText(scoreHomestr);
+
+        //Prendo i risultati delle partite in trasferta
+        String scoreVisstr = "";
+        for (Integer i : m.getScoreHome()){
+            scoreVisstr += String.valueOf(i);
+        }
+        scoreVisitors.setText(scoreVisstr);
 
         return convertView;
     }

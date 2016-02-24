@@ -1,12 +1,16 @@
 package com.example.android.baskettime;
 
+import android.content.Intent;
 import android.graphics.ColorFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ListView;
@@ -23,21 +27,28 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 
 /**
  * Created by Fabio on 10/02/2016.
  */
-public class partitelive extends AppCompatActivity implements View.OnClickListener {
+public class partitelive extends AppCompatActivity implements View.OnClickListener, ListView.OnItemSelectedListener {
 
     private List<Match> matchList = new ArrayList<Match>();
     private ListView gameslist;
     private CustomList adapter;
+    public Toolbar toolbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history2);
+        setTitle("Storico Partite");
+
+        //Inizializzo la Toolbar e la inserisco nell'actionbar
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         gameslist = (ListView) findViewById(R.id.game_list);
         adapter = new CustomList(this, matchList);
@@ -56,6 +67,8 @@ public class partitelive extends AppCompatActivity implements View.OnClickListen
                         JSONArray matches = j.getJSONArray(ConfigActivity.JSON_GAMES_TAG);
                         ArrayList<String> teamHome = new ArrayList<String>();
                         ArrayList<String> teamVis = new ArrayList<String>();
+                        ArrayList<Integer> scoreTeamHome = new ArrayList<Integer>();
+                        ArrayList<Integer> scoreTeamVis = new ArrayList<Integer>();
 
                         for (int i = 0; i<matches.length(); i++){
 
@@ -63,14 +76,19 @@ public class partitelive extends AppCompatActivity implements View.OnClickListen
 
                             teamHome.add(json.getString(ConfigActivity.TAG_HOME_TEAM));
                             teamVis.add(json.getString(ConfigActivity.TAG_VISITOR_TEAM));
+                            scoreTeamHome.add(json.getInt(ConfigActivity.TAG_SCORE_HOME));
+                            scoreTeamVis.add(json.getInt(ConfigActivity.TAG_VISITOR_TEAM));
+
 
                             Log.d("prova match", "match =" + teamHome);
                         }
 
-                        Match match = new Match(teamHome, teamVis);
+                        Match match = new Match(teamHome, teamVis, scoreTeamHome, scoreTeamVis);
 
                         match.setHomeTeam(teamHome);
-                        match.setHomeTeam(teamVis);
+                        match.setScoreHome(scoreTeamHome);
+                        match.setVisitorTeam(teamVis);
+                        match.setScoreVisitors(scoreTeamVis);
 
                         matchList.add(match);
 
@@ -103,9 +121,20 @@ public class partitelive extends AppCompatActivity implements View.OnClickListen
         return true;
     }
 
-
     @Override
     public void onClick(View v) {
+
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
 
     }
 }

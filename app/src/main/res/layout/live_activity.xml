@@ -196,7 +196,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginLeft="20dp"
                 android:background="@drawable/custom_button"
-                android:text="Start!"
+                android:text="Update !"
                 android:textAllCaps="false" />
 
             <Button

@@ -37,8 +37,8 @@ public class ConfigActivity {
     public static final String KEY_TEAM2 = "team";
     public static final String KEY_VISITOR_TEAM = "id_home_visitor";
     public static final String KEY_HOME_TEAM = "id_home_team";
-    public static final String KEY_SCORE_HOME = "final_score_home";
-    public static final String KEY_SCORE_VISITOR = "final_score_visitor";
+    public static final String TAG_SCORE_HOME = "final_score_home";
+    public static final String TAG_SCORE_VISITOR = "final_score_visitor";
 
 
     //Se il Server risponde e quindi il login è andato bene

@@ -5,26 +5,54 @@
     android:background="@drawable/list_row_selector"
     android:padding="8dp">
 
-    <LinearLayout
+    <TableRow
+        android:id="@+id/homeRow"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/teamHome"
-            android:textSize="20sp"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:text="prova" />
+            android:text="Messina"
+            android:textSize="20sp"
+            android:textColor="#039be5"
+            android:layout_marginRight="20dp"/>
+
+        <TextView
+            android:id="@+id/homeScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="#000000"
+            android:textSize="20sp" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/homeRow">
 
         <TextView
             android:id="@+id/teamVis"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/teamHome"
+            android:text="Catania"
             android:textSize="20sp"
+            android:textColor="#F44336"
+            android:layout_marginRight="20dp"/>
+
+        <TextView
+            android:id="@+id/visitorScore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="prova2"
-            android:layout_below="@id/teamHome"/>
+            android:text="0"
+            android:textColor="#000000"
+            android:textSize="20sp" />
 
-    </LinearLayout>
+    </TableRow>
+
+
 </RelativeLayout>

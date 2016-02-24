@@ -102,8 +102,6 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
     private TextView scoreViewVisitor;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -291,7 +289,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         gt.execute();
     }
 
-    private void insertQuarter(){
+    private void insertQuarter() {
 
         SharedPreferences sharedPreferences1 = getSharedPreferences(ConfigActivity.TAG_ID_GAME, Context.MODE_PRIVATE);
 
@@ -302,7 +300,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
         Log.d("String get quarter", "=" + getQuarter);
 
-        class insertQuarter extends AsyncTask<Void, Void, String>{
+        class insertQuarter extends AsyncTask<Void, Void, String> {
 
 
             @Override
@@ -383,25 +381,25 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
     public void subOne(View v) {
         if (scoreTeamHm > 0)
             scoreTeamHm -= 1;
-            scoreView.setText(String.valueOf(scoreTeamHm));
+        scoreView.setText(String.valueOf(scoreTeamHm));
     }
 
     public void subOnePointVis(View v) {
         if (scoreTeamVis > 0)
             scoreTeamVis -= 1;
-            scoreViewVisitor.setText(String.valueOf(scoreTeamVis));
+        scoreViewVisitor.setText(String.valueOf(scoreTeamVis));
     }
 
     public void addQuarter(View v) {
         if (quarter >= 1 && quarter <= 3)
             quarter += 1;
-            quarterView.setText(String.valueOf(quarter) + "°");
+        quarterView.setText(String.valueOf(quarter) + "°");
     }
 
     public void subOneQuart(View v) {
         if (quarter > 1)
             quarter -= 1;
-            quarterView.setText(String.valueOf(quarter)+ "°");
+        quarterView.setText(String.valueOf(quarter) + "°");
     }
 
     //Reset Punteggi
@@ -413,7 +411,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
         scoreView.setText(String.valueOf(scoreTeamHm));
         scoreViewVisitor.setText(String.valueOf(scoreTeamVis));
-        quarterView.setText(String.valueOf(quarter)+ "°");
+        quarterView.setText(String.valueOf(quarter) + "°");
     }
 
     //Funzione Logout
@@ -467,81 +465,82 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
             logout();
         }
 
-        if (v == updateResult){
+        if (v == updateResult) {
             insertQuarter();
         }
     }
 
-    /**
-     * public void loadImagefromGallery(View view) {
-     * <p/>
-     * //Creo l'intento per aprire un'applicazione di gestione d'immagini
-     * Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-     * //Lancio l'intento
-     * startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
-     * }
-     * <p/>
-     * public void getIMGSize(Uri uri) {
-     * BitmapFactory.Options options = new BitmapFactory.Options();
-     * options.inJustDecodeBounds = true;
-     * BitmapFactory.decodeFile(new File(uri.getPath()).getAbsolutePath(), options);
-     * imageHeight = options.outHeight;
-     * imageWidth = options.outWidth;
-     * }
-     *
-     * @Override protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
-     * super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-     * switch (requestCode) {
-     * case 1:
-     * if (resultCode == RESULT_OK) {
-     * Uri selectedImage = imageReturnedIntent.getData();
-     * try {
-     * //Inizializzo l'immagine
-     * CircleImageView imgView = (CircleImageView) findViewById(R.id.profile_image);
-     * getIMGSize(selectedImage);
-     * <p/>
-     * //Ruoto l'immagine, in verticale non risulta giusta l'orientamento
-     * imgView.setImageBitmap(decodeUri(selectedImage));
-     * imgView.setPivotX(imgView.getWidth() / 2);
-     * imgView.setPivotY(imgView.getHeight() / 2);
-     * imgView.setRotation(270);
-     * <p/>
-     * <p/>
-     * } catch (FileNotFoundException e) {
-     * <p/>
-     * //In caso di errore
-     * e.printStackTrace();
-     * }
-     * <p/>
-     * }
-     * }
-     * }
-     * <p/>
-     * private Bitmap decodeUri(Uri selectedImage) throws FileNotFoundException {
-     * <p/>
-     * //Metodo per scaling dell'immagine
-     * BitmapFactory.Options o = new BitmapFactory.Options();
-     * o.inJustDecodeBounds = true;
-     * BitmapFactory.decodeStream(
-     * getContentResolver().openInputStream(selectedImage), null, o);
-     * <p/>
-     * //Massima dimensione consentita
-     * final int REQUIRED_SIZE = 100;
-     * <p/>
-     * int width_tmp = o.outWidth, height_tmp = o.outHeight;
-     * int scale = 1;
-     * while (true) {
-     * if (width_tmp / 2 < REQUIRED_SIZE || height_tmp / 2 < REQUIRED_SIZE) {
-     * break;
-     * }
-     * width_tmp /= 2;
-     * height_tmp /= 2;
-     * scale *= 2;
-     * }
-     * <p/>
-     * BitmapFactory.Options o2 = new BitmapFactory.Options();
-     * o2.inSampleSize = scale;
-     * return BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o2);
-     * }
-     **/
+
+    public void loadImagefromGallery(View view) {
+
+        //Creo l'intento per aprire un'applicazione di gestione d'immagini
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        //Lancio l'intento
+        startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
+    }
+
+    public void getIMGSize(Uri uri) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(new File(uri.getPath()).getAbsolutePath(), options);
+        imageHeight = options.outHeight;
+        imageWidth = options.outWidth;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+        switch (requestCode) {
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    Uri selectedImage = imageReturnedIntent.getData();
+                    try {
+                        //Inizializzo l'immagine
+                        CircleImageView imgView = (CircleImageView) findViewById(R.id.profile_image);
+                        getIMGSize(selectedImage);
+
+                        //Ruoto l'immagine, in verticale non risulta giusta l'orientamento
+                        imgView.setImageBitmap(decodeUri(selectedImage));
+                        imgView.setPivotX(imgView.getWidth() / 2);
+                        imgView.setPivotY(imgView.getHeight() / 2);
+                        imgView.setRotation(270);
+
+
+                    } catch (FileNotFoundException e) {
+
+                        //In caso di errore
+                        e.printStackTrace();
+                    }
+
+                }
+        }
+    }
+
+    private Bitmap decodeUri(Uri selectedImage) throws FileNotFoundException {
+
+        //Metodo per scaling dell'immagine
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeStream(
+                getContentResolver().openInputStream(selectedImage), null, o);
+
+        //Massima dimensione consentita
+        final int REQUIRED_SIZE = 100;
+
+        int width_tmp = o.outWidth, height_tmp = o.outHeight;
+        int scale = 1;
+        while (true) {
+            if (width_tmp / 2 < REQUIRED_SIZE || height_tmp / 2 < REQUIRED_SIZE) {
+                break;
+            }
+            width_tmp /= 2;
+            height_tmp /= 2;
+            scale *= 2;
+        }
+
+        BitmapFactory.Options o2 = new BitmapFactory.Options();
+        o2.inSampleSize = scale;
+        return BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o2);
+    }
+
 }
