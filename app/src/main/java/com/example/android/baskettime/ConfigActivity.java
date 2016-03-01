@@ -29,6 +29,10 @@ public class ConfigActivity {
     public static final String TAG_HOME_TEAM_ID = "homeTeam";
     public static final String TAG_VISITOR_TEAM_ID = "visitorTeam";
     public static final String TAG_ARENA = "arena";
+    public static final String TAG_LOGIN = "login";
+    public static final String TAG_NAME = "name";
+    public static final String TAG_SURNAME = "surname";
+    public static final String TAG_STATUS = "status";
 
     //Keys per Email e Password come definito nel file prova.php
     public static final String KEY_EMAIL = "email";
@@ -53,6 +57,7 @@ public class ConfigActivity {
 
     //Questo verrà usato per conservare l'email dell'utente corrente
     public static final String EMAIL_SHARED_PREF = "email";
+    public static final String NAME_SURNAME_PREF = "nameSurname";
 
     //Userò questa variabile booleana nelle Shared Preference pre seguire se l'utente è dentro o no
     public static final String LOGGEDIN_SHARED_PREF = "loggedin";

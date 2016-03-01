@@ -54,29 +54,31 @@ import org.json.JSONObject;
 
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by fabio on 11/11/2015.
  */
-public class HistoryActivity extends AppCompatActivity implements View.OnClickListener {
+public class HistoryActivity extends AppCompatActivity implements View.OnClickListener, ListView.OnItemSelectedListener {
 
     //TextView per i dati dell'utente
     private TextView tvEmail;
-    private JSONArray games;
-    private TextView teamHome;
-    private TextView scoreHome;
-    private TextView scoreVisitor;
-    private TextView teamVisitor;
+    private TextView tvNameSurname;
 
     //Bottone per il logout
     private Button logoutButton;
     private FloatingActionButton newgame;
 
+    private List<Match> matchList = new ArrayList<Match>();
+    private ListView gameslist;
+    private CustomList adapter;
 
-    private LinearLayout mLayout0;
+
+    /**private LinearLayout mLayout0;
     private LinearLayout mLayout1;
-    private LinearLayout mLayout2;
+    private LinearLayout mLayout2;**/
 
     private Toolbar toolbar;
     private NavigationView navigationView;
@@ -86,16 +88,15 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_history);
+        setContentView(R.layout.activity_history2);
         setTitle("Storico Partite");
 
-        teamHome = (TextView) findViewById(R.id.team_home_text);
-        scoreHome = (TextView) findViewById(R.id.homeScore);
-        teamVisitor = (TextView) findViewById(R.id.team_visitors_text);
-        scoreVisitor = (TextView) findViewById(R.id.visitorScore);
 
         //Creo un inflater per inflazionare il layout dell'header
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        gameslist = (ListView) findViewById(R.id.game_list);
+        adapter = new CustomList(this, matchList);
 
         //Inizializzo il Bottone per il logout
         logoutButton = (Button) findViewById(R.id.logout_button);
@@ -111,6 +112,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         //Catturo i dati e li inserisco nell'header
         SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         String email = sharedPreferences.getString(ConfigActivity.EMAIL_SHARED_PREF, "Not Available");
+        String nameSurname = sharedPreferences.getString(ConfigActivity.NAME_SURNAME_PREF, "Not Available");
 
         //Inizializzo la NavigationView, utilizzata per il drawer
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -125,6 +127,9 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         //Inizializzo ed imposto la mail della persona loggata
         tvEmail = (TextView) vi.findViewById(R.id.email_header);
         tvEmail.setText(email);
+
+        tvNameSurname = (TextView) vi.findViewById(R.id.username_header);
+        tvNameSurname.setText(nameSurname);
 
         //Aggiungo la View
         navigationView.addHeaderView(vi);
@@ -163,14 +168,12 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                         startActivity(championship);
                         overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
 
-                    case R.id.storico:
-                        Intent prova = new Intent(HistoryActivity.this, partitelive.class);
-                        startActivity(prova);
-                        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
                 }
                 return true;
             }
         });
+
+
 
         //Inizializza il drawer layout e il Toggle
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -196,7 +199,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         actionBarDrawerToggle.syncState();
 
         //Inizializzo i tre layout
-        mLayout0 = (LinearLayout) findViewById(R.id.linear_layout0);
+        /**mLayout0 = (LinearLayout) findViewById(R.id.linear_layout0);
         mLayout1 = (LinearLayout) findViewById(R.id.linear_layout1);
         mLayout2 = (LinearLayout) findViewById(R.id.linear_layout2);
 
@@ -222,64 +225,71 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
             public void onClick(View v) {
                 startActivity(new Intent(HistoryActivity.this, Popup0Activity.class));
             }
+        });**/
+
+        StringRequest matchReq = new StringRequest(ConfigActivity.GET_GAME, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                JSONObject j = null;
+
+                try {
+
+                    j = new JSONObject(response);
+
+                    JSONArray matches = j.getJSONArray(ConfigActivity.JSON_GAMES_TAG);
+                    ArrayList<String> teamHome = new ArrayList<String>();
+                    ArrayList<String> teamVis = new ArrayList<String>();
+                    ArrayList<Integer> scoreTeamHome = new ArrayList<Integer>();
+                    ArrayList<Integer> scoreTeamVis = new ArrayList<Integer>();
+
+                    for (int i = 0; i<matches.length(); i++){
+
+                        JSONObject json = matches.getJSONObject(i);
+
+                        teamHome.add(json.getString(ConfigActivity.TAG_HOME_TEAM_ID));
+                        teamVis.add(json.getString(ConfigActivity.TAG_VISITOR_TEAM_ID));
+                        scoreTeamHome.add(json.getInt(ConfigActivity.TAG_SCORE_HOME));
+                        scoreTeamVis.add(json.getInt(ConfigActivity.TAG_SCORE_VISITOR));
+
+
+                        Log.d("Squadra Casalinga", "squadra " + teamHome);
+                        Log.d("Squadra Ospite", "squadra " + teamVis);
+                        Log.d("Punteggio squadra Casa", "punteggio " + scoreTeamHome);
+                        Log.d("Punteggio squadra Ospi", "punteggio " + scoreTeamVis);
+                    }
+
+                    Match match = new Match(teamHome, teamVis, scoreTeamHome, scoreTeamVis);
+
+                    match.setHomeTeam(teamHome);
+                    match.setScoreHome(scoreTeamHome);
+                    match.setVisitorTeam(teamVis);
+                    match.setScoreVisitors(scoreTeamVis);
+
+                    matchList.add(match);
+
+                    Log.d("prova match", "match =" + matchList);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                gameslist.setAdapter(adapter);
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
         });
-
-        getGames();
-
-
-    }
-
-    private void getGames() {
-        StringRequest stringRequest = new StringRequest(ConfigActivity.GET_GAME,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                        JSONObject j = null;
-
-                        try {
-                            j = new JSONObject(response);
-                            games = j.getJSONArray(ConfigActivity.JSON_GAMES_TAG);
-                            String teamhome = "";
-                            String teamvis = "";
-
-                            for (int i = 0; i < games.length(); i++) {
-
-                                try {
-
-                                    JSONObject json = games.getJSONObject(i);
-
-                                    teamhome =json.getString(ConfigActivity.TAG_HOME_TEAM);
-                                    teamvis = json.getString(ConfigActivity.TAG_VISITOR_TEAM);
-
-                                    Log.d("TeamHome", "getString" + teamhome);
-                                    teamHome.setText(teamhome);
-                                    teamVisitor.setText(teamvis);
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
-                            }
-
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                    }
-                });
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
-        requestQueue.add(stringRequest);
-    }
+        requestQueue.add(matchReq);
 
+    }
 
     //Funzione Logout
     private void logout() {
@@ -344,6 +354,16 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
             startActivity(newgame);
             overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
         }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }
 

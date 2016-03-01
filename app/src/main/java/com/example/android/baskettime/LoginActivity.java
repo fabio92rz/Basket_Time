@@ -141,6 +141,35 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onResponse(String response) {
 
+                /**JSONObject j = null;
+                String name = "";
+                String surname = "";
+                String status = "";
+
+                try {
+                    j = new JSONObject(response);
+
+                    JSONArray login = j.getJSONArray(ConfigActivity.TAG_LOGIN);
+
+                    for (int i = 0; i < login.length(); i++) {
+
+                        try {
+                            JSONObject jsonObject = login.getJSONObject(i);
+
+                            name = jsonObject.getString(ConfigActivity.TAG_NAME);
+                            surname = jsonObject.getString(ConfigActivity.TAG_SURNAME);
+                            status = jsonObject.getString(ConfigActivity.TAG_STATUS);
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }**/
+
                 //Se riceviamo success dal server
                 if (response.equalsIgnoreCase(ConfigActivity.LOGIN_SUCCESS)) {
 
@@ -201,79 +230,79 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     /**public List readJsonStream(InputStream in) throws IOException {
-        JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
-        try {
-            return readMessagesArray(reader);
-        } finally {
-            reader.close();
-        }
-    }
+     JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+     try {
+     return readMessagesArray(reader);
+     } finally {
+     reader.close();
+     }
+     }
 
-    public List readMessagesArray(JsonReader reader) throws IOException {
+     public List readMessagesArray(JsonReader reader) throws IOException {
 
-        List messages = new ArrayList();
-        reader.beginArray();
+     List messages = new ArrayList();
+     reader.beginArray();
 
-        while (reader.hasNext()) {
+     while (reader.hasNext()) {
 
-            messages.add(readMessage(reader));
-        }
-        reader.endArray();
-        return messages;
-    }
+     messages.add(readMessage(reader));
+     }
+     reader.endArray();
+     return messages;
+     }
 
-    public Message readMessage(JsonReader reader) throws IOException {
+     public Message readMessage(JsonReader reader) throws IOException {
 
-        long id = -1;
-        String status = null;
-        Data data = null;
+     long id = -1;
+     String status = null;
+     Data data = null;
 
-        reader.beginObject();
-        while (reader.hasNext()) {
+     reader.beginObject();
+     while (reader.hasNext()) {
 
-            String jsonkey = reader.nextName();
-            if (jsonkey.equals("status")) {
-                status = reader.nextString();
+     String jsonkey = reader.nextName();
+     if (jsonkey.equals("status")) {
+     status = reader.nextString();
 
-            } else if (jsonkey.equals("data")) {
+     } else if (jsonkey.equals("data")) {
 
-                data = readData(reader);
+     data = readData(reader);
 
-            } else {
-                reader.skipValue();
-            }
-        }
-        reader.endObject();
-        return new Message();
-    }
+     } else {
+     reader.skipValue();
+     }
+     }
+     reader.endObject();
+     return new Message();
+     }
 
-    public Data readData(JsonReader reader) throws IOException {
-        String username = null;
-        String userSurname = null;
-        String userEmail = null;
-        String userPassword = null;
+     public Data readData(JsonReader reader) throws IOException {
+     String username = null;
+     String userSurname = null;
+     String userEmail = null;
+     String userPassword = null;
 
-        reader.beginObject();
-        while (reader.hasNext()) {
+     reader.beginObject();
+     while (reader.hasNext()) {
 
-            String jsonKey = reader.nextName();
-            if (jsonKey.equals("name")) {
-                username = reader.nextString();
+     String jsonKey = reader.nextName();
+     if (jsonKey.equals("name")) {
+     username = reader.nextString();
 
-            } else if (jsonKey.equals("surname")) {
-                userSurname = reader.nextString();
+     } else if (jsonKey.equals("surname")) {
+     userSurname = reader.nextString();
 
-            } else if (jsonKey.equals("email")) {
-                userEmail = reader.nextString();
+     } else if (jsonKey.equals("email")) {
+     userEmail = reader.nextString();
 
-            } else if (jsonKey.equals("password")) {
-                userPassword = reader.nextString();
-            } else {
+     } else if (jsonKey.equals("password")) {
+     userPassword = reader.nextString();
+     } else {
 
-                reader.skipValue();
-            }
-        }
-        reader.endObject();
-        return new Data(username, userSurname, userEmail, userPassword);
-    }**/
+     reader.skipValue();
+     }
+     }
+     reader.endObject();
+     return new Data(username, userSurname, userEmail, userPassword);
+     }**/
 }

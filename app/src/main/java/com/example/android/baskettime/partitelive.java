@@ -76,20 +76,22 @@ public class partitelive extends AppCompatActivity implements View.OnClickListen
 
                             teamHome.add(json.getString(ConfigActivity.TAG_HOME_TEAM_ID));
                             teamVis.add(json.getString(ConfigActivity.TAG_VISITOR_TEAM_ID));
-                            //scoreTeamHome.add(json.getInt(ConfigActivity.TAG_SCORE_HOME));
-                            //scoreTeamVis.add(json.getInt(ConfigActivity.TAG_SCORE_VISITOR));
+                            scoreTeamHome.add(json.getInt(ConfigActivity.TAG_SCORE_HOME));
+                            scoreTeamVis.add(json.getInt(ConfigActivity.TAG_SCORE_VISITOR));
 
 
-                            Log.d("prova match", "match =" + teamHome);
-                            Log.d("prova score", "score = " + scoreTeamHome);
+                            Log.d("Squadra Casalinga", "squadra " + teamHome);
+                            Log.d("Squadra Ospite", "squadra " + teamVis);
+                            Log.d("Punteggio squadra Casa", "punteggio " + scoreTeamHome);
+                            Log.d("Punteggio squadra Ospi", "punteggio " + scoreTeamVis);
                         }
 
                         Match match = new Match(teamHome, teamVis, scoreTeamHome, scoreTeamVis);
 
                         match.setHomeTeam(teamHome);
                         match.setScoreHome(scoreTeamHome);
-                        //match.setVisitorTeam(teamVis);
-                        //match.setScoreVisitors(scoreTeamVis);
+                        match.setVisitorTeam(teamVis);
+                        match.setScoreVisitors(scoreTeamVis);
 
                         matchList.add(match);
 

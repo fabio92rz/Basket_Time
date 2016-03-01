@@ -28,16 +28,19 @@ public class CustomList extends BaseAdapter {
 
     @Override
     public int getCount() {
+
         return matchItems.size();
     }
 
     @Override
     public Object getItem(int location) {
+
         return matchItems.get(location);
     }
 
     @Override
     public long getItemId(int position) {
+
         return position;
     }
 
@@ -75,14 +78,14 @@ public class CustomList extends BaseAdapter {
         //Prendo i risultati delle partite casalinghe
         String scoreHomestr = "";
         for (Integer i : m.getScoreHome()){
-            scoreHomestr += String.valueOf(i);
+            scoreHomestr += i + " - \n";
         }
         scorehome.setText(scoreHomestr);
 
         //Prendo i risultati delle partite in trasferta
         String scoreVisstr = "";
         for (Integer i : m.getScoreVisitors()){
-            scoreVisstr += String.valueOf(i);
+            scoreVisstr += i + "\n";
         }
         scoreVisitors.setText(scoreVisstr);
 

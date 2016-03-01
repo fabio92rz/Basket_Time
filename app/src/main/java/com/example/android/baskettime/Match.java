@@ -24,22 +24,27 @@ public class Match {
     }
 
     public ArrayList<String> getHomeTeam() {
+
         return homeTeam;
     }
 
     public void setHomeTeam(ArrayList<String> homeTeam) {
+
         this.homeTeam = homeTeam;
     }
 
     public ArrayList<String> getVisitorTeam() {
+
         return visitorTeam;
     }
 
     public void setVisitorTeam(ArrayList<String> visitorTeam) {
+
         this.visitorTeam = visitorTeam;
     }
 
     public ArrayList<Integer> getScoreHome() {
+
         return scoreHome;
     }
 
