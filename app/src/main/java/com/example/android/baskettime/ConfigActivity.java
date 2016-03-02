@@ -6,7 +6,7 @@ package com.example.android.baskettime;
 public class ConfigActivity {
 
     //Url vari
-    public static final String LOGIN_URL = "http://95.85.23.84/prova2.php";
+    public static final String LOGIN_URL = "http://95.85.23.84/login2.php";
     public static final String INSERT_CHAMP = "http://95.85.23.84/insertChamp2.php";
     public static final String INSERT_TEAMS = "http://95.85.23.84/insertTeams.php";
     public static final String GET_TEAMS_URL = "http://95.85.23.84/getTeams.php";
@@ -29,10 +29,11 @@ public class ConfigActivity {
     public static final String TAG_HOME_TEAM_ID = "homeTeam";
     public static final String TAG_VISITOR_TEAM_ID = "visitorTeam";
     public static final String TAG_ARENA = "arena";
-    public static final String TAG_LOGIN = "login";
+    public static final String TAG_LOGIN = "user";
     public static final String TAG_NAME = "name";
     public static final String TAG_SURNAME = "surname";
     public static final String TAG_STATUS = "status";
+    public static final String TAG_QUARTER = "quarter";
 
     //Keys per Email e Password come definito nel file prova.php
     public static final String KEY_EMAIL = "email";

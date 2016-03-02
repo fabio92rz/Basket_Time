@@ -79,6 +79,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
     //TextView per i dati dell'utente
     private TextView tvEmail;
+    private TextView tvNameSurname;
 
     //Bottone per il logout
     private Button logoutButton;
@@ -129,6 +130,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         //Catturo i dati e li inserisco nell'header
         SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         String email = sharedPreferences.getString(ConfigActivity.EMAIL_SHARED_PREF, "Not Available");
+        String nameSurname = sharedPreferences.getString(ConfigActivity.NAME_SURNAME_PREF, "Not Available");
         Log.d("Live Activity", "getString()" + email);
 
         //Inizializzo la NavigationView, utilizzata per il drawer
@@ -144,6 +146,9 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         //Inizializzo ed imposto la mail della persona loggata
         tvEmail = (TextView) vi.findViewById(R.id.email_header);
         tvEmail.setText(email);
+
+        tvNameSurname = (TextView) vi.findViewById(R.id.username_header);
+        tvNameSurname.setText(nameSurname);
 
         quarterView = (TextView) findViewById(R.id.quarto_textView);
         quarterView.setText(String.valueOf(quarter) + "°");
@@ -322,7 +327,34 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-                Toast.makeText(LiveActivity.this, "Update effettuato !", Toast.LENGTH_LONG).show();
+
+                JSONObject j = null;
+                String uploadOk = "";
+
+                try {
+
+                    j = new JSONObject(s);
+                    JSONArray upload = j.getJSONArray(ConfigActivity.TAG_QUARTER);
+
+                    for (int i = 0; i<upload.length(); i++){
+
+                        try {
+
+                            JSONObject jsonObject = upload.getJSONObject(i);
+                            uploadOk = jsonObject.getString(ConfigActivity.TAG_STATUS);
+
+                        } catch (JSONException e){
+
+                            e.printStackTrace();
+                        }
+                    }
+
+                }catch (JSONException e){
+
+                    e.printStackTrace();
+                }
+
+                Toast.makeText(LiveActivity.this, uploadOk, Toast.LENGTH_LONG).show();
 
             }
         }

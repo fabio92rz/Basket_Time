@@ -68,6 +68,7 @@ import com.android.volley.toolbox.Volley;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.lang3.text.WordUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -141,7 +142,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onResponse(String response) {
 
-                /**JSONObject j = null;
+                JSONObject j = null;
                 String name = "";
                 String surname = "";
                 String status = "";
@@ -168,10 +169,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }**/
+                }
 
                 //Se riceviamo success dal server
-                if (response.equalsIgnoreCase(ConfigActivity.LOGIN_SUCCESS)) {
+                if (status.equalsIgnoreCase(ConfigActivity.LOGIN_SUCCESS)) {
 
                     //Creo una Shared Preference
                     SharedPreferences sharedPreferences = LoginActivity.this.getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
@@ -182,6 +183,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     //Aggiungo i valori all'editor
                     editor.putBoolean(ConfigActivity.LOGGEDIN_SHARED_PREF, true);
                     editor.putString(ConfigActivity.EMAIL_SHARED_PREF, email);
+                    editor.putString(ConfigActivity.NAME_SURNAME_PREF, WordUtils.capitalize(name) + " " + WordUtils.capitalize(surname));
 
                     //Salvo i valori
                     editor.commit();
@@ -228,81 +230,4 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             login();
         }
     }
-
-    /**public List readJsonStream(InputStream in) throws IOException {
-     JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
-     try {
-     return readMessagesArray(reader);
-     } finally {
-     reader.close();
-     }
-     }
-
-     public List readMessagesArray(JsonReader reader) throws IOException {
-
-     List messages = new ArrayList();
-     reader.beginArray();
-
-     while (reader.hasNext()) {
-
-     messages.add(readMessage(reader));
-     }
-     reader.endArray();
-     return messages;
-     }
-
-     public Message readMessage(JsonReader reader) throws IOException {
-
-     long id = -1;
-     String status = null;
-     Data data = null;
-
-     reader.beginObject();
-     while (reader.hasNext()) {
-
-     String jsonkey = reader.nextName();
-     if (jsonkey.equals("status")) {
-     status = reader.nextString();
-
-     } else if (jsonkey.equals("data")) {
-
-     data = readData(reader);
-
-     } else {
-     reader.skipValue();
-     }
-     }
-     reader.endObject();
-     return new Message();
-     }
-
-     public Data readData(JsonReader reader) throws IOException {
-     String username = null;
-     String userSurname = null;
-     String userEmail = null;
-     String userPassword = null;
-
-     reader.beginObject();
-     while (reader.hasNext()) {
-
-     String jsonKey = reader.nextName();
-     if (jsonKey.equals("name")) {
-     username = reader.nextString();
-
-     } else if (jsonKey.equals("surname")) {
-     userSurname = reader.nextString();
-
-     } else if (jsonKey.equals("email")) {
-     userEmail = reader.nextString();
-
-     } else if (jsonKey.equals("password")) {
-     userPassword = reader.nextString();
-     } else {
-
-     reader.skipValue();
-     }
-     }
-     reader.endObject();
-     return new Data(username, userSurname, userEmail, userPassword);
-     }**/
 }
