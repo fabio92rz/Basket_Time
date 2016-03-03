@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_below="@id/toolbar">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -19,8 +20,8 @@
             android:orientation="vertical"
             android:paddingBottom="20dp"
             android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:paddingTop="20dp">
+            android:paddingTop="20dp"
+            android:paddingRight="5dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -28,7 +29,6 @@
                 android:paddingBottom="10dp"
                 android:paddingLeft="5dp"
                 android:layout_marginLeft="5dp"
-                android:paddingTop="80dp"
                 android:text="Team Home"
                 android:textColor="#039be5"
                 android:textSize="20dp" />
@@ -43,10 +43,10 @@
             android:id="@+id/divisore"
             android:layout_width="1dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="300dp"
+            android:layout_marginBottom="370dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="70dp"
+            android:layout_marginTop="15dp"
             android:background="@android:color/black" />
 
         <LinearLayout
@@ -63,7 +63,6 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="10dp"
                 android:paddingRight="5dp"
-                android:paddingTop="80dp"
                 android:layout_marginRight="5dp"
                 android:text="Team Visitor"
                 android:textColor="#F44336"
@@ -76,13 +75,38 @@
         </LinearLayout>
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/champ_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Seleziona il campionato"
+        android:layout_alignParentLeft="true"
+        android:textSize="18sp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="5dp"
+        android:textColor="#000000"
+        android:layout_centerInParent="true"/>
+
+    <Spinner
+        android:id="@+id/champ_spinner"
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/champ_select"
+        android:layout_alignParentLeft="true"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="10dp">
+    </Spinner>
+
     <Button
         android:id="@+id/insert_button"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/champ_spinner"
         android:layout_centerInParent="true"
-        android:layout_marginBottom="240dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/custom_button"
         android:text="Ok !"
         android:textAllCaps="false" />

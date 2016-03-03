@@ -42,13 +42,15 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
 
     private Spinner spinnerHome;
     private Spinner spinnerVisitor;
+    private Spinner spinnerChampionship;
 
     private ArrayList<String> teamHome;
     private ArrayList<String> teamVisitor;
+    private ArrayList<String> championship;
 
     int id_game;
 
-    private JSONArray result;
+    private JSONObject j;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,14 +66,18 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
 
         teamHome = new ArrayList<String>();
         teamVisitor = new ArrayList<String>();
+        championship = new ArrayList<String>();
 
         insertButton = (Button) findViewById(R.id.insert_button);
+
         spinnerHome = (Spinner) findViewById(R.id.spinner_team_home);
         spinnerVisitor = (Spinner) findViewById(R.id.spinner_team_visitor);
+        spinnerChampionship = (Spinner) findViewById(R.id.champ_spinner);
 
         insertButton.setOnClickListener(this);
         spinnerHome.setOnItemSelectedListener(this);
         spinnerVisitor.setOnItemSelectedListener(this);
+        spinnerChampionship.setOnItemSelectedListener(this);
 
 
         getData();
@@ -96,12 +102,12 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
                     @Override
                     public void onResponse(String response) {
 
-                        JSONObject j = null;
                         try {
                             j = new JSONObject(response);
 
-                            result = j.getJSONArray(ConfigActivity.JSON_ARRAY);
-                            getTeams(result);
+                            //result = j.getJSONArray(ConfigActivity.JSON_ARRAY);
+                            getTeams(j);
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -119,48 +125,86 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
         requestQueue.add(stringRequest);
     }
 
-    private void getTeams(JSONArray j) {
+    private void getTeams(JSONObject response) {
+
+        try {
+
+        JSONArray j = response.getJSONObject(ConfigActivity.JSON_ARRAY).getJSONArray(ConfigActivity.TAG_TEAM);
 
         for (int i = 0; i < j.length(); i++) {
 
-            try {
+
                 JSONObject json = j.getJSONObject(i);
 
                 teamHome.add(json.getString(ConfigActivity.TAG_HOME_TEAM));
+
                 teamVisitor.add(json.getString(ConfigActivity.TAG_VISITOR_TEAM));
-            } catch (JSONException e) {
-                e.printStackTrace();
+
             }
+
+        j = response.getJSONObject(ConfigActivity.JSON_ARRAY).getJSONArray(ConfigActivity.TAG_CHAMP);
+
+        for (int i = 0; i < j.length(); i++) {
+
+
+                JSONObject json = j.getJSONObject(i);
+
+                championship.add(json.getString(ConfigActivity.TAG_SPECIFIC_CHAMP));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
+        spinnerChampionship.setAdapter(new ArrayAdapter<String>(NewGameActivity.this, android.R.layout.simple_spinner_dropdown_item, championship));
         spinnerVisitor.setAdapter(new ArrayAdapter<String>(NewGameActivity.this, android.R.layout.simple_spinner_dropdown_item, teamVisitor));
         spinnerHome.setAdapter(new ArrayAdapter<String>(NewGameActivity.this, android.R.layout.simple_spinner_dropdown_item, teamHome));
     }
 
 
-    private int getID(int position) {
+    private int getTeamsID(int position) {
 
         int id = 0;
 
-
         try {
-            JSONObject json = result.getJSONObject(position);
-            id = json.getInt(ConfigActivity.TAG_ID);
+
+            JSONArray json = j.getJSONObject(ConfigActivity.JSON_ARRAY).getJSONArray(ConfigActivity.TAG_TEAM);
+            JSONObject jsonObject = json.getJSONObject(position);
+            id = jsonObject.getInt(ConfigActivity.TAG_ID);
 
         } catch (JSONException e) {
 
             e.printStackTrace();
         }
         return id;
+    }
 
+    private int getChampID(int position){
+
+        int id = 0;
+
+        try {
+
+            JSONArray json = j.getJSONObject(ConfigActivity.JSON_ARRAY).getJSONArray(ConfigActivity.TAG_CHAMP);
+            JSONObject jsonObject = json.getJSONObject(position);
+
+            id = jsonObject.getInt(ConfigActivity.TAG_ID);
+
+        } catch (JSONException e){
+
+            e.printStackTrace();
+        }
+
+        return id;
     }
 
     private void insertTeams() {
 
-        final String idhome = String.valueOf(getID((int) spinnerHome.getSelectedItemId()));
-        final String idvisitor = String.valueOf(getID((int) spinnerVisitor.getSelectedItemId()));
+        final String idhome = String.valueOf(getTeamsID((int) spinnerHome.getSelectedItemId()));
+        final String idvisitor = String.valueOf(getTeamsID((int) spinnerVisitor.getSelectedItemId()));
+        final String idChamp = String.valueOf(getChampID((int) spinnerChampionship.getSelectedItemId()));
         Log.i("idhome", "getstring" + idhome);
         Log.i("idVisitor", "getstring" + idvisitor);
+        Log.d("Championship", "Get ID" + idChamp);
 
 
         class insertTeams extends AsyncTask<Void, Void, String> {

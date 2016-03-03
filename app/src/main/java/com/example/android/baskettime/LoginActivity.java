@@ -72,6 +72,7 @@ import org.apache.commons.lang3.text.WordUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -79,6 +80,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText eTEmail;
     private EditText eTPassword;
     private Button loginButton;
+
+    TextView guest;
 
     //Definisco la variabile Booleana e la setto false
     private boolean loggedIn = false;
@@ -107,6 +110,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(signup);
             }
         });
+
+        guest = (TextView) findViewById(R.id.guest_tv);
+        guest.setOnClickListener(this);
 
     }
 
@@ -227,7 +233,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         if (v == loginButton) {
+
             login();
         }
+
+        if (v == guest){
+
+            Intent guestactivity = new Intent(LoginActivity.this, GuestActivity.class);
+            startActivity(guestactivity);
+        }
+
+
     }
 }

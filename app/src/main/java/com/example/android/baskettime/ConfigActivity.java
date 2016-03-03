@@ -29,11 +29,14 @@ public class ConfigActivity {
     public static final String TAG_HOME_TEAM_ID = "homeTeam";
     public static final String TAG_VISITOR_TEAM_ID = "visitorTeam";
     public static final String TAG_ARENA = "arena";
+    public static final String TAG_TEAM = "teams";
     public static final String TAG_LOGIN = "user";
     public static final String TAG_NAME = "name";
     public static final String TAG_SURNAME = "surname";
     public static final String TAG_STATUS = "status";
     public static final String TAG_QUARTER = "quarter";
+    public static final String TAG_CHAMP = "championships";
+    public static final String TAG_SPECIFIC_CHAMP = "championship";
 
     //Keys per Email e Password come definito nel file prova.php
     public static final String KEY_EMAIL = "email";

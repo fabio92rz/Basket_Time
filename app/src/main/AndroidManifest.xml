@@ -41,6 +41,9 @@
         <activity
             android:name=".partitelive"></activity>
         <activity
+            android:name=".GuestActivity"></activity>
+
+        <activity
             android:name=".Popup0Activity"
             android:theme="@style/AppTheme.CustomTheme">
         </activity>
