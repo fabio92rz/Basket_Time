@@ -1,59 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:padding="20dp">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-
-    <TableRow
-        android:id="@+id/homeRow"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/teamHome"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="Messina"
-            android:textSize="20sp"
-            android:textColor="#039be5"
-            android:layout_marginRight="20dp"/>
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:divider="?android:attr/dividerHorizontal"
+        android:padding="20dp"
+        android:showDividers="middle">
 
         <TextView
-            android:id="@+id/homeScore"
+            android:id="@+id/champ_history"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
-            android:textColor="#000000"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:text="Campionato"
             android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/visitorScore"
+        <TableRow
+            android:id="@+id/homeRow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
-            android:layout_marginRight="20dp"
-            android:textColor="#000000"
+            android:paddingLeft="55dp">
+
+            <TextView
+                android:id="@+id/teamHome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="20dp"
+                android:text="Messina"
+                android:textColor="#039be5"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/homeScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="#000000"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/visitorScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+
+                android:textColor="#000000"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/teamVis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/teamHome"
+                android:layout_marginLeft="20dp"
+                android:text="Catania"
+                android:textColor="#F44336"
+                android:textSize="20sp" />
+
+
+        </TableRow>
+
+       <!-- <TextView
+            android:id="@+id/champ_history2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="Campionato"
             android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/teamVis"
+        <TableRow
+            android:id="@+id/homeRow2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/teamHome"
-            android:text="Catania"
-            android:textSize="20sp"
-            android:textColor="#F44336"
-            android:layout_marginRight="20dp"/>
+            android:paddingLeft="55dp">
 
-        <TextView
-            android:id="@+id/nquarter_tw"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1°"
-            android:textSize="20sp"/>
+            <TextView
+                android:id="@+id/teamHome2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="20dp"
+                android:text="Messina"
+                android:textColor="#039be5"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/homeScore2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="#000000"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/visitorScore2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="#000000"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/teamVis2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/teamHome"
+                android:layout_marginLeft="20dp"
+                android:text="Catania"
+                android:textColor="#F44336"
+                android:textSize="20sp" />
 
 
-    </TableRow>
-</TableLayout>
+        </TableRow>-->
+    </TableLayout>
+</RelativeLayout>

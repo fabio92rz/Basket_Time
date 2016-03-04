@@ -18,6 +18,7 @@ import java.util.List;
  */
 public class CustomList extends BaseAdapter {
     private Activity activity;
+    TextView championship2;
     private LayoutInflater inflater;
     private List<Match> matchItems;
 
@@ -53,9 +54,15 @@ public class CustomList extends BaseAdapter {
             convertView = inflater.inflate(R.layout.row, null);
 
         TextView teamHome = (TextView) convertView.findViewById(R.id.teamHome);
+        //TextView teamHome2 = (TextView) convertView.findViewById(R.id.teamHome2);
         TextView scorehome = (TextView) convertView.findViewById(R.id.homeScore);
+        //TextView scorehome2 = (TextView) convertView.findViewById(R.id.homeScore2);
         TextView teamVis = (TextView) convertView.findViewById(R.id.teamVis);
+        //TextView teamVis2 = (TextView) convertView.findViewById(R.id.teamVis2);
         TextView scoreVisitors = (TextView) convertView.findViewById(R.id.visitorScore);
+        //TextView scoreVisitors2 = (TextView) convertView.findViewById(R.id.visitorScore2);
+        TextView championship = (TextView) convertView.findViewById(R.id.champ_history);
+        //TextView championship2 = (TextView) convertView.findViewById(R.id.champ_history2);
 
 
         // Prendo i dati dei march per la riga
@@ -78,7 +85,7 @@ public class CustomList extends BaseAdapter {
         //Prendo i risultati delle partite casalinghe
         String scoreHomestr = "";
         for (Integer i : m.getScoreHome()){
-            scoreHomestr += i + " - \n";
+            scoreHomestr += i + " -\n";
         }
         scorehome.setText(scoreHomestr);
 
@@ -88,6 +95,22 @@ public class CustomList extends BaseAdapter {
             scoreVisstr += i + "\n";
         }
         scoreVisitors.setText(scoreVisstr);
+
+        String champ = "";
+        for (String i : m.getChampionship()){
+
+            champ = i;
+
+            if (champ == i){
+
+                championship.setText(champ);
+            }
+
+            else{
+
+                championship2.setText(champ);
+            }
+        }
 
         return convertView;
     }

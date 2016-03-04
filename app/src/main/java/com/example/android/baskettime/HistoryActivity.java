@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -242,6 +243,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                     ArrayList<String> teamVis = new ArrayList<String>();
                     ArrayList<Integer> scoreTeamHome = new ArrayList<Integer>();
                     ArrayList<Integer> scoreTeamVis = new ArrayList<Integer>();
+                    ArrayList<String> champ = new ArrayList<String>();
 
                     for (int i = 0; i<matches.length(); i++){
 
@@ -251,6 +253,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                         teamVis.add(json.getString(ConfigActivity.TAG_VISITOR_TEAM_ID));
                         scoreTeamHome.add(json.getInt(ConfigActivity.TAG_SCORE_HOME));
                         scoreTeamVis.add(json.getInt(ConfigActivity.TAG_SCORE_VISITOR));
+                        champ.add(json.getString(ConfigActivity.TAG_CHAMP_HIST));
 
 
                         Log.d("Squadra Casalinga", "squadra " + teamHome);
@@ -259,16 +262,15 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                         Log.d("Punteggio squadra Ospi", "punteggio " + scoreTeamVis);
                     }
 
-                    Match match = new Match(teamHome, teamVis, scoreTeamHome, scoreTeamVis);
+                    Match match = new Match(teamHome, teamVis, scoreTeamHome, scoreTeamVis, champ);
 
                     match.setHomeTeam(teamHome);
                     match.setScoreHome(scoreTeamHome);
                     match.setVisitorTeam(teamVis);
                     match.setScoreVisitors(scoreTeamVis);
+                    match.setChampionship(champ);
 
                     matchList.add(match);
-
-                    Log.d("prova match", "match =" + matchList);
 
                 } catch (JSONException e) {
                     e.printStackTrace();

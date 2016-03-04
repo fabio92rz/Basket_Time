@@ -32,7 +32,7 @@ import java.util.List;
 
 /**
  * Created by Fabio on 10/02/2016.
- */
+
 public class partitelive extends AppCompatActivity implements View.OnClickListener, ListView.OnItemSelectedListener {
 
     private List<Match> matchList = new ArrayList<Match>();
@@ -141,4 +141,4 @@ public class partitelive extends AppCompatActivity implements View.OnClickListen
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-}
+}**/

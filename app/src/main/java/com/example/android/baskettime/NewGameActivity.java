@@ -104,8 +104,6 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
 
                         try {
                             j = new JSONObject(response);
-
-                            //result = j.getJSONArray(ConfigActivity.JSON_ARRAY);
                             getTeams(j);
 
                         } catch (JSONException e) {
@@ -137,7 +135,6 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
                 JSONObject json = j.getJSONObject(i);
 
                 teamHome.add(json.getString(ConfigActivity.TAG_HOME_TEAM));
-
                 teamVisitor.add(json.getString(ConfigActivity.TAG_VISITOR_TEAM));
 
             }
@@ -230,6 +227,7 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
                 HashMap<String, String> param = new HashMap<>();
                 param.put(ConfigActivity.KEY_HOME_TEAM, idhome);
                 param.put(ConfigActivity.KEY_VISITOR_TEAM, idvisitor);
+                param.put(ConfigActivity.TAG_GAMES_CHAMP, idChamp);
 
                 RequestHandler requestHandler = new RequestHandler();
                 String res = requestHandler.sendPostRequest(ConfigActivity.INSERT_GAMES, param);

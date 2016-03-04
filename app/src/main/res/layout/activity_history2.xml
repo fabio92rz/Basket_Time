@@ -14,7 +14,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            tools:context=".partitalive">
+            tools:context=".partitalive"
+            android:gravity="center_vertical">
 
             <include
                 android:id="@+id/toolbar"
@@ -26,7 +27,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/toolbar"
-                android:listSelector="@drawable/list_row_selector" />
+                android:listSelector="@drawable/list_row_selector"
+                android:layout_centerInParent="true"/>
 
 
             <android.support.design.widget.FloatingActionButton

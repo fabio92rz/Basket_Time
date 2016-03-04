@@ -14,13 +14,16 @@ public class Match {
     private ArrayList<String> homeTeam;
     private ArrayList<String> visitorTeam;
 
+    private ArrayList<String> championship;
 
-    public Match(ArrayList<String> homeTeam, ArrayList<String> visitorTeam, ArrayList<Integer> scoreHome, ArrayList<Integer> scoreVisitors) {
+
+    public Match(ArrayList<String> homeTeam, ArrayList<String> visitorTeam, ArrayList<Integer> scoreHome, ArrayList<Integer> scoreVisitors, ArrayList<String> championship) {
 
         this.homeTeam = homeTeam;
         this.visitorTeam = visitorTeam;
         this.scoreHome = scoreHome;
         this.scoreVisitors = scoreVisitors;
+        this.championship = championship;
     }
 
     public ArrayList<String> getHomeTeam() {
@@ -61,6 +64,16 @@ public class Match {
     public void setScoreVisitors(ArrayList<Integer> scoreVisitors) {
 
         this.scoreVisitors = scoreVisitors;
+    }
+
+    public void setChampionship(ArrayList<String> championship){
+
+        this.championship = championship;
+    }
+
+    public ArrayList<String> getChampionship(){
+
+        return championship;
     }
 
 }
