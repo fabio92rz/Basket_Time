@@ -26,6 +26,10 @@ public class Match {
         this.championship = championship;
     }
 
+    public Match() {
+
+    }
+
     public ArrayList<String> getHomeTeam() {
 
         return homeTeam;

@@ -39,7 +39,7 @@
         <activity
             android:name=".ChampActivity"></activity>
         <activity
-            android:name=".partitelive"></activity>
+            android:name=".recyclerActivity"></activity>
         <activity
             android:name=".GuestActivity"></activity>
 

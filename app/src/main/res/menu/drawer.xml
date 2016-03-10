@@ -21,5 +21,10 @@
             android:icon="@drawable/football"
             android:title="@string/insert_string" />
 
+        <item
+            android:id="@+id/test_recycler"
+            android:checked="false"
+            android:title="@string/prova_listview" />
+
     </group>
 </menu>

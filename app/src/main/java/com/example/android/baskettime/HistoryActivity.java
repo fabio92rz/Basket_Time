@@ -77,9 +77,11 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
     private CustomList adapter;
 
 
-    /**private LinearLayout mLayout0;
-    private LinearLayout mLayout1;
-    private LinearLayout mLayout2;**/
+    /**
+     * private LinearLayout mLayout0;
+     * private LinearLayout mLayout1;
+     * private LinearLayout mLayout2;
+     **/
 
     private Toolbar toolbar;
     private NavigationView navigationView;
@@ -169,11 +171,14 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                         startActivity(championship);
                         overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
 
+                    case R.id.test_recycler:
+                        Intent test = new Intent(HistoryActivity.this, recyclerActivity.class);
+                        startActivity(test);
+
                 }
                 return true;
             }
         });
-
 
 
         //Inizializza il drawer layout e il Toggle
@@ -201,31 +206,28 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
         //Inizializzo i tre layout
         /**mLayout0 = (LinearLayout) findViewById(R.id.linear_layout0);
-        mLayout1 = (LinearLayout) findViewById(R.id.linear_layout1);
-        mLayout2 = (LinearLayout) findViewById(R.id.linear_layout2);
+         mLayout1 = (LinearLayout) findViewById(R.id.linear_layout1);
+         mLayout2 = (LinearLayout) findViewById(R.id.linear_layout2);
 
 
-        //Imposto il click per il layout per aprire il popup
+         //Imposto il click per il layout per aprire il popup
 
-        mLayout0.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(HistoryActivity.this, Popup0Activity.class));
-            }
+         mLayout0.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View v) {
+        startActivity(new Intent(HistoryActivity.this, Popup0Activity.class));
+        }
         });
 
-        mLayout1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(HistoryActivity.this, Popup0Activity.class));
-            }
+         mLayout1.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View v) {
+        startActivity(new Intent(HistoryActivity.this, Popup0Activity.class));
+        }
         });
 
-        mLayout2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(HistoryActivity.this, Popup0Activity.class));
-            }
+         mLayout2.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View v) {
+        startActivity(new Intent(HistoryActivity.this, Popup0Activity.class));
+        }
         });**/
 
         StringRequest matchReq = new StringRequest(ConfigActivity.GET_GAME, new Response.Listener<String>() {
@@ -245,7 +247,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                     ArrayList<Integer> scoreTeamVis = new ArrayList<Integer>();
                     ArrayList<String> champ = new ArrayList<String>();
 
-                    for (int i = 0; i<matches.length(); i++){
+                    for (int i = 0; i < matches.length(); i++) {
 
                         JSONObject json = matches.getJSONObject(i);
 

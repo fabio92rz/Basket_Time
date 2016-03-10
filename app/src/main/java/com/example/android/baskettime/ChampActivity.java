@@ -42,8 +42,8 @@ public class ChampActivity extends AppCompatActivity implements View.OnClickList
     EditText newChampionship;
 
     @Override
-    protected void onCreate(Bundle InsanceState) {
-        super.onCreate(InsanceState);
+    protected void onCreate(Bundle InstanceState) {
+        super.onCreate(InstanceState);
         setContentView(R.layout.activity_champ);
         setTitle("Nuovo Torneo");
 

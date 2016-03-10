@@ -74,5 +74,4 @@ public class ConfigActivity {
     public static final String KEY_SCORE_QUARTER= "nquarter";
     public static final String KEY_ID_CURRENT_MATCH = "id_game";
 
-
 }
