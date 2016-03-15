@@ -1,5 +1,7 @@
 package com.example.android.baskettime;
 
+import android.content.ClipData;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,6 +22,7 @@ public class Games {
     String championship;
     Integer scoreHome;
     Integer scoreVisitor;
+    Integer quarter;
 
     Games() {
 
@@ -41,11 +45,14 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> {
 
     @Override
     public void onBindViewHolder(PersonViewHolder holder, int position) {
-        //holder.champ.setText(matches.get(position).championship);
+
+        holder.champ.setText(matches.get(position).championship);
         holder.teamHome.setText(matches.get(position).teamHome);
         holder.scoreHome.setText(String.valueOf(matches.get(position).scoreHome));
         holder.teamVisitor.setText(matches.get(position).teamVisitor);
         holder.scoreVisitor.setText(String.valueOf(matches.get(position).scoreVisitor));
+        holder.quarter.setText(String.valueOf(matches.get(position).quarter + "°"));
+        holder.cv.setTag(position);
     }
 
     @Override
@@ -62,21 +69,43 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> {
     }
 
     public static class PersonViewHolder extends RecyclerView.ViewHolder {
+
         CardView cv;
+        View click;
         TextView champ;
         TextView teamHome;
         TextView teamVisitor;
         TextView scoreHome;
         TextView scoreVisitor;
+        TextView quarter;
 
-        PersonViewHolder(View itemView) {
+        PersonViewHolder(final View itemView) {
+
             super(itemView);
+
+            click = itemView;
             cv = (CardView) itemView.findViewById(R.id.cv);
-            //champ = (TextView) itemView.findViewById(R.id.championship_cv);
+            quarter = (TextView) itemView.findViewById(R.id.final_quarter);
+            champ = (TextView) itemView.findViewById(R.id.championship_cv);
             teamHome = (TextView) itemView.findViewById(R.id.teamHome_cv);
             teamVisitor = (TextView) itemView.findViewById(R.id.teamVisitor_cv);
             scoreHome = (TextView) itemView.findViewById(R.id.scoreHome_cv);
             scoreVisitor = (TextView) itemView.findViewById(R.id.scoreVisitor_cv);
+
+            click.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    int position = (int) v.getTag();
+
+                    Intent matchDetails = new Intent(v.getContext(), Popup0Activity.class);
+
+                    v.getContext().startActivity(matchDetails);
+                }
+            });
+
+
+
         }
     }
 }

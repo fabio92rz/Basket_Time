@@ -5,15 +5,23 @@
     android:id="@+id/cv"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    card_view:cardElevation="0dp">
+    card_view:cardElevation="5dp"
+    card_view:cardCornerRadius="2dp"
+    card_view:cardUseCompatPadding="true"
+    card_view:cardPreventCornerOverlap="false"
+    card_view:contentPadding="2dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp">
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Campionato"
+            android:id="@+id/championship_cv"
+            android:layout_marginBottom="15dp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -21,13 +29,16 @@
             android:text="Quarto"
             android:textColor="#000000"
             android:textSize="15sp"
+            android:layout_below="@id/championship_cv"
             android:id="@+id/quart"/>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
-            android:text="nquart"
-            android:layout_below="@id/quart"/>
+            android:layout_below="@id/quart"
+            android:id="@+id/final_quarter"
+            android:gravity="center"
+            android:text="1" />
 
         <View
             android:id="@+id/startview"
@@ -36,13 +47,14 @@
             android:layout_height="35dp"
             android:layout_marginRight="5dp"
             android:layout_marginLeft="10dp"
+            android:layout_below="@id/championship_cv"
             android:background="@android:color/black" />
 
         <TextView
+            android:layout_below="@id/championship_cv"
             android:id="@+id/teamHome_cv"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:layout_toRightOf="@id/startview"
             android:textColor="#039be5"
             android:textSize="15sp" />
@@ -52,6 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/teamHome_cv"
+            android:layout_below="@id/championship_cv"
             android:textSize="15sp" />
 
         <TextView

@@ -424,7 +424,6 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void addQuarter(View v) {
-        if (quarter >= 1 && quarter <= 3)
             quarter += 1;
         quarterView.setText(String.valueOf(quarter) + "°");
     }

@@ -23,6 +23,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
 import android.util.Log;
@@ -64,6 +66,10 @@ import java.util.List;
  */
 public class HistoryActivity extends AppCompatActivity implements View.OnClickListener, ListView.OnItemSelectedListener {
 
+    RecyclerView rv;
+    LinearLayoutManager llm;
+    List <Games> matchList;
+
     //TextView per i dati dell'utente
     private TextView tvEmail;
     private TextView tvNameSurname;
@@ -71,17 +77,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
     //Bottone per il logout
     private Button logoutButton;
     private FloatingActionButton newgame;
-
-    private List<Match> matchList = new ArrayList<Match>();
-    private ListView gameslist;
-    private CustomList adapter;
-
-
-    /**
-     * private LinearLayout mLayout0;
-     * private LinearLayout mLayout1;
-     * private LinearLayout mLayout2;
-     **/
 
     private Toolbar toolbar;
     private NavigationView navigationView;
@@ -91,15 +86,22 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_history2);
+        setContentView(R.layout.activity_recycler);
         setTitle("Storico Partite");
 
+        matchList = new ArrayList<>();
+
+        rv = (RecyclerView) findViewById(R.id.recyclerView);
+        rv.setHasFixedSize(true);
+
+        llm = new LinearLayoutManager(HistoryActivity.this);
+        rv.setLayoutManager(llm);
+
+        final RVAdapter rvAdapter = new RVAdapter(matchList);
+        rv.setAdapter(rvAdapter);
 
         //Creo un inflater per inflazionare il layout dell'header
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        gameslist = (ListView) findViewById(R.id.game_list);
-        adapter = new CustomList(this, matchList);
 
         //Inizializzo il Bottone per il logout
         logoutButton = (Button) findViewById(R.id.logout_button);
@@ -171,10 +173,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                         startActivity(championship);
                         overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
 
-                    case R.id.test_recycler:
-                        Intent test = new Intent(HistoryActivity.this, recyclerActivity.class);
-                        startActivity(test);
-
                 }
                 return true;
             }
@@ -204,84 +202,45 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         //Chiamo syncState per far comparire il toggle
         actionBarDrawerToggle.syncState();
 
-        //Inizializzo i tre layout
-        /**mLayout0 = (LinearLayout) findViewById(R.id.linear_layout0);
-         mLayout1 = (LinearLayout) findViewById(R.id.linear_layout1);
-         mLayout2 = (LinearLayout) findViewById(R.id.linear_layout2);
-
-
-         //Imposto il click per il layout per aprire il popup
-
-         mLayout0.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View v) {
-        startActivity(new Intent(HistoryActivity.this, Popup0Activity.class));
-        }
-        });
-
-         mLayout1.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View v) {
-        startActivity(new Intent(HistoryActivity.this, Popup0Activity.class));
-        }
-        });
-
-         mLayout2.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View v) {
-        startActivity(new Intent(HistoryActivity.this, Popup0Activity.class));
-        }
-        });**/
-
-        StringRequest matchReq = new StringRequest(ConfigActivity.GET_GAME, new Response.Listener<String>() {
+        StringRequest jsonArrayRequest = new StringRequest(ConfigActivity.GET_GAME, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
-                JSONObject j = null;
-
                 try {
 
+                    JSONObject j = null;
                     j = new JSONObject(response);
-
+                    //String champ1 = "";
                     JSONArray matches = j.getJSONArray(ConfigActivity.JSON_GAMES_TAG);
-                    ArrayList<String> teamHome = new ArrayList<String>();
-                    ArrayList<String> teamVis = new ArrayList<String>();
-                    ArrayList<Integer> scoreTeamHome = new ArrayList<Integer>();
-                    ArrayList<Integer> scoreTeamVis = new ArrayList<Integer>();
-                    ArrayList<String> champ = new ArrayList<String>();
 
                     for (int i = 0; i < matches.length(); i++) {
 
-                        JSONObject json = matches.getJSONObject(i);
+                        JSONObject jsonObject = matches.getJSONObject(i);
+                        Games games = new Games();
 
-                        teamHome.add(json.getString(ConfigActivity.TAG_HOME_TEAM_ID));
-                        teamVis.add(json.getString(ConfigActivity.TAG_VISITOR_TEAM_ID));
-                        scoreTeamHome.add(json.getInt(ConfigActivity.TAG_SCORE_HOME));
-                        scoreTeamVis.add(json.getInt(ConfigActivity.TAG_SCORE_VISITOR));
-                        champ.add(json.getString(ConfigActivity.TAG_CHAMP_HIST));
+                        //champ1 = jsonObject.getString(ConfigActivity.TAG_CHAMP_HIST);
+                        games.championship = jsonObject.getString(ConfigActivity.TAG_CHAMP_HIST);
+                        games.teamHome = jsonObject.getString(ConfigActivity.TAG_HOME_TEAM_ID);
+                        games.scoreHome = jsonObject.getInt(ConfigActivity.TAG_SCORE_HOME);
+                        games.teamVisitor = jsonObject.getString(ConfigActivity.TAG_VISITOR_TEAM_ID);
+                        games.scoreVisitor = jsonObject.getInt(ConfigActivity.TAG_SCORE_VISITOR);
+                        games.quarter = jsonObject.getInt(ConfigActivity.TAG_QUARTER);
 
+                        Log.d("Prova teamhome", "String=" +games.teamHome);
+                        Log.d("Prova teamvis", "String=" +games.teamVisitor);
+                        Log.d("Prova scorehome", "String=" +games.scoreHome);
+                        Log.d("Prova scoreVisitor", "String=" + games.scoreVisitor);
 
-                        Log.d("Squadra Casalinga", "squadra " + teamHome);
-                        Log.d("Squadra Ospite", "squadra " + teamVis);
-                        Log.d("Punteggio squadra Casa", "punteggio " + scoreTeamHome);
-                        Log.d("Punteggio squadra Ospi", "punteggio " + scoreTeamVis);
+                        //champ.setText(champ1);
+                        matchList.add(games);
+
                     }
 
-                    Match match = new Match(teamHome, teamVis, scoreTeamHome, scoreTeamVis, champ);
-
-                    match.setHomeTeam(teamHome);
-                    match.setScoreHome(scoreTeamHome);
-                    match.setVisitorTeam(teamVis);
-                    match.setScoreVisitors(scoreTeamVis);
-                    match.setChampionship(champ);
-
-                    matchList.add(match);
+                    rvAdapter.notifyDataSetChanged();
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-                gameslist.setAdapter(adapter);
-
             }
-
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -291,8 +250,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
-        requestQueue.add(matchReq);
-
+        requestQueue.add(jsonArrayRequest);
     }
 
     //Funzione Logout
