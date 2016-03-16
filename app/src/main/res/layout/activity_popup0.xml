@@ -30,41 +30,32 @@
         android:padding="20dp">
 
         <TextView
+            android:id="@+id/teamHomePopup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Team Home"
             android:textSize="20sp"
             android:textColor="#039be5"/>
 
         <TextView
+            android:id="@+id/scoreHomePopup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
             android:layout_marginLeft="5dp"
             android:textSize="20sp"
             android:textColor="#000000" />
 
         <TextView
+            android:id="@+id/scoreVisitorPopup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="-"
-            android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:textSize="20sp"
             android:textColor="#000000"/>
 
         <TextView
+            android:id="@+id/teamVisitorPopup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
-            android:layout_marginRight="5dp"
-            android:textSize="20sp"
-            android:textColor="#000000"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Team Visitor"
             android:textSize="20sp"
             android:textColor="#F44336"/>
 

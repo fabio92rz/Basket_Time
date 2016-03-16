@@ -224,7 +224,9 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                         games.teamVisitor = jsonObject.getString(ConfigActivity.TAG_VISITOR_TEAM_ID);
                         games.scoreVisitor = jsonObject.getInt(ConfigActivity.TAG_SCORE_VISITOR);
                         games.quarter = jsonObject.getInt(ConfigActivity.TAG_QUARTER);
+                        games.id_game = jsonObject.getInt(ConfigActivity.TAG_ID_GAME);
 
+                        Log.d("Prova idgame", "Partita numero=" +games.id_game);
                         Log.d("Prova teamhome", "String=" +games.teamHome);
                         Log.d("Prova teamvis", "String=" +games.teamVisitor);
                         Log.d("Prova scorehome", "String=" +games.scoreHome);

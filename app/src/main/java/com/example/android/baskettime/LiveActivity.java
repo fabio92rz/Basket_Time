@@ -252,7 +252,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
                 try {
 
                     jsonObject = new JSONObject(res);
-                    matchDetails = jsonObject.getJSONArray(ConfigActivity.JSON_GAMES_TAG);
+                    matchDetails = jsonObject.getJSONArray(ConfigActivity.TAG_SINGLE_MATCH);
 
                     for (int i = 0; i < matchDetails.length(); i++) {
 

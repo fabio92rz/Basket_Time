@@ -39,6 +39,7 @@ public class ConfigActivity {
     public static final String TAG_SPECIFIC_CHAMP = "championship";
     public static final String TAG_GAMES_CHAMP = "id_champ";
     public static final String TAG_CHAMP_HIST = "champ";
+    public static final String TAG_SINGLE_MATCH = "singleMatch";
 
     //Keys per Email e Password come definito nel file prova.php
     public static final String KEY_EMAIL = "email";

@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ public class Games {
     String teamHome;
     String teamVisitor;
     String championship;
+    Integer id_game;
     Integer scoreHome;
     Integer scoreVisitor;
     Integer quarter;
@@ -29,7 +31,7 @@ public class Games {
     }
 }
 
-class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> {
+class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
     List<Games> matches;
 
     RVAdapter(List<Games> matches) {
@@ -37,14 +39,14 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> {
     }
 
     @Override
-    public PersonViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public GamesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_card, parent, false);
-        PersonViewHolder pvh = new PersonViewHolder(v);
+        GamesViewHolder pvh = new GamesViewHolder(v);
         return pvh;
     }
 
     @Override
-    public void onBindViewHolder(PersonViewHolder holder, int position) {
+    public void onBindViewHolder(GamesViewHolder holder, int position) {
 
         holder.champ.setText(matches.get(position).championship);
         holder.teamHome.setText(matches.get(position).teamHome);
@@ -53,6 +55,8 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> {
         holder.scoreVisitor.setText(String.valueOf(matches.get(position).scoreVisitor));
         holder.quarter.setText(String.valueOf(matches.get(position).quarter + "°"));
         holder.cv.setTag(position);
+        holder.selectedGame = matches.get(position).id_game;
+
     }
 
     @Override
@@ -68,9 +72,10 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> {
         super.onAttachedToRecyclerView(recyclerView);
     }
 
-    public static class PersonViewHolder extends RecyclerView.ViewHolder {
+    public static class GamesViewHolder extends RecyclerView.ViewHolder {
 
         CardView cv;
+        Integer selectedGame;
         View click;
         TextView champ;
         TextView teamHome;
@@ -79,7 +84,7 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> {
         TextView scoreVisitor;
         TextView quarter;
 
-        PersonViewHolder(final View itemView) {
+        GamesViewHolder(final View itemView) {
 
             super(itemView);
 
@@ -100,6 +105,9 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder> {
 
                     Intent matchDetails = new Intent(v.getContext(), Popup0Activity.class);
 
+                    Log.d("prova partita", "selezionata" + selectedGame);
+
+                    matchDetails.putExtra("matchID", selectedGame);
                     v.getContext().startActivity(matchDetails);
                 }
             });
