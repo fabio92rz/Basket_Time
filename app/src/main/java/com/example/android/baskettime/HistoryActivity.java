@@ -44,6 +44,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -60,6 +61,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by fabio on 11/11/2015.
@@ -115,7 +117,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         setSupportActionBar(toolbar);
 
         //Catturo i dati e li inserisco nell'header
-        SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        final SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         String email = sharedPreferences.getString(ConfigActivity.EMAIL_SHARED_PREF, "Not Available");
         String nameSurname = sharedPreferences.getString(ConfigActivity.NAME_SURNAME_PREF, "Not Available");
 
@@ -202,6 +204,8 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         //Chiamo syncState per far comparire il toggle
         actionBarDrawerToggle.syncState();
 
+        final String function = "getGames";
+
         StringRequest jsonArrayRequest = new StringRequest(ConfigActivity.GET_GAME, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -209,7 +213,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
                     JSONObject j = null;
                     j = new JSONObject(response);
-                    //String champ1 = "";
                     JSONArray matches = j.getJSONArray(ConfigActivity.JSON_GAMES_TAG);
 
                     for (int i = 0; i < matches.length(); i++) {
@@ -217,7 +220,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                         JSONObject jsonObject = matches.getJSONObject(i);
                         Games games = new Games();
 
-                        //champ1 = jsonObject.getString(ConfigActivity.TAG_CHAMP_HIST);
+
                         games.championship = jsonObject.getString(ConfigActivity.TAG_CHAMP_HIST);
                         games.teamHome = jsonObject.getString(ConfigActivity.TAG_HOME_TEAM_ID);
                         games.scoreHome = jsonObject.getInt(ConfigActivity.TAG_SCORE_HOME);
@@ -248,7 +251,19 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
             public void onErrorResponse(VolleyError error) {
 
             }
-        });
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+
+                //Aggiungo i parametri alla richiesta
+                params.put(ConfigActivity.KEY_ID_SESSION, sharedPreferences.getString(ConfigActivity.SESSION_ID, ""));
+                params.put("f", function);
+
+                //Ritorno i paramentri
+                return params;
+            }
+        };
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
@@ -276,6 +291,9 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
                         //Metto un valore vuto nella mail
                         editor.putString(ConfigActivity.EMAIL_SHARED_PREF, "");
+
+                        //Cancello l'id della sessione
+                        editor.putString(ConfigActivity.SESSION_ID, "");
 
                         //Salvo le SharedPreference
                         editor.commit();

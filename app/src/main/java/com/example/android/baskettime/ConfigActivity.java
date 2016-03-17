@@ -7,13 +7,14 @@ public class ConfigActivity {
 
     //Url vari
     public static final String LOGIN_URL = "http://95.85.23.84/login2.php";
-    public static final String INSERT_CHAMP = "http://95.85.23.84/insertChamp2.php";
+    //public static final String INSERT_CHAMP = "http://95.85.23.84/insertChamp2.php";
     public static final String INSERT_TEAMS = "http://95.85.23.84/insertTeams.php";
     public static final String GET_TEAMS_URL = "http://95.85.23.84/getTeams.php";
     public static final String GET_GAME = "http://95.85.23.84/getGames.php";
     public static final String INSERT_GAMES = "http://95.85.23.84/insertGames.php";
     public static final String REGISTER_URL = "http://95.85.23.84/register.php";
     public static final String INSERT_QUARTER = "http://95.85.23.84/insertQuarter.php";
+    public static final String ENTRY = "http://95.85.23.84/entry.php";
 
     //Tag JSON
     public static final String JSON_ARRAY = "result";
@@ -54,6 +55,7 @@ public class ConfigActivity {
     public static final String TAG_SCORE_VISITOR = "final_score_visitor";
 
 
+
     //Se il Server risponde e quindi il login è andato bene
     public static final String LOGIN_SUCCESS = "success";
 
@@ -65,6 +67,7 @@ public class ConfigActivity {
     //Questo verrà usato per conservare l'email dell'utente corrente
     public static final String EMAIL_SHARED_PREF = "email";
     public static final String NAME_SURNAME_PREF = "nameSurname";
+    public static final String SESSION_ID = "sessionid";
 
     //Userò questa variabile booleana nelle Shared Preference pre seguire se l'utente è dentro o no
     public static final String LOGGEDIN_SHARED_PREF = "loggedin";
@@ -74,5 +77,6 @@ public class ConfigActivity {
     public static final String KEY_SCORE_VISITOR_TEAM = "score_visitor_team";
     public static final String KEY_SCORE_QUARTER= "nquarter";
     public static final String KEY_ID_CURRENT_MATCH = "id_game";
+    public static final String KEY_ID_SESSION = "idSession";
 
 }

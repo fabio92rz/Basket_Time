@@ -48,6 +48,8 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
     private ArrayList<String> teamVisitor;
     private ArrayList<String> championship;
 
+    final String function = "insertGames";
+
     int id_game;
 
     private JSONObject j;
@@ -199,6 +201,8 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
         final String idhome = String.valueOf(getTeamsID((int) spinnerHome.getSelectedItemId()));
         final String idvisitor = String.valueOf(getTeamsID((int) spinnerVisitor.getSelectedItemId()));
         final String idChamp = String.valueOf(getChampID((int) spinnerChampionship.getSelectedItemId()));
+        SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, MODE_PRIVATE);
+        final String sessionId = sharedPreferences.getString(ConfigActivity.KEY_ID_SESSION, "");
         Log.i("idhome", "getstring" + idhome);
         Log.i("idVisitor", "getstring" + idvisitor);
         Log.d("Championship", "Get ID" + idChamp);
@@ -228,6 +232,8 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
                 param.put(ConfigActivity.KEY_HOME_TEAM, idhome);
                 param.put(ConfigActivity.KEY_VISITOR_TEAM, idvisitor);
                 param.put(ConfigActivity.TAG_GAMES_CHAMP, idChamp);
+                param.put(ConfigActivity.KEY_ID_SESSION, sessionId);
+                param.put("f", function);
 
                 RequestHandler requestHandler = new RequestHandler();
                 String res = requestHandler.sendPostRequest(ConfigActivity.INSERT_GAMES, param);

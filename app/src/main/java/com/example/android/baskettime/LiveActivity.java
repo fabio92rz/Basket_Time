@@ -96,6 +96,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
     private String teamHome = "";
     private String teamVisitor = "";
+    final String function = "insertQuarter";
     private TextView teamhome;
     private TextView teamvis;
     private TextView quarterView;
@@ -296,7 +297,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
     private void insertQuarter() {
 
-        SharedPreferences sharedPreferences1 = getSharedPreferences(ConfigActivity.TAG_ID_GAME, Context.MODE_PRIVATE);
+        final SharedPreferences sharedPreferences1 = getSharedPreferences(ConfigActivity.TAG_ID_GAME, Context.MODE_PRIVATE);
 
         final String getQuarter = String.valueOf(quarterView.getText().toString());
         final String getHomeScore = String.valueOf(scoreView.getText().toString());
@@ -316,6 +317,8 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
                 param.put(ConfigActivity.KEY_SCORE_HOME_TEAM, getHomeScore);
                 param.put(ConfigActivity.KEY_SCORE_VISITOR_TEAM, getVisitorScore);
                 param.put(ConfigActivity.KEY_ID_CURRENT_MATCH, id_game);
+                param.put(ConfigActivity.KEY_ID_SESSION, sharedPreferences1.getString(ConfigActivity.SESSION_ID, ""));
+                param.put("f", function);
 
 
                 RequestHandler requestHandler = new RequestHandler();

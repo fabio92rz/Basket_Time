@@ -137,6 +137,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //Prendo i valori dalle EditText
         final String email = eTEmail.getText().toString().trim();
         final String password = eTPassword.getText().toString().trim();
+        final String function = "login";
 
 
         //Inizializzo il popup di caricamento
@@ -144,7 +145,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         loading = ProgressDialog.show(LoginActivity.this, "Attendere prego...", null, true, true);
 
         //Creo la string request
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, ConfigActivity.LOGIN_URL, new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, ConfigActivity.ENTRY, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
@@ -152,10 +153,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String name = "";
                 String surname = "";
                 String status = "";
+                String userSession = "";
 
                 try {
-                    j = new JSONObject(response);
 
+                    j = new JSONObject(response);
                     JSONArray login = j.getJSONArray(ConfigActivity.TAG_LOGIN);
 
                     for (int i = 0; i < login.length(); i++) {
@@ -166,6 +168,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             name = jsonObject.getString(ConfigActivity.TAG_NAME);
                             surname = jsonObject.getString(ConfigActivity.TAG_SURNAME);
                             status = jsonObject.getString(ConfigActivity.TAG_STATUS);
+                            userSession = jsonObject.getString("session");
 
 
                         } catch (JSONException e) {
@@ -190,6 +193,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     editor.putBoolean(ConfigActivity.LOGGEDIN_SHARED_PREF, true);
                     editor.putString(ConfigActivity.EMAIL_SHARED_PREF, email);
                     editor.putString(ConfigActivity.NAME_SURNAME_PREF, WordUtils.capitalize(name) + " " + WordUtils.capitalize(surname));
+                    editor.putString(ConfigActivity.SESSION_ID, userSession);
 
                     //Salvo i valori
                     editor.commit();
@@ -219,6 +223,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 //Aggiungo i parametri alla richiesta
                 params.put(ConfigActivity.KEY_EMAIL, email);
                 params.put(ConfigActivity.KEY_PASSWORD, password);
+                params.put("f", function );
 
                 //Ritorno i paramentri
                 return params;
