@@ -1,6 +1,8 @@
 package com.example.android.baskettime;
 
 import android.app.ActivityOptions;
+import android.app.DownloadManager;
+import android.app.VoiceInteractor;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,6 +20,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -30,6 +34,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -99,7 +104,7 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void getData() {
-        StringRequest stringRequest = new StringRequest(ConfigActivity.GET_TEAMS_URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, ConfigActivity.ENTRY,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -118,7 +123,23 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
                     public void onErrorResponse(VolleyError error) {
 
                     }
-                });
+                }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+
+                SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, MODE_PRIVATE);
+                final String function = "getTeams";
+                final String sessionId = sharedPreferences.getString(ConfigActivity.SESSION_ID, "");
+
+                //Aggiungo i parametri alla richiesta
+                params.put(ConfigActivity.KEY_ID_SESSION, sessionId);
+                params.put("f", function);
+
+                //Ritorno i paramentri
+                return params;
+            }
+        };
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
@@ -147,9 +168,9 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
 
 
                 JSONObject json = j.getJSONObject(i);
-
                 championship.add(json.getString(ConfigActivity.TAG_SPECIFIC_CHAMP));
             }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -198,10 +219,10 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
 
     private void insertTeams() {
 
+        SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, MODE_PRIVATE);
         final String idhome = String.valueOf(getTeamsID((int) spinnerHome.getSelectedItemId()));
         final String idvisitor = String.valueOf(getTeamsID((int) spinnerVisitor.getSelectedItemId()));
         final String idChamp = String.valueOf(getChampID((int) spinnerChampionship.getSelectedItemId()));
-        SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, MODE_PRIVATE);
         final String sessionId = sharedPreferences.getString(ConfigActivity.KEY_ID_SESSION, "");
         Log.i("idhome", "getstring" + idhome);
         Log.i("idVisitor", "getstring" + idvisitor);
@@ -236,7 +257,7 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
                 param.put("f", function);
 
                 RequestHandler requestHandler = new RequestHandler();
-                String res = requestHandler.sendPostRequest(ConfigActivity.INSERT_GAMES, param);
+                String res = requestHandler.sendPostRequest(ConfigActivity.ENTRY, param);
 
                 JSONObject j = null;
                 JSONObject gameDetails = null;
@@ -273,9 +294,7 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         if (v == insertButton) {
-
             insertTeams();
-
         }
     }
 

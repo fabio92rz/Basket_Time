@@ -233,7 +233,10 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
         SharedPreferences sharedPreferences1 = getSharedPreferences(ConfigActivity.TAG_ID_GAME, Context.MODE_PRIVATE);
         final String id_game = String.valueOf(sharedPreferences1.getInt(ConfigActivity.ID_GAME, 0));
+        final String idSession = sharedPreferences1.getString(ConfigActivity.SESSION_ID, "");
+        final String function = "getGames";
         Log.d("Live Activity", "valore id_game" + id_game);
+        Log.d("Live Activity", "Sessione numero: " + idSession);
 
         class getMatch extends AsyncTask<Void, Void, String> {
 
@@ -243,32 +246,22 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
                 HashMap<String, String> param = new HashMap<>();
                 param.put(ConfigActivity.KEY_MATCH_ID, id_game);
+                param.put(ConfigActivity.KEY_ID_SESSION, idSession);
+                param.put("f", function);
 
                 RequestHandler requestHandler = new RequestHandler();
-                String res = requestHandler.sendPostRequest(ConfigActivity.GET_GAME, param);
+                String res = requestHandler.sendPostRequest(ConfigActivity.ENTRY, param);
 
                 JSONObject jsonObject = null;
-                JSONArray matchDetails = null;
+                JSONObject matchDetails = null;
 
                 try {
 
                     jsonObject = new JSONObject(res);
-                    matchDetails = jsonObject.getJSONArray(ConfigActivity.TAG_SINGLE_MATCH);
+                    matchDetails = jsonObject.getJSONObject(ConfigActivity.TAG_SINGLE_MATCH);
 
-                    for (int i = 0; i < matchDetails.length(); i++) {
-
-                        try {
-
-                            JSONObject json = matchDetails.getJSONObject(i);
-
-                            teamHome = json.getString(ConfigActivity.TAG_CURRENT_TEAM_HOME);
-                            teamVisitor = json.getString(ConfigActivity.TAG_CURRENT_TEAM_VISITOR);
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
+                    teamHome = matchDetails.getString(ConfigActivity.TAG_CURRENT_TEAM_HOME);
+                    teamVisitor = matchDetails.getString(ConfigActivity.TAG_CURRENT_TEAM_VISITOR);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -322,7 +315,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
 
                 RequestHandler requestHandler = new RequestHandler();
-                String res = requestHandler.sendPostRequest(ConfigActivity.INSERT_QUARTER, param);
+                String res = requestHandler.sendPostRequest(ConfigActivity.ENTRY, param);
 
                 return res;
             }
@@ -339,20 +332,20 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
                     j = new JSONObject(s);
                     JSONArray upload = j.getJSONArray(ConfigActivity.TAG_QUARTER);
 
-                    for (int i = 0; i<upload.length(); i++){
+                    for (int i = 0; i < upload.length(); i++) {
 
                         try {
 
                             JSONObject jsonObject = upload.getJSONObject(i);
                             uploadOk = jsonObject.getString(ConfigActivity.TAG_STATUS);
 
-                        } catch (JSONException e){
+                        } catch (JSONException e) {
 
                             e.printStackTrace();
                         }
                     }
 
-                }catch (JSONException e){
+                } catch (JSONException e) {
 
                     e.printStackTrace();
                 }
@@ -427,7 +420,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void addQuarter(View v) {
-            quarter += 1;
+        quarter += 1;
         quarterView.setText(String.valueOf(quarter) + "°");
     }
 
@@ -467,6 +460,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
                         //Setto il valore Booleano a Falso
                         editor.putBoolean(ConfigActivity.LOGGEDIN_SHARED_PREF, false);
+                        editor.putString(ConfigActivity.SESSION_ID, "");
 
                         //Metto un valore vuto nella mail
                         editor.putString(ConfigActivity.EMAIL_SHARED_PREF, "");

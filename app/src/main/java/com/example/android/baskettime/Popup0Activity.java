@@ -62,7 +62,13 @@ public class Popup0Activity extends AppCompatActivity {
 
     private void getMatch() {
 
+        SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, MODE_PRIVATE);
+
+        final String sessionId = sharedPreferences.getString(ConfigActivity.SESSION_ID, "");
         final String selectedMatch = this.getIntent().getExtras().get("matchID").toString();
+        final String function = "getGames";
+
+        Log.d("Prova idsessione", "Session id = " + sessionId);
         Log.d("Prova selected match", "match numero =" + selectedMatch);
 
         class getMatch extends AsyncTask<Void, String, String> {
@@ -73,9 +79,11 @@ public class Popup0Activity extends AppCompatActivity {
 
                     HashMap<String, String> param = new HashMap<>();
                     param.put(ConfigActivity.KEY_MATCH_ID, selectedMatch);
+                    param.put(ConfigActivity.KEY_ID_SESSION, sessionId);
+                    param.put("f", function);
 
                     RequestHandler requestHandler = new RequestHandler();
-                    String res = requestHandler.sendPostRequest(ConfigActivity.GET_GAME, param);
+                    String res = requestHandler.sendPostRequest(ConfigActivity.ENTRY, param);
 
                     try {
 

@@ -1,6 +1,7 @@
 package com.example.android.baskettime;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -96,8 +97,13 @@ public class ChampActivity extends AppCompatActivity implements View.OnClickList
 
     private void addTeams() {
 
+        SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, MODE_PRIVATE);
+
+        final String idSession = sharedPreferences.getString(ConfigActivity.SESSION_ID, "");
+        final String function = "insertTeams";
         final String team = firstTeam.getText().toString().trim();
         final String championship = newChampionship.getText().toString().trim();
+
 
         class addTeams extends AsyncTask<String, Void, String>{
 
@@ -116,9 +122,11 @@ public class ChampActivity extends AppCompatActivity implements View.OnClickList
                 HashMap<String, String> params = new HashMap<>();
                 params.put(ConfigActivity.KEY_TEAM, team);
                 params.put(ConfigActivity.KEY_CHAMP, championship);
+                params.put(ConfigActivity.KEY_ID_SESSION, idSession);
+                params.put("f", function);
 
                 RequestHandler requestHandler = new RequestHandler();
-                String res = requestHandler.sendPostRequest(ConfigActivity.INSERT_TEAMS, params);
+                String res = requestHandler.sendPostRequest(ConfigActivity.ENTRY, params);
                 return res;
             }
         }

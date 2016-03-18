@@ -45,6 +45,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -70,7 +71,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
     RecyclerView rv;
     LinearLayoutManager llm;
-    List <Games> matchList;
+    List<Games> matchList;
 
     //TextView per i dati dell'utente
     private TextView tvEmail;
@@ -120,6 +121,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         final SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         String email = sharedPreferences.getString(ConfigActivity.EMAIL_SHARED_PREF, "Not Available");
         String nameSurname = sharedPreferences.getString(ConfigActivity.NAME_SURNAME_PREF, "Not Available");
+        final String idSession = sharedPreferences.getString(ConfigActivity.SESSION_ID, "");
 
         //Inizializzo la NavigationView, utilizzata per il drawer
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -204,9 +206,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         //Chiamo syncState per far comparire il toggle
         actionBarDrawerToggle.syncState();
 
-        final String function = "getGames";
-
-        StringRequest jsonArrayRequest = new StringRequest(ConfigActivity.GET_GAME, new Response.Listener<String>() {
+        StringRequest gameRequest = new StringRequest(Request.Method.POST, ConfigActivity.ENTRY, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -220,7 +220,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                         JSONObject jsonObject = matches.getJSONObject(i);
                         Games games = new Games();
 
-
                         games.championship = jsonObject.getString(ConfigActivity.TAG_CHAMP_HIST);
                         games.teamHome = jsonObject.getString(ConfigActivity.TAG_HOME_TEAM_ID);
                         games.scoreHome = jsonObject.getInt(ConfigActivity.TAG_SCORE_HOME);
@@ -229,10 +228,10 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                         games.quarter = jsonObject.getInt(ConfigActivity.TAG_QUARTER);
                         games.id_game = jsonObject.getInt(ConfigActivity.TAG_ID_GAME);
 
-                        Log.d("Prova idgame", "Partita numero=" +games.id_game);
-                        Log.d("Prova teamhome", "String=" +games.teamHome);
-                        Log.d("Prova teamvis", "String=" +games.teamVisitor);
-                        Log.d("Prova scorehome", "String=" +games.scoreHome);
+                        Log.d("Prova idgame", "Partita numero=" + games.id_game);
+                        Log.d("Prova teamhome", "String=" + games.teamHome);
+                        Log.d("Prova teamvis", "String=" + games.teamVisitor);
+                        Log.d("Prova scorehome", "String=" + games.scoreHome);
                         Log.d("Prova scoreVisitor", "String=" + games.scoreVisitor);
 
                         //champ.setText(champ1);
@@ -256,8 +255,10 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
 
+                final String function = "getGames";
+
                 //Aggiungo i parametri alla richiesta
-                params.put(ConfigActivity.KEY_ID_SESSION, sharedPreferences.getString(ConfigActivity.SESSION_ID, ""));
+                params.put(ConfigActivity.KEY_ID_SESSION, idSession);
                 params.put("f", function);
 
                 //Ritorno i paramentri
@@ -266,8 +267,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         };
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-
-        requestQueue.add(jsonArrayRequest);
+        requestQueue.add(gameRequest);
     }
 
     //Funzione Logout
