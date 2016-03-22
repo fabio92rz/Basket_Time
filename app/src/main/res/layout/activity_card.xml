@@ -12,6 +12,7 @@
     card_view:contentPadding="2dp">
 
     <RelativeLayout
+        android:id="@+id/relativeCardLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="20dp">
@@ -60,14 +61,6 @@
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/scoreHome_cv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/teamHome_cv"
-            android:layout_below="@id/championship_cv"
-            android:textSize="15sp" />
-
-        <TextView
             android:id="@+id/teamVisitor_cv"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
@@ -76,12 +69,30 @@
             android:textColor="#F44336"
             android:textSize="15sp" />
 
+        <View
+            android:id="@+id/finishView"
+            android:layout_alignParentRight="true"
+            android:layout_width="1dp"
+            android:layout_height="35dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginLeft="5dp"
+            android:layout_below="@id/championship_cv"
+            android:background="@android:color/black" />
+
+        <TextView
+            android:id="@+id/scoreHome_cv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/finishView"
+            android:layout_below="@id/championship_cv"
+            android:textSize="15sp" />
+
         <TextView
             android:id="@+id/scoreVisitor_cv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/scoreHome_cv"
-            android:layout_toRightOf="@id/teamVisitor_cv"
+            android:layout_toLeftOf="@id/finishView"
             android:textSize="15sp" />
 
     </RelativeLayout>

@@ -1,63 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:background="@drawable/custom_border"
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/sintesiMatch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="12dp">
+        android:orientation="vertical"
+        android:padding="10dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Riassunto Partita"
-            android:textSize="25sp"
-            android:textColor="#000000" />
+            android:layout_marginBottom="10dp"
+            android:text="Sintesi Partita"
+            android:textColor="#000000"
+            android:textSize="25sp" />
 
+        <View
+            android:layout_width="75dp"
+            android:layout_height="1dp"
+            android:background="#039be5" />
     </LinearLayout>
 
     <LinearLayout
+        android:layout_below="@id/sintesiMatch"
+        android:id="@+id/finalMatch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="20dp">
+        android:padding="10dp">
 
         <TextView
             android:id="@+id/teamHomePopup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="#039be5"/>
+            android:textColor="#039be5"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/scoreHomePopup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:textSize="20sp"
-            android:textColor="#000000" />
+            android:textColor="#000000"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/scoreVisitorPopup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="5dp"
-            android:textSize="20sp"
-            android:textColor="#000000"/>
+            android:textColor="#000000"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/teamVisitorPopup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="#F44336"/>
+            android:textColor="#F44336"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/finalMatch"
+        tools:context=".Popup0Actiivty">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewPopup"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

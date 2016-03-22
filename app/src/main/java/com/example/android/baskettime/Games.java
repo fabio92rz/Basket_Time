@@ -35,6 +35,7 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
     List<Games> matches;
 
     RVAdapter(List<Games> matches) {
+
         this.matches = matches;
     }
 
