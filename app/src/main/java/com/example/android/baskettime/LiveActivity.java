@@ -231,8 +231,10 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
     private void getMatch() {
 
-        SharedPreferences sharedPreferences1 = getSharedPreferences(ConfigActivity.TAG_ID_GAME, Context.MODE_PRIVATE);
-        final String id_game = String.valueOf(sharedPreferences1.getInt(ConfigActivity.ID_GAME, 0));
+        SharedPreferences sharedPreferences1 = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences2 = getSharedPreferences(ConfigActivity.TAG_ID_GAME, Context.MODE_PRIVATE);
+
+        final String id_game = String.valueOf(sharedPreferences2.getInt(ConfigActivity.ID_GAME, 0));
         final String idSession = sharedPreferences1.getString(ConfigActivity.SESSION_ID, "");
         final String function = "getGames";
         Log.d("Live Activity", "valore id_game" + id_game);
@@ -253,15 +255,21 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
                 String res = requestHandler.sendPostRequest(ConfigActivity.ENTRY, param);
 
                 JSONObject jsonObject = null;
-                JSONObject matchDetails = null;
+                JSONArray matchDetails = null;
 
                 try {
 
                     jsonObject = new JSONObject(res);
-                    matchDetails = jsonObject.getJSONObject(ConfigActivity.TAG_SINGLE_MATCH);
+                    matchDetails = jsonObject.getJSONArray(ConfigActivity.TAG_SINGLE_MATCH);
 
-                    teamHome = matchDetails.getString(ConfigActivity.TAG_CURRENT_TEAM_HOME);
-                    teamVisitor = matchDetails.getString(ConfigActivity.TAG_CURRENT_TEAM_VISITOR);
+                    for (int i = 0; i<matchDetails.length(); i++) {
+
+                        JSONObject teams = matchDetails.getJSONObject(i);
+
+                        teamHome = teams.getString(ConfigActivity.TAG_CURRENT_TEAM_HOME);
+                        teamVisitor = teams.getString(ConfigActivity.TAG_CURRENT_TEAM_VISITOR);
+
+                    }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -277,6 +285,8 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
+
+                Log.d("Prova teamHome", "TeamHome = " + teamHome);
 
                 teamhome.setText(teamHome);
                 teamvis.setText(teamVisitor);
