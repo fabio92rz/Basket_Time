@@ -10,10 +10,13 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -42,6 +45,7 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.lang.String;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -86,7 +90,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
     private Button updateResult;
 
     //Variabili per lo scaling dell'immagine
-    private static int RESULT_LOAD_IMG = 1;
+    private static int SELECT_PICTURE = 1;
     String imgDecodableString;
 
     //Varibili per la Navigation View
@@ -142,7 +146,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         View vi = inflater.inflate(R.layout.header, navigationView, false);
 
         ImageView background = (ImageView) vi.findViewById(R.id.header_image);
-        Picasso.with(this).load("http://i.imgur.com/bKFyqyE.jpg").into(background);
+        Picasso.with(this).load("http://i.imgur.com/6etUX3l.jpg").into(background);
 
         //Inizializzo ed imposto la mail della persona loggata
         tvEmail = (TextView) vi.findViewById(R.id.email_header);
@@ -513,73 +517,29 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
     public void loadImagefromGallery(View view) {
 
         //Creo l'intento per aprire un'applicazione di gestione d'immagini
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent galleryIntent = new Intent();
+        galleryIntent.setType("image/*");
+        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
         //Lancio l'intento
-        startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
+        startActivityForResult(Intent.createChooser(galleryIntent, "Seleziona Foto"), SELECT_PICTURE);
     }
 
-    public void getIMGSize(Uri uri) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(new File(uri.getPath()).getAbsolutePath(), options);
-        imageHeight = options.outHeight;
-        imageWidth = options.outWidth;
-    }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SELECT_PICTURE) {
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
-        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-        switch (requestCode) {
-            case 1:
-                if (resultCode == RESULT_OK) {
-                    Uri selectedImage = imageReturnedIntent.getData();
-                    try {
-                        //Inizializzo l'immagine
-                        CircleImageView imgView = (CircleImageView) findViewById(R.id.profile_image);
-                        getIMGSize(selectedImage);
+                Uri selectedImageUri = data.getData();
+                CircleImageView imageView = (CircleImageView) findViewById(R.id.profile_image);
 
-                        //Ruoto l'immagine, in verticale non risulta giusta l'orientamento
-                        imgView.setImageBitmap(decodeUri(selectedImage));
-                        imgView.setPivotX(imgView.getWidth() / 2);
-                        imgView.setPivotY(imgView.getHeight() / 2);
-                        imgView.setRotation(270);
+                try {
 
+                    Picasso.with(this).load(selectedImageUri).into(imageView);
 
-                    } catch (FileNotFoundException e) {
-
-                        //In caso di errore
-                        e.printStackTrace();
-                    }
+                } finally {
 
                 }
-        }
-    }
 
-    private Bitmap decodeUri(Uri selectedImage) throws FileNotFoundException {
-
-        //Metodo per scaling dell'immagine
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-        BitmapFactory.decodeStream(
-                getContentResolver().openInputStream(selectedImage), null, o);
-
-        //Massima dimensione consentita
-        final int REQUIRED_SIZE = 100;
-
-        int width_tmp = o.outWidth, height_tmp = o.outHeight;
-        int scale = 1;
-        while (true) {
-            if (width_tmp / 2 < REQUIRED_SIZE || height_tmp / 2 < REQUIRED_SIZE) {
-                break;
             }
-            width_tmp /= 2;
-            height_tmp /= 2;
-            scale *= 2;
         }
-
-        BitmapFactory.Options o2 = new BitmapFactory.Options();
-        o2.inSampleSize = scale;
-        return BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o2);
     }
-
 }

@@ -10,6 +10,8 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="title_activity_activity_register">activity_register</string>
+    <string name="delete_match">Elimina partita</string>
+    <string name="modify_match">Modifica partita</string>
 
     <string name="navigation_item_1">Home</string>
     <string name="navigation_item_2">Events</string>

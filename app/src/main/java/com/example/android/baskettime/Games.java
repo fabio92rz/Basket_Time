@@ -1,14 +1,21 @@
 package com.example.android.baskettime;
 
 import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,6 +91,7 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
         TextView scoreHome;
         TextView scoreVisitor;
         TextView quarter;
+        ImageButton options;
 
         GamesViewHolder(final View itemView) {
 
@@ -91,6 +99,7 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
 
             click = itemView;
             cv = (CardView) itemView.findViewById(R.id.cv);
+            options = (ImageButton) itemView.findViewById(R.id.popupmenu);
             quarter = (TextView) itemView.findViewById(R.id.final_quarter);
             champ = (TextView) itemView.findViewById(R.id.championship_cv);
             teamHome = (TextView) itemView.findViewById(R.id.teamHome_cv);
@@ -104,15 +113,46 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
 
                     int position = (int) v.getTag();
 
+
                     Intent matchDetails = new Intent(v.getContext(), Popup0Activity.class);
-
-                    Log.d("prova partita", "selezionata" + selectedGame);
-
                     matchDetails.putExtra("matchID", selectedGame);
                     v.getContext().startActivity(matchDetails);
+
+
                 }
             });
 
+            options.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
+                    MenuInflater inflater = popupMenu.getMenuInflater();
+                    inflater.inflate(R.menu.popup_menu, popupMenu.getMenu());
+
+                    popupMenu.setGravity(Gravity.END);
+                    popupMenu.show();
+
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+
+                            switch (item.getItemId()){
+
+                                case R.id.delete:
+                                    Toast.makeText(itemView.getContext(), item.getTitle(), Toast.LENGTH_LONG).show();
+                                    break;
+
+                                case R.id.modify:
+                                    Toast.makeText(itemView.getContext(), item.getTitle(), Toast.LENGTH_LONG).show();
+                                    break;
+                            }
+
+                            return true;
+                        }
+                    });
+                }
+            });
 
 
         }

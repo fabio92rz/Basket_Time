@@ -130,7 +130,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         View vi = inflater.inflate(R.layout.header, navigationView, false);
 
         ImageView background = (ImageView) vi.findViewById(R.id.header_image);
-        Picasso.with(this).load("http://i.imgur.com/bKFyqyE.jpg").into(background);
+        Picasso.with(this).load("http://i.imgur.com/6etUX3l.jpg").into(background);
 
 
         //Inizializzo ed imposto la mail della persona loggata
