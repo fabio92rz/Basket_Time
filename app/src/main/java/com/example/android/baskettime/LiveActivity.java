@@ -1,10 +1,13 @@
 package com.example.android.baskettime;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -14,6 +17,7 @@ import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
@@ -63,6 +67,7 @@ import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -89,10 +94,6 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
     private Button logoutButton;
     private Button updateResult;
 
-    //Variabili per lo scaling dell'immagine
-    private static int SELECT_PICTURE = 1;
-    String imgDecodableString;
-
     //Varibili per la Navigation View
     private Toolbar toolbar;
     private NavigationView navigationView;
@@ -106,6 +107,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
     private TextView quarterView;
     private TextView scoreView;
     private TextView scoreViewVisitor;
+    private CircleImageView profilePicture;
 
 
     @Override
@@ -136,7 +138,10 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         String email = sharedPreferences.getString(ConfigActivity.EMAIL_SHARED_PREF, "Not Available");
         String nameSurname = sharedPreferences.getString(ConfigActivity.NAME_SURNAME_PREF, "Not Available");
+        String profilePic = sharedPreferences.getString("profilePicture", "");
+
         Log.d("Live Activity", "getString()" + email);
+        Log.d("Live Activity", "profilePicPath= " + profilePic);
 
         //Inizializzo la NavigationView, utilizzata per il drawer
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -164,6 +169,38 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         scoreViewVisitor = (TextView) findViewById(R.id.score_team_visitor);
         scoreView.setText(String.valueOf(scoreTeamVis));
 
+        profilePicture = (CircleImageView) vi.findViewById(R.id.profile_image);
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        Bitmap bitmap = BitmapFactory.decodeFile(profilePic, options);
+
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(profilePic);
+
+            int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+            switch (rotation) {
+
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    profilePicture.setImageBitmap(rotateImage(bitmap, 90));
+                    break;
+
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    profilePicture.setImageBitmap(rotateImage(bitmap, 180));
+                    break;
+
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    profilePicture.setImageBitmap(rotateImage(bitmap, 270));
+                    break;
+            }
+
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+
+
         //Aggiungo la View
         navigationView.addHeaderView(vi);
 
@@ -185,9 +222,6 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
                 switch (menuItem.getItemId()) {
 
                     case R.id.live:
-                        Intent live = new Intent(LiveActivity.this, LiveActivity.class);
-                        startActivity(live);
-                        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
                         break;
 
                     case R.id.storico_partite:
@@ -266,7 +300,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
                     jsonObject = new JSONObject(res);
                     matchDetails = jsonObject.getJSONArray(ConfigActivity.TAG_SINGLE_MATCH);
 
-                    for (int i = 0; i<matchDetails.length(); i++) {
+                    for (int i = 0; i < matchDetails.length(); i++) {
 
                         JSONObject teams = matchDetails.getJSONObject(i);
 
@@ -514,32 +548,74 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    public void loadImagefromGallery(View view) {
+    /**public void loadImagefromGallery(View view) {
 
-        //Creo l'intento per aprire un'applicazione di gestione d'immagini
         Intent galleryIntent = new Intent();
         galleryIntent.setType("image/*");
         galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-        //Lancio l'intento
+
         startActivityForResult(Intent.createChooser(galleryIntent, "Seleziona Foto"), SELECT_PICTURE);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_PICTURE) {
 
                 Uri selectedImageUri = data.getData();
-                CircleImageView imageView = (CircleImageView) findViewById(R.id.profile_image);
 
                 try {
 
-                    Picasso.with(this).load(selectedImageUri).into(imageView);
+                    SharedPreferences sharedPreferences = LiveActivity.this.getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                } finally {
 
+                    CircleImageView imageView = (CircleImageView) findViewById(R.id.profile_image);
+                    Bitmap bmp = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
+
+                    int nh = (int) ( bmp.getHeight() * (512.0 / bmp.getWidth()) );
+                    Bitmap scaled = Bitmap.createScaledBitmap(bmp, 512, nh, true);
+
+                    String path = FileUtility.getRealPathFromURI(getApplicationContext(), Uri.parse("file://" + selectedImageUri.getPath()));
+                    editor.putString("profilePicture", path);
+
+                    editor.commit();
+
+                    ExifInterface exif = new ExifInterface(path);
+
+
+
+                    int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+                    switch (rotation) {
+
+                        case ExifInterface.ORIENTATION_ROTATE_90:
+                            imageView.setImageBitmap(rotateImage(scaled, 90));
+                            break;
+
+                        case ExifInterface.ORIENTATION_ROTATE_180:
+                            imageView.setImageBitmap(rotateImage(scaled, 180));
+                            break;
+
+                        case ExifInterface.ORIENTATION_ROTATE_270:
+                            imageView.setImageBitmap(rotateImage(scaled, 270));
+                            break;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
 
             }
         }
+    }**/
+
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Bitmap retVal;
+
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        retVal = Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+
+        return retVal;
     }
 }

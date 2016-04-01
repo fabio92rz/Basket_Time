@@ -11,11 +11,14 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -59,10 +62,13 @@ import org.json.JSONObject;
 
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by fabio on 11/11/2015.
@@ -76,6 +82,8 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
     //TextView per i dati dell'utente
     private TextView tvEmail;
     private TextView tvNameSurname;
+    private boolean profilePictureBoolean;
+    public static int SELECT_PICTURE = 1;
 
     //Bottone per il logout
     private Button logoutButton;
@@ -121,6 +129,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         final SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         String email = sharedPreferences.getString(ConfigActivity.EMAIL_SHARED_PREF, "Not Available");
         String nameSurname = sharedPreferences.getString(ConfigActivity.NAME_SURNAME_PREF, "Not Available");
+        //String profilePic = sharedPreferences.getString("profilePicture", "");
         final String idSession = sharedPreferences.getString(ConfigActivity.SESSION_ID, "");
 
         //Inizializzo la NavigationView, utilizzata per il drawer
@@ -167,15 +176,13 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                         break;
 
                     case R.id.storico_partite:
-                        Intent history = new Intent(HistoryActivity.this, HistoryActivity.class);
-                        startActivity(history);
-                        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
                         break;
 
                     case R.id.insert_championship:
                         Intent championship = new Intent(HistoryActivity.this, ChampActivity.class);
                         startActivity(championship);
                         overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                        break;
 
                 }
                 return true;
@@ -250,7 +257,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
             public void onErrorResponse(VolleyError error) {
 
             }
-        }){
+        }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
@@ -325,6 +332,51 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         super.onPause();
     }
 
+    /**@Override
+    protected void onResume() {
+        super.onResume();
+
+        SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        String profilePic = "";
+        //Catturo il valore booleano dalle SharedPreference
+        profilePic = sharedPreferences.getString("profilePicture", "");
+        profilePictureBoolean = sharedPreferences.getBoolean(ConfigActivity.PROFILE_PIC, false);
+
+        //Se diventa vero
+        if (profilePictureBoolean = true) {
+
+            CircleImageView profilePicture = (CircleImageView) findViewById(R.id.profile_image);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            Bitmap bitmap = BitmapFactory.decodeFile(profilePic, options);
+
+            ExifInterface exif = null;
+            try {
+                exif = new ExifInterface(profilePic);
+
+                int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+                switch (rotation) {
+
+                    case ExifInterface.ORIENTATION_ROTATE_90:
+                        profilePicture.setImageBitmap(rotateImage(bitmap, 90));
+                        break;
+
+                    case ExifInterface.ORIENTATION_ROTATE_180:
+                        profilePicture.setImageBitmap(rotateImage(bitmap, 180));
+                        break;
+
+                    case ExifInterface.ORIENTATION_ROTATE_270:
+                        profilePicture.setImageBitmap(rotateImage(bitmap, 270));
+                        break;
+                }
+
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+    }**/
+
     @Override
     public void onClick(View v) {
         if (v == logoutButton) {
@@ -346,6 +398,79 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    public void loadImagefromGallery(View view) {
+
+        Intent galleryIntent = new Intent();
+        galleryIntent.setType("image/*");
+        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+
+        startActivityForResult(Intent.createChooser(galleryIntent, "Seleziona Foto"), SELECT_PICTURE);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SELECT_PICTURE) {
+
+                Uri selectedImageUri = data.getData();
+
+                try {
+
+                    SharedPreferences sharedPreferences = HistoryActivity.this.getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+
+
+                    CircleImageView imageView = (CircleImageView) findViewById(R.id.profile_image);
+                    Bitmap bmp = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
+
+                    int nh = (int) ( bmp.getHeight() * (512.0 / bmp.getWidth()) );
+                    Bitmap scaled = Bitmap.createScaledBitmap(bmp, 512, nh, true);
+
+                    String path = FileUtility.getRealPathFromURI(getApplicationContext(), Uri.parse("file://" + selectedImageUri.getPath()));
+                    editor.putString("profilePicture", path);
+                    Log.d("Profile picture", "path= " + path);
+
+                    editor.commit();
+
+                    ExifInterface exif = new ExifInterface(path);
+
+
+
+                    int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+                    switch (rotation) {
+
+                        case ExifInterface.ORIENTATION_ROTATE_90:
+                            imageView.setImageBitmap(rotateImage(scaled, 90));
+                            break;
+
+                        case ExifInterface.ORIENTATION_ROTATE_180:
+                            imageView.setImageBitmap(rotateImage(scaled, 180));
+                            break;
+
+                        case ExifInterface.ORIENTATION_ROTATE_270:
+                            imageView.setImageBitmap(rotateImage(scaled, 270));
+                            break;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                profilePictureBoolean = true;
+            }
+        }
+    }
+
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Bitmap retVal;
+
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        retVal = Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+
+        return retVal;
     }
 }
 

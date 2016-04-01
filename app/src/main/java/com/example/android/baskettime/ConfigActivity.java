@@ -64,6 +64,7 @@ public class ConfigActivity {
 
     //Userò questa variabile booleana nelle Shared Preference pre seguire se l'utente è dentro o no
     public static final String LOGGEDIN_SHARED_PREF = "loggedin";
+    public static final String PROFILE_PIC = "";
 
     //Chiavi per l'inserimento dei quarti
     public static final String KEY_SCORE_HOME_TEAM = "score_home_team";
