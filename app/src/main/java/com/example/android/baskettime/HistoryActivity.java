@@ -19,6 +19,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -82,7 +83,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
     //TextView per i dati dell'utente
     private TextView tvEmail;
     private TextView tvNameSurname;
-    private boolean profilePictureBoolean;
+    private CircleImageView profilePicture;
     public static int SELECT_PICTURE = 1;
 
     //Bottone per il logout
@@ -91,6 +92,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
     private Toolbar toolbar;
     private NavigationView navigationView;
+    boolean profilePictureBoolean = false;
     protected DrawerLayout drawerLayout;
 
 
@@ -129,7 +131,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         final SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         String email = sharedPreferences.getString(ConfigActivity.EMAIL_SHARED_PREF, "Not Available");
         String nameSurname = sharedPreferences.getString(ConfigActivity.NAME_SURNAME_PREF, "Not Available");
-        //String profilePic = sharedPreferences.getString("profilePicture", "");
+
         final String idSession = sharedPreferences.getString(ConfigActivity.SESSION_ID, "");
 
         //Inizializzo la NavigationView, utilizzata per il drawer
@@ -149,6 +151,8 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         tvNameSurname = (TextView) vi.findViewById(R.id.username_header);
         tvNameSurname.setText(nameSurname);
 
+        profilePicture = (CircleImageView) vi.findViewById(R.id.profile_image);
+
         //Aggiungo la View
         navigationView.addHeaderView(vi);
 
@@ -163,32 +167,39 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                 if (menuItem.isChecked()) menuItem.setChecked(false);
                 else menuItem.setChecked(true);
 
-                //Chiude il drawer dopo un click
-                drawerLayout.closeDrawers();
-
                 //Controlla quale click è stato fatto e esegue la giusta operazione
                 switch (menuItem.getItemId()) {
 
                     case R.id.live:
-                        Intent live = new Intent(HistoryActivity.this, LiveActivity.class);
-                        startActivity(live);
-                        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent live = new Intent(HistoryActivity.this, LiveActivity.class);
+                                startActivity(live);
+                            }
+                        }, 340);
                         break;
 
                     case R.id.storico_partite:
                         break;
 
                     case R.id.insert_championship:
-                        Intent championship = new Intent(HistoryActivity.this, ChampActivity.class);
-                        startActivity(championship);
-                        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent championship = new Intent(HistoryActivity.this, ChampActivity.class);
+                                startActivity(championship);
+                            }
+                        }, 340);
                         break;
-
                 }
+
+                //Chiude il drawer dopo un click
+                drawerLayout.closeDrawers();
+
                 return true;
             }
         });
-
 
         //Inizializza il drawer layout e il Toggle
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -203,7 +214,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onDrawerOpened(View drawerView) {
 
-                super.onDrawerClosed(drawerView);
+                super.onDrawerOpened(drawerView);
             }
         };
 
@@ -235,11 +246,11 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                         games.quarter = jsonObject.getInt(ConfigActivity.TAG_QUARTER);
                         games.id_game = jsonObject.getInt(ConfigActivity.TAG_ID_GAME);
 
-                        Log.d("Prova idgame", "Partita numero=" + games.id_game);
-                        Log.d("Prova teamhome", "String=" + games.teamHome);
-                        Log.d("Prova teamvis", "String=" + games.teamVisitor);
-                        Log.d("Prova scorehome", "String=" + games.scoreHome);
-                        Log.d("Prova scoreVisitor", "String=" + games.scoreVisitor);
+                        //Log.d("Prova idgame", "Partita numero=" + games.id_game);
+                        //Log.d("Prova teamhome", "String=" + games.teamHome);
+                        //Log.d("Prova teamvis", "String=" + games.teamVisitor);
+                        //Log.d("Prova scorehome", "String=" + games.scoreHome);
+                        //Log.d("Prova scoreVisitor", "String=" + games.scoreVisitor);
 
                         //champ.setText(champ1);
                         matchList.add(games);
@@ -275,6 +286,49 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(gameRequest);
+
+        //Catturo il valore booleano dalle SharedPreference
+        profilePictureBoolean = sharedPreferences.getBoolean(ConfigActivity.PROFILE_PIC, false);
+
+        if (profilePictureBoolean) {
+
+            String profilePic = "";
+            profilePic = sharedPreferences.getString("profilePicture", "");
+            Log.d("Prova ProfilePic", "Path: " + profilePic);
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            Bitmap bitmap = BitmapFactory.decodeFile(profilePic, options);
+
+            int nh = (int) (bitmap.getHeight() * (512.0 / bitmap.getWidth()));
+            Bitmap scaled = Bitmap.createScaledBitmap(bitmap, 512, nh, true);
+
+            ExifInterface exif = null;
+            try {
+                exif = new ExifInterface(profilePic);
+
+                int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+                switch (rotation) {
+
+                    case ExifInterface.ORIENTATION_ROTATE_90:
+                        profilePicture.setImageBitmap(rotateImage(scaled, 90));
+                        break;
+
+                    case ExifInterface.ORIENTATION_ROTATE_180:
+                        profilePicture.setImageBitmap(rotateImage(scaled, 180));
+                        break;
+
+                    case ExifInterface.ORIENTATION_ROTATE_270:
+                        profilePicture.setImageBitmap(rotateImage(scaled, 270));
+                        break;
+                }
+
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+
+        }
     }
 
     //Funzione Logout
@@ -295,15 +349,16 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
                         //Setto il valore Booleano a Falso
                         editor.putBoolean(ConfigActivity.LOGGEDIN_SHARED_PREF, false);
+                        editor.putBoolean(ConfigActivity.PROFILE_PIC, false);
 
-                        //Metto un valore vuto nella mail
+                        //Metto un valore vuoto nella mail
                         editor.putString(ConfigActivity.EMAIL_SHARED_PREF, "");
 
                         //Cancello l'id della sessione
                         editor.putString(ConfigActivity.SESSION_ID, "");
 
                         //Salvo le SharedPreference
-                        editor.commit();
+                        editor.apply();
 
                         //Faccio partire la LoginActivity
                         Intent intent = new Intent(HistoryActivity.this, LoginActivity.class);
@@ -331,51 +386,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
     public void onPause() {
         super.onPause();
     }
-
-    /**@Override
-    protected void onResume() {
-        super.onResume();
-
-        SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        String profilePic = "";
-        //Catturo il valore booleano dalle SharedPreference
-        profilePic = sharedPreferences.getString("profilePicture", "");
-        profilePictureBoolean = sharedPreferences.getBoolean(ConfigActivity.PROFILE_PIC, false);
-
-        //Se diventa vero
-        if (profilePictureBoolean = true) {
-
-            CircleImageView profilePicture = (CircleImageView) findViewById(R.id.profile_image);
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            Bitmap bitmap = BitmapFactory.decodeFile(profilePic, options);
-
-            ExifInterface exif = null;
-            try {
-                exif = new ExifInterface(profilePic);
-
-                int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-
-                switch (rotation) {
-
-                    case ExifInterface.ORIENTATION_ROTATE_90:
-                        profilePicture.setImageBitmap(rotateImage(bitmap, 90));
-                        break;
-
-                    case ExifInterface.ORIENTATION_ROTATE_180:
-                        profilePicture.setImageBitmap(rotateImage(bitmap, 180));
-                        break;
-
-                    case ExifInterface.ORIENTATION_ROTATE_270:
-                        profilePicture.setImageBitmap(rotateImage(bitmap, 270));
-                        break;
-                }
-
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        }
-    }**/
 
     @Override
     public void onClick(View v) {
@@ -421,21 +431,17 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                     SharedPreferences sharedPreferences = HistoryActivity.this.getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
 
-
                     CircleImageView imageView = (CircleImageView) findViewById(R.id.profile_image);
                     Bitmap bmp = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
 
-                    int nh = (int) ( bmp.getHeight() * (512.0 / bmp.getWidth()) );
+                    int nh = (int) (bmp.getHeight() * (512.0 / bmp.getWidth()));
                     Bitmap scaled = Bitmap.createScaledBitmap(bmp, 512, nh, true);
 
                     String path = FileUtility.getRealPathFromURI(getApplicationContext(), Uri.parse("file://" + selectedImageUri.getPath()));
                     editor.putString("profilePicture", path);
                     Log.d("Profile picture", "path= " + path);
 
-                    editor.commit();
-
                     ExifInterface exif = new ExifInterface(path);
-
 
 
                     int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
@@ -444,21 +450,25 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
                         case ExifInterface.ORIENTATION_ROTATE_90:
                             imageView.setImageBitmap(rotateImage(scaled, 90));
+                            editor.putBoolean(ConfigActivity.PROFILE_PIC, true);
                             break;
 
                         case ExifInterface.ORIENTATION_ROTATE_180:
                             imageView.setImageBitmap(rotateImage(scaled, 180));
+                            editor.putBoolean(ConfigActivity.PROFILE_PIC, true);
                             break;
 
                         case ExifInterface.ORIENTATION_ROTATE_270:
                             imageView.setImageBitmap(rotateImage(scaled, 270));
+                            editor.putBoolean(ConfigActivity.PROFILE_PIC, true);
                             break;
                     }
+
+                    editor.apply();
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-                profilePictureBoolean = true;
             }
         }
     }

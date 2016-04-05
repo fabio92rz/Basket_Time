@@ -18,6 +18,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
@@ -70,6 +71,7 @@ import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -173,26 +175,31 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+
         Bitmap bitmap = BitmapFactory.decodeFile(profilePic, options);
 
-        ExifInterface exif = null;
-        try {
-            exif = new ExifInterface(profilePic);
+        int scaling = (int) (bitmap.getHeight() * (512.0 / bitmap.getWidth()) );
+        Bitmap scaled = Bitmap.createScaledBitmap(bitmap, 512, scaling, true);
 
+        ExifInterface exif = null;
+
+        try {
+
+            exif = new ExifInterface(profilePic);
             int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
 
             switch (rotation) {
 
                 case ExifInterface.ORIENTATION_ROTATE_90:
-                    profilePicture.setImageBitmap(rotateImage(bitmap, 90));
+                    profilePicture.setImageBitmap(rotateImage(scaled, 90));
                     break;
 
                 case ExifInterface.ORIENTATION_ROTATE_180:
-                    profilePicture.setImageBitmap(rotateImage(bitmap, 180));
+                    profilePicture.setImageBitmap(rotateImage(scaled, 180));
                     break;
 
                 case ExifInterface.ORIENTATION_ROTATE_270:
-                    profilePicture.setImageBitmap(rotateImage(bitmap, 270));
+                    profilePicture.setImageBitmap(rotateImage(scaled, 270));
                     break;
             }
 
@@ -225,15 +232,23 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
                         break;
 
                     case R.id.storico_partite:
-                        Intent history = new Intent(LiveActivity.this, HistoryActivity.class);
-                        startActivity(history);
-                        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent history = new Intent(LiveActivity.this, HistoryActivity.class);
+                                startActivity(history);
+                            }
+                        }, 340);
                         break;
 
                     case R.id.insert_championship:
-                        Intent championship = new Intent(LiveActivity.this, ChampActivity.class);
-                        startActivity(championship);
-                        overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent championship = new Intent(LiveActivity.this, ChampActivity.class);
+                                startActivity(championship);
+                            }
+                        }, 340);
                         break;
                 }
                 return true;
@@ -262,7 +277,6 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
         //Chiamo syncState per far comparire il toggle
         actionBarDrawerToggle.syncState();
-
         getMatch();
 
     }
@@ -547,75 +561,12 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
-    /**public void loadImagefromGallery(View view) {
-
-        Intent galleryIntent = new Intent();
-        galleryIntent.setType("image/*");
-        galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-
-        startActivityForResult(Intent.createChooser(galleryIntent, "Seleziona Foto"), SELECT_PICTURE);
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_PICTURE) {
-
-                Uri selectedImageUri = data.getData();
-
-                try {
-
-                    SharedPreferences sharedPreferences = LiveActivity.this.getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-
-
-                    CircleImageView imageView = (CircleImageView) findViewById(R.id.profile_image);
-                    Bitmap bmp = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
-
-                    int nh = (int) ( bmp.getHeight() * (512.0 / bmp.getWidth()) );
-                    Bitmap scaled = Bitmap.createScaledBitmap(bmp, 512, nh, true);
-
-                    String path = FileUtility.getRealPathFromURI(getApplicationContext(), Uri.parse("file://" + selectedImageUri.getPath()));
-                    editor.putString("profilePicture", path);
-
-                    editor.commit();
-
-                    ExifInterface exif = new ExifInterface(path);
-
-
-
-                    int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-
-                    switch (rotation) {
-
-                        case ExifInterface.ORIENTATION_ROTATE_90:
-                            imageView.setImageBitmap(rotateImage(scaled, 90));
-                            break;
-
-                        case ExifInterface.ORIENTATION_ROTATE_180:
-                            imageView.setImageBitmap(rotateImage(scaled, 180));
-                            break;
-
-                        case ExifInterface.ORIENTATION_ROTATE_270:
-                            imageView.setImageBitmap(rotateImage(scaled, 270));
-                            break;
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }
-    }**/
-
     public static Bitmap rotateImage(Bitmap source, float angle) {
         Bitmap retVal;
 
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         retVal = Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
-
         return retVal;
     }
 }

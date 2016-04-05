@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+        <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:background="#eeeeee">
+
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/tool_bar" />
+
+
+            <TextView
+                android:id="@+id/championship"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/toolbar"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:text="Partite concluse"
+                android:textColor="#616161"
+                android:textSize="20sp" />
+
+            <View
+                android:layout_width="50dp"
+                android:layout_height="1dp"
+                android:layout_below="@id/championship"
+                android:background="@android:color/holo_blue_light"
+                android:layout_centerInParent="true"
+                android:id="@+id/view_divider"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/view_divider"
+                tools:context=".HistoryActivity">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="3dp" />
+
+            </LinearLayout>
+        </RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

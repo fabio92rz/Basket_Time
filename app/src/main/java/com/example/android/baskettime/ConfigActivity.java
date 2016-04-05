@@ -41,7 +41,6 @@ public class ConfigActivity {
     public static final String KEY_CHAMP = "championship";
     public static final String KEY_TEAM = "team";
     public static final String KEY_MATCH_ID = "id";
-    public static final String KEY_TEAM2 = "team";
     public static final String KEY_VISITOR_TEAM = "id_home_visitor";
     public static final String KEY_HOME_TEAM = "id_home_team";
     public static final String TAG_SCORE_HOME = "final_score_home";
@@ -64,7 +63,7 @@ public class ConfigActivity {
 
     //Userò questa variabile booleana nelle Shared Preference pre seguire se l'utente è dentro o no
     public static final String LOGGEDIN_SHARED_PREF = "loggedin";
-    public static final String PROFILE_PIC = "";
+    public static final String PROFILE_PIC = "profilePic";
 
     //Chiavi per l'inserimento dei quarti
     public static final String KEY_SCORE_HOME_TEAM = "score_home_team";
