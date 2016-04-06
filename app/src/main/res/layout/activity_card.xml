@@ -19,12 +19,13 @@
 
         <ImageButton
             android:id="@+id/popupmenu"
-            android:background="@drawable/dots_vertical"
+            android:background="@drawable/dots_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="showPopup"
+            android:layout_marginRight="5dp"
             android:backgroundTint="@android:color/darker_gray"
-            android:layout_alignParentRight="true" />
+            android:layout_alignParentRight="true"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -39,22 +40,46 @@
             android:text="Quarto"
             android:textColor="#000000"
             android:textSize="15sp"
-            android:layout_below="@id/championship_cv"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="18dp"
+            android:layout_below="@id/popupmenu"
             android:id="@+id/quart"/>
 
         <TextView
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/quart"
+            android:layout_marginTop="3dp"
             android:id="@+id/final_quarter"
             android:gravity="center_horizontal"
             android:text="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Orario"
+            android:id="@+id/orario"
+            android:textSize="15sp"
+            android:layout_below="@id/popupmenu"
+            android:layout_marginTop="18dp"
+            android:textColor="@android:color/black"
+            android:layout_alignParentRight="true"/>
+
+        <View
+            android:id="@+id/finishView"
+            android:layout_width="1dp"
+            android:layout_height="60dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_toLeftOf="@id/orario"
+            android:layout_below="@id/championship_cv"
+            android:background="@android:color/black" />
 
         <View
             android:id="@+id/startview"
             android:layout_toRightOf="@id/quart"
             android:layout_width="1dp"
-            android:layout_height="40dp"
+            android:layout_height="60dp"
             android:layout_marginRight="5dp"
             android:layout_marginLeft="10dp"
             android:layout_below="@id/championship_cv"
@@ -64,37 +89,41 @@
             android:layout_below="@id/championship_cv"
             android:id="@+id/teamHome_cv"
             android:layout_width="100dp"
+            android:text="Messina"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/startview"
             android:textColor="#039be5"
-            android:textSize="15sp" />
+            android:textSize="17sp" />
 
         <TextView
             android:id="@+id/teamVisitor_cv"
             android:layout_width="100dp"
+            android:text="Catania"
             android:layout_height="wrap_content"
             android:layout_below="@+id/teamHome_cv"
             android:layout_toRightOf="@id/startview"
+            android:layout_marginTop="11dp"
             android:textColor="#F44336"
-            android:textSize="15sp" />
+            android:textSize="17sp" />
 
-        <View
-            android:id="@+id/finishView"
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text="15:30"
+            android:id="@+id/time_cv"
+            android:textSize="15sp"
             android:layout_alignParentRight="true"
-            android:layout_width="1dp"
-            android:layout_height="40dp"
-            android:layout_marginRight="40dp"
-            android:layout_marginLeft="5dp"
-            android:layout_below="@id/championship_cv"
-            android:background="@android:color/black" />
+            android:layout_below="@id/orario"
+            android:layout_marginTop="3dp" />
 
         <TextView
             android:id="@+id/scoreHome_cv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/finishView"
+            android:text="0"
             android:layout_below="@id/championship_cv"
-            android:textSize="15sp" />
+            android:textSize="17sp" />
 
         <TextView
             android:id="@+id/scoreVisitor_cv"
@@ -102,7 +131,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/scoreHome_cv"
             android:layout_toLeftOf="@id/finishView"
-            android:textSize="15sp" />
+            android:layout_marginTop="11dp"
+            android:text="0"
+            android:textSize="17sp" />
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>

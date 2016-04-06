@@ -33,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,6 +49,8 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
     private Spinner spinnerHome;
     private Spinner spinnerVisitor;
     private Spinner spinnerChampionship;
+
+    public Calendar calendar = Calendar.getInstance();
 
     private ArrayList<String> teamHome;
     private ArrayList<String> teamVisitor;
@@ -228,9 +231,38 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
         Log.i("idVisitor", "getstring" + idvisitor);
         Log.d("Championship", "Get ID" + idChamp);
 
+        final int day = calendar.get(Calendar.DATE);
+        final int month = calendar.get(Calendar.MONTH);
+        final int year = calendar.get(Calendar.YEAR);
+        final int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        final int minute = calendar.get(Calendar.MINUTE);
+
+        String date = "";
+        String time = "";
+
+        if (day < 10 && month + 1 < 10){
+
+            date = "0" + String.valueOf(day) + "/" + "0" + String.valueOf(month + 1) + "/" + String.valueOf(year);
+
+        }else {
+
+            date = String.valueOf(day) + "/" + String.valueOf(month) + "/" + String.valueOf(year);
+        }
+
+        if (hour <10 && minute <10){
+
+            time = "0" + String.valueOf(hour) + ":" + "0" + String.valueOf(minute);
+
+        } else {
+
+            time = String.valueOf(hour) + ":" + String.valueOf(minute);
+
+        }
+
+        final String Time = time;
+        final String Date = date;
 
         class insertTeams extends AsyncTask<Void, Void, String> {
-
 
             @Override
             protected void onPreExecute() {
@@ -255,6 +287,8 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
                 param.put(ConfigActivity.TAG_GAMES_CHAMP, idChamp);
                 param.put(ConfigActivity.KEY_ID_SESSION, sessionId);
                 param.put("f", function);
+                param.put("day", Date);
+                param.put("time", Time);
 
                 RequestHandler requestHandler = new RequestHandler();
                 String res = requestHandler.sendPostRequest(ConfigActivity.ENTRY, param);

@@ -43,10 +43,31 @@
                 android:id="@+id/view_divider"
                 />
 
+            <ImageView
+                android:layout_below="@id/view_divider"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/calendar_text"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/calendar_icon"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Data"
+                android:layout_toRightOf="@id/calendar_icon"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_below="@id/view_divider"
+                android:textSize="20sp"
+                android:id="@+id/date_cv"/>
+
             <LinearLayout
+                android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/view_divider"
+                android:layout_below="@id/date_cv"
                 tools:context=".HistoryActivity">
 
                 <android.support.v7.widget.RecyclerView

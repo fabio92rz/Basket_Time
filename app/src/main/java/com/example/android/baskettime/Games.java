@@ -28,6 +28,8 @@ public class Games {
     String teamHome;
     String teamVisitor;
     String championship;
+    //String date;
+    String time;
     Integer id_game;
     Integer scoreHome;
     Integer scoreVisitor;
@@ -56,6 +58,8 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
     @Override
     public void onBindViewHolder(GamesViewHolder holder, int position) {
 
+        //holder.dateTv.setText(matches.get(position).date);
+        holder.timeTv.setText(matches.get(position).time);
         holder.champ.setText(matches.get(position).championship);
         holder.teamHome.setText(matches.get(position).teamHome);
         holder.scoreHome.setText(String.valueOf(matches.get(position).scoreHome));
@@ -89,6 +93,8 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
         TextView teamHome;
         TextView teamVisitor;
         TextView scoreHome;
+        TextView dateTv;
+        TextView timeTv;
         TextView scoreVisitor;
         TextView quarter;
         ImageButton options;
@@ -99,6 +105,8 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
 
             click = itemView;
             cv = (CardView) itemView.findViewById(R.id.cv);
+            timeTv = (TextView) itemView.findViewById(R.id.time_cv);
+            //dateTv = (TextView) itemView.findViewById(R.id.date_cv);
             options = (ImageButton) itemView.findViewById(R.id.popupmenu);
             quarter = (TextView) itemView.findViewById(R.id.final_quarter);
             champ = (TextView) itemView.findViewById(R.id.championship_cv);
@@ -110,8 +118,6 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
             click.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    int position = (int) v.getTag();
 
 
                     Intent matchDetails = new Intent(v.getContext(), Popup0Activity.class);
@@ -137,7 +143,7 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
 
-                            switch (item.getItemId()){
+                            switch (item.getItemId()) {
 
                                 case R.id.delete:
                                     Toast.makeText(itemView.getContext(), item.getTitle(), Toast.LENGTH_LONG).show();

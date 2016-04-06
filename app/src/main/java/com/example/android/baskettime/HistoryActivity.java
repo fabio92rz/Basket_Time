@@ -83,6 +83,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
     //TextView per i dati dell'utente
     private TextView tvEmail;
     private TextView tvNameSurname;
+    private TextView dateTv;
     private CircleImageView profilePicture;
     public static int SELECT_PICTURE = 1;
 
@@ -112,6 +113,8 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
         final RVAdapter rvAdapter = new RVAdapter(matchList);
         rv.setAdapter(rvAdapter);
+
+        dateTv = (TextView) findViewById(R.id.date_cv);
 
         //Creo un inflater per inflazionare il layout dell'header
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -232,12 +235,15 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                     JSONObject j = null;
                     j = new JSONObject(response);
                     JSONArray matches = j.getJSONArray(ConfigActivity.JSON_GAMES_TAG);
+                    String date = "";
 
                     for (int i = 0; i < matches.length(); i++) {
 
                         JSONObject jsonObject = matches.getJSONObject(i);
                         Games games = new Games();
 
+                        date = jsonObject.getString("day");
+                        games.time = jsonObject.getString("time");
                         games.championship = jsonObject.getString(ConfigActivity.TAG_CHAMP_HIST);
                         games.teamHome = jsonObject.getString(ConfigActivity.TAG_HOME_TEAM_ID);
                         games.scoreHome = jsonObject.getInt(ConfigActivity.TAG_SCORE_HOME);
@@ -254,6 +260,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
                         //champ.setText(champ1);
                         matchList.add(games);
+                        dateTv.setText(date);
 
                     }
 
@@ -286,49 +293,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(gameRequest);
-
-        //Catturo il valore booleano dalle SharedPreference
-        profilePictureBoolean = sharedPreferences.getBoolean(ConfigActivity.PROFILE_PIC, false);
-
-        if (profilePictureBoolean) {
-
-            String profilePic = "";
-            profilePic = sharedPreferences.getString("profilePicture", "");
-            Log.d("Prova ProfilePic", "Path: " + profilePic);
-
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            Bitmap bitmap = BitmapFactory.decodeFile(profilePic, options);
-
-            int nh = (int) (bitmap.getHeight() * (512.0 / bitmap.getWidth()));
-            Bitmap scaled = Bitmap.createScaledBitmap(bitmap, 512, nh, true);
-
-            ExifInterface exif = null;
-            try {
-                exif = new ExifInterface(profilePic);
-
-                int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-
-                switch (rotation) {
-
-                    case ExifInterface.ORIENTATION_ROTATE_90:
-                        profilePicture.setImageBitmap(rotateImage(scaled, 90));
-                        break;
-
-                    case ExifInterface.ORIENTATION_ROTATE_180:
-                        profilePicture.setImageBitmap(rotateImage(scaled, 180));
-                        break;
-
-                    case ExifInterface.ORIENTATION_ROTATE_270:
-                        profilePicture.setImageBitmap(rotateImage(scaled, 270));
-                        break;
-                }
-
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-
-        }
     }
 
     //Funzione Logout
@@ -407,6 +371,56 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        SharedPreferences sharedPreferences = HistoryActivity.this.getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, MODE_PRIVATE);
+        //Catturo il valore booleano dalle SharedPreference
+        profilePictureBoolean = sharedPreferences.getBoolean(ConfigActivity.PROFILE_PIC, false);
+
+        if (profilePictureBoolean) {
+
+            String profilePic = "";
+            profilePic = sharedPreferences.getString("profilePicture", "");
+            Log.d("Prova ProfilePic", "Path: " + profilePic);
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            Bitmap bitmap = BitmapFactory.decodeFile(profilePic, options);
+
+            int nh = (int) (bitmap.getHeight() * (512.0 / bitmap.getWidth()));
+            Bitmap scaled = Bitmap.createScaledBitmap(bitmap, 512, nh, true);
+
+            ExifInterface exif = null;
+            try {
+                exif = new ExifInterface(profilePic);
+
+                int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+                switch (rotation) {
+
+                    case ExifInterface.ORIENTATION_ROTATE_90:
+                        profilePicture.setImageBitmap(rotateImage(scaled, 90));
+                        break;
+
+                    case ExifInterface.ORIENTATION_ROTATE_180:
+                        profilePicture.setImageBitmap(rotateImage(scaled, 180));
+                        break;
+
+                    case ExifInterface.ORIENTATION_ROTATE_270:
+                        profilePicture.setImageBitmap(rotateImage(scaled, 270));
+                        break;
+                }
+
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+
+        }
 
     }
 
