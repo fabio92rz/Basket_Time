@@ -60,6 +60,7 @@ public class ConfigActivity {
     public static final String EMAIL_SHARED_PREF = "email";
     public static final String NAME_SURNAME_PREF = "nameSurname";
     public static final String SESSION_ID = "sessionid";
+    public static final String userId = "id";
 
     //Userò questa variabile booleana nelle Shared Preference pre seguire se l'utente è dentro o no
     public static final String LOGGEDIN_SHARED_PREF = "loggedin";

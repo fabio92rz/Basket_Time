@@ -86,7 +86,7 @@ import com.squareup.picasso.Picasso;
 
 public class LiveActivity extends AppCompatActivity implements View.OnClickListener {
 
-    int scoreTeamHm = 0, scoreTeamVis = 0, quarter = 1, imageHeight, imageWidth;
+    int scoreTeamHm = 0, scoreTeamVis = 0, quarter = 1;
 
     //TextView per i dati dell'utente
     private TextView tvEmail;
@@ -95,6 +95,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
     //Bottone per il logout
     private Button logoutButton;
     private Button updateResult;
+    private Button endGame;
 
     //Varibili per la Navigation View
     private Toolbar toolbar;
@@ -129,8 +130,10 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         //Inizializzo il Bottone per il logout
         logoutButton = (Button) findViewById(R.id.logout_button);
         updateResult = (Button) findViewById(R.id.start_button);
+        endGame = (Button) findViewById(R.id.stop_button);
         logoutButton.setOnClickListener(this);
         updateResult.setOnClickListener(this);
+        endGame.setOnClickListener(this);
 
         //Inizializzo le textView
         teamhome = (TextView) findViewById(R.id.team_home_text);
@@ -178,7 +181,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
         Bitmap bitmap = BitmapFactory.decodeFile(profilePic, options);
 
-        int scaling = (int) (bitmap.getHeight() * (512.0 / bitmap.getWidth()) );
+        int scaling = (int) (bitmap.getHeight() * (512.0 / bitmap.getWidth()));
         Bitmap scaled = Bitmap.createScaledBitmap(bitmap, 512, scaling, true);
 
         ExifInterface exif = null;
@@ -552,12 +555,17 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+
         if (v == logoutButton) {
             logout();
         }
 
         if (v == updateResult) {
             insertQuarter();
+        }
+
+        if (v == endGame) {
+            endGame();
         }
     }
 
@@ -569,4 +577,35 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         retVal = Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
         return retVal;
     }
+
+    private void endGame() {
+
+        //Credo un dialogo di allerta per confermare il logout
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage("Partita terminata?");
+        alertDialogBuilder.setPositiveButton("Si",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+
+                        //Faccio partire la LoginActivity
+                        Intent intent = new Intent(LiveActivity.this, HistoryActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
+        alertDialogBuilder.setNegativeButton("No",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+
+                    }
+                });
+
+        //Showing the alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+
 }

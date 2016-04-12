@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +29,7 @@ public class Games {
     String teamHome;
     String teamVisitor;
     String championship;
-    //String date;
+    String date;
     String time;
     Integer id_game;
     Integer scoreHome;
@@ -42,6 +43,7 @@ public class Games {
 
 class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
     List<Games> matches;
+    String tempTime = "";
 
     RVAdapter(List<Games> matches) {
 
@@ -58,7 +60,16 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
     @Override
     public void onBindViewHolder(GamesViewHolder holder, int position) {
 
-        //holder.dateTv.setText(matches.get(position).date);
+
+        if (! String.valueOf(matches.get(position).date).equals(tempTime)) {
+
+            holder.dateTv.setText(matches.get(position).date);
+            tempTime = String.valueOf(matches.get(position).date);
+            holder.dateTv.setVisibility(View.VISIBLE);
+            holder.dateImage.setVisibility(View.VISIBLE);
+
+        }
+
         holder.timeTv.setText(matches.get(position).time);
         holder.champ.setText(matches.get(position).championship);
         holder.teamHome.setText(matches.get(position).teamHome);
@@ -90,6 +101,7 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
         Integer selectedGame;
         View click;
         TextView champ;
+        ImageView dateImage;
         TextView teamHome;
         TextView teamVisitor;
         TextView scoreHome;
@@ -105,8 +117,9 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
 
             click = itemView;
             cv = (CardView) itemView.findViewById(R.id.cv);
+            dateImage = (ImageView) itemView.findViewById(R.id.calendar_icon);
             timeTv = (TextView) itemView.findViewById(R.id.time_cv);
-            //dateTv = (TextView) itemView.findViewById(R.id.date_cv);
+            dateTv = (TextView) itemView.findViewById(R.id.date_cv);
             options = (ImageButton) itemView.findViewById(R.id.popupmenu);
             quarter = (TextView) itemView.findViewById(R.id.final_quarter);
             champ = (TextView) itemView.findViewById(R.id.championship_cv);

@@ -31,6 +31,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -62,6 +63,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -83,7 +85,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
     //TextView per i dati dell'utente
     private TextView tvEmail;
     private TextView tvNameSurname;
-    private TextView dateTv;
+    //private TextView dateTv;
     private CircleImageView profilePicture;
     public static int SELECT_PICTURE = 1;
 
@@ -95,6 +97,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
     private NavigationView navigationView;
     boolean profilePictureBoolean = false;
     protected DrawerLayout drawerLayout;
+    public Bitmap scaled;
 
 
     @Override
@@ -114,7 +117,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         final RVAdapter rvAdapter = new RVAdapter(matchList);
         rv.setAdapter(rvAdapter);
 
-        dateTv = (TextView) findViewById(R.id.date_cv);
+        //dateTv = (TextView) findViewById(R.id.date_cv);
 
         //Creo un inflater per inflazionare il layout dell'header
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -235,14 +238,14 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                     JSONObject j = null;
                     j = new JSONObject(response);
                     JSONArray matches = j.getJSONArray(ConfigActivity.JSON_GAMES_TAG);
-                    String date = "";
 
                     for (int i = 0; i < matches.length(); i++) {
 
                         JSONObject jsonObject = matches.getJSONObject(i);
                         Games games = new Games();
 
-                        date = jsonObject.getString("day");
+
+                        games.date = jsonObject.getString("day");
                         games.time = jsonObject.getString("time");
                         games.championship = jsonObject.getString(ConfigActivity.TAG_CHAMP_HIST);
                         games.teamHome = jsonObject.getString(ConfigActivity.TAG_HOME_TEAM_ID);
@@ -252,15 +255,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                         games.quarter = jsonObject.getInt(ConfigActivity.TAG_QUARTER);
                         games.id_game = jsonObject.getInt(ConfigActivity.TAG_ID_GAME);
 
-                        //Log.d("Prova idgame", "Partita numero=" + games.id_game);
-                        //Log.d("Prova teamhome", "String=" + games.teamHome);
-                        //Log.d("Prova teamvis", "String=" + games.teamVisitor);
-                        //Log.d("Prova scorehome", "String=" + games.scoreHome);
-                        //Log.d("Prova scoreVisitor", "String=" + games.scoreVisitor);
-
-                        //champ.setText(champ1);
                         matchList.add(games);
-                        dateTv.setText(date);
 
                     }
 
@@ -360,7 +355,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         if (v == newgame) {
             Intent newgame = new Intent(HistoryActivity.this, NewGameActivity.class);
             startActivity(newgame);
-            overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+            //overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
         }
     }
 
@@ -375,7 +370,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
 
         SharedPreferences sharedPreferences = HistoryActivity.this.getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, MODE_PRIVATE);
@@ -435,6 +430,8 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        final SharedPreferences sharedPreferences = HistoryActivity.this.getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_PICTURE) {
 
@@ -442,14 +439,14 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
                 try {
 
-                    SharedPreferences sharedPreferences = HistoryActivity.this.getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+
                     SharedPreferences.Editor editor = sharedPreferences.edit();
 
                     CircleImageView imageView = (CircleImageView) findViewById(R.id.profile_image);
                     Bitmap bmp = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
 
                     int nh = (int) (bmp.getHeight() * (512.0 / bmp.getWidth()));
-                    Bitmap scaled = Bitmap.createScaledBitmap(bmp, 512, nh, true);
+                    scaled = Bitmap.createScaledBitmap(bmp, 512, nh, true);
 
                     String path = FileUtility.getRealPathFromURI(getApplicationContext(), Uri.parse("file://" + selectedImageUri.getPath()));
                     editor.putString("profilePicture", path);
@@ -485,6 +482,44 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                 }
             }
         }
+
+        StringRequest pictureRequest = new StringRequest(Request.Method.POST, ConfigActivity.ENTRY, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError{
+                Map<String, String> params = new HashMap<>();
+
+                final String function = "uploadPhoto";
+                String profilePicImage = getStringImage(scaled);
+
+                Log.d("profilePic prova", "test: " + profilePicImage);
+
+                params.put("f", function);
+                params.put("profile_picture", sharedPreferences.getString("profilePicture", ""));
+
+                Log.d("prova path", "path: " + sharedPreferences.getString("profilePicture", ""));
+
+                params.put("profilePicture", profilePicImage);
+                params.put("id", String.valueOf(sharedPreferences.getInt("userId", 0)));
+
+                Log.d("prova dell'Id", "id= " + String.valueOf(sharedPreferences.getInt("userId", 0)));
+
+                return params;
+            }
+        };
+
+        RequestQueue pictureQueue = Volley.newRequestQueue(this);
+        pictureQueue.add(pictureRequest);
+
     }
 
     public static Bitmap rotateImage(Bitmap source, float angle) {
@@ -495,6 +530,15 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         retVal = Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
 
         return retVal;
+    }
+
+    public String getStringImage(Bitmap source){
+        ByteArrayOutputStream profilePictureByte = new ByteArrayOutputStream();
+        source.compress(Bitmap.CompressFormat.JPEG, 100, profilePictureByte);
+        byte [] profilePicBytes = profilePictureByte.toByteArray();
+        String encodedProfilePic = Base64.encodeToString(profilePicBytes, Base64.DEFAULT);
+
+        return encodedProfilePic;
     }
 }
 

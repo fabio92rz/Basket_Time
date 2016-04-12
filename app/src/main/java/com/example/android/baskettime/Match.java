@@ -16,18 +16,18 @@ public class Match {
 
     private ArrayList<String> championship;
 
-    //private ArrayList<String> date;
+    private ArrayList<String> date;
     private ArrayList<String> time;
 
 
-    public Match(ArrayList<String> homeTeam, ArrayList<String> visitorTeam, ArrayList<Integer> scoreHome, ArrayList<Integer> scoreVisitors, ArrayList<String> championship, ArrayList<String> time) {
+    public Match(ArrayList<String> homeTeam, ArrayList<String> visitorTeam, ArrayList<Integer> scoreHome, ArrayList<Integer> scoreVisitors, ArrayList<String> championship, ArrayList<String> date, ArrayList<String> time) {
 
         this.homeTeam = homeTeam;
         this.visitorTeam = visitorTeam;
         this.scoreHome = scoreHome;
         this.scoreVisitors = scoreVisitors;
         this.championship = championship;
-        //this.date = date;
+        this.date = date;
         this.time = time;
     }
 
@@ -85,7 +85,7 @@ public class Match {
         return championship;
     }
 
-    /**public void setDate(ArrayList<String> date){
+    public void setDate(ArrayList<String> date){
 
         this.date = date;
     }
@@ -93,7 +93,7 @@ public class Match {
     public ArrayList<String> getDate (ArrayList<String> date){
 
         return date;
-    }**/
+    }
 
     public void setTime(ArrayList<String> time){
 

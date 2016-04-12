@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Message;
@@ -154,6 +155,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String surname = "";
                 String status = "";
                 String userSession = "";
+                int id = 0;
 
                 try {
 
@@ -169,6 +171,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             surname = jsonObject.getString(ConfigActivity.TAG_SURNAME);
                             status = jsonObject.getString(ConfigActivity.TAG_STATUS);
                             userSession = jsonObject.getString("session");
+                            id = jsonObject.getInt(ConfigActivity.TAG_ID);
 
 
                         } catch (JSONException e) {
@@ -194,7 +197,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     editor.putString(ConfigActivity.EMAIL_SHARED_PREF, email);
                     editor.putString(ConfigActivity.NAME_SURNAME_PREF, WordUtils.capitalize(name) + " " + WordUtils.capitalize(surname));
                     editor.putString(ConfigActivity.SESSION_ID, userSession);
+                    editor.putInt(ConfigActivity.userId, id);
 
+                    Log.d("prova id user", "id= " + id);
                     //Salvo i valori
                     editor.commit();
 
