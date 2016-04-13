@@ -98,7 +98,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         eTPassword = (EditText) findViewById(R.id.login_pass_text);
 
         //Inizializzo il bottone e setto il ClickListener
-        loginButton = (Button) findViewById(R.id.login_butt);
+        loginButton = (Button) findViewById(R.id.login_button);
         loginButton.setOnClickListener(this);
 
 
@@ -155,6 +155,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String surname = "";
                 String status = "";
                 String userSession = "";
+                String profilePicPath = "";
                 int id = 0;
 
                 try {
@@ -172,6 +173,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             status = jsonObject.getString(ConfigActivity.TAG_STATUS);
                             userSession = jsonObject.getString("session");
                             id = jsonObject.getInt(ConfigActivity.TAG_ID);
+                            profilePicPath = jsonObject.getString("profilePicturePath");
 
 
                         } catch (JSONException e) {
@@ -194,14 +196,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     //Aggiungo i valori all'editor
                     editor.putBoolean(ConfigActivity.LOGGEDIN_SHARED_PREF, true);
+                    editor.putBoolean(ConfigActivity.PROFILE_PIC, true);
                     editor.putString(ConfigActivity.EMAIL_SHARED_PREF, email);
                     editor.putString(ConfigActivity.NAME_SURNAME_PREF, WordUtils.capitalize(name) + " " + WordUtils.capitalize(surname));
                     editor.putString(ConfigActivity.SESSION_ID, userSession);
                     editor.putInt(ConfigActivity.userId, id);
+                    editor.putString("profilePicture", profilePicPath);
 
                     Log.d("prova id user", "id= " + id);
+
                     //Salvo i valori
-                    editor.commit();
+                    editor.apply();
 
                     //Tolgo il popup di caricamento
                     loading.dismiss();

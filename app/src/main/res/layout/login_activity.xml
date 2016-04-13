@@ -43,14 +43,14 @@
         android:backgroundTint="#FFFFFF" />
 
 
-    <android.support.v7.widget.AppCompatButton
+    <Button
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
         android:layout_marginBottom="24dp"
         android:layout_marginTop="24dp"
         android:padding="12dp"
         android:text="Login"
-        android:id="@+id/login_butt"
+        android:id="@+id/login_button"
         android:background="@drawable/custom_button"/>
 
     <TextView

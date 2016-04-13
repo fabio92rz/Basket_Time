@@ -45,6 +45,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -73,6 +74,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import biz.kasual.materialnumberpicker.MaterialNumberPicker;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import android.graphics.Matrix;
@@ -83,6 +85,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Picasso;
+import com.vi.swipenumberpicker.OnValueChangeListener;
+import com.vi.swipenumberpicker.SwipeNumberPicker;
 
 public class LiveActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -96,6 +100,8 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
     private Button logoutButton;
     private Button updateResult;
     private Button endGame;
+    private SwipeNumberPicker quarterPicker;
+    private LinearLayout quarterLayout;
 
     //Varibili per la Navigation View
     private Toolbar toolbar;
@@ -104,13 +110,13 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
     private String teamHome = "";
     private String teamVisitor = "";
-    final String function = "insertQuarter";
     private TextView teamhome;
     private TextView teamvis;
     private TextView quarterView;
     private TextView scoreView;
     private TextView scoreViewVisitor;
     private CircleImageView profilePicture;
+    final String function = "insertQuarter";
 
 
     @Override
@@ -126,6 +132,23 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         //Inizializzo la Toolbar e la inserisco nell'actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        quarterPicker = (SwipeNumberPicker) findViewById(R.id.quarterPicker);
+
+        quarterPicker.setOnValueChangeListener(new OnValueChangeListener() {
+            @Override
+            public boolean onValueChange(SwipeNumberPicker view, int oldValue, int newValue) {
+                boolean isValueOk = (newValue & 1) == 0;
+                if (isValueOk)
+                    quarterPicker.setText(Integer.toString(newValue) + "°");
+
+                return isValueOk;
+            }
+        });
+        //quarterPicker.setMinValue(0);
+        //quarterPicker.setMaxValue(500);
+        //quarterPicker.setWrapSelectorWheel(false);
+
 
         //Inizializzo il Bottone per il logout
         logoutButton = (Button) findViewById(R.id.logout_button);

@@ -48,6 +48,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -487,6 +488,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onResponse(String response) {
 
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -499,19 +501,14 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                 Map<String, String> params = new HashMap<>();
 
                 final String function = "uploadPhoto";
-                String profilePicImage = getStringImage(scaled);
-
-                Log.d("profilePic prova", "test: " + profilePicImage);
+                final String idSession = sharedPreferences.getString(ConfigActivity.SESSION_ID, "");
+                final String profilePicImage = getStringImage(scaled);
 
                 params.put("f", function);
-                params.put("profile_picture", sharedPreferences.getString("profilePicture", ""));
-
-                Log.d("prova path", "path: " + sharedPreferences.getString("profilePicture", ""));
-
                 params.put("profilePicture", profilePicImage);
-                params.put("id", String.valueOf(sharedPreferences.getInt("userId", 0)));
-
-                Log.d("prova dell'Id", "id= " + String.valueOf(sharedPreferences.getInt("userId", 0)));
+                params.put(ConfigActivity.KEY_ID_SESSION, idSession);
+                params.put("profile_picture", sharedPreferences.getString("profilePicture", ""));
+                params.put("id", String.valueOf(sharedPreferences.getInt(ConfigActivity.userId, 0)));
 
                 return params;
             }
