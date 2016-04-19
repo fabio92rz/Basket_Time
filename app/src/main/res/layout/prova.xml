@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <me.angrybyte.numberpicker.view.ActualNumberPicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:show_bars="false"
+        app:draw_over_controls="false"
+        app:draw_over_text="false"
+        app:show_controls="false"
+        app:show_fast_controls="false"/>
+
+    <com.vi.swipenumberpicker.SwipeNumberPicker
+        android:layout_width="120dp"
+        android:textSize="25sp"
+        android:layout_height="60dp"
+        android:id="@+id/quarterPicker"
+        app:snp_min="0"
+        app:snp_max="500"
+        />
+
+</LinearLayout>

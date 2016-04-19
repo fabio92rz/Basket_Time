@@ -196,12 +196,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     //Aggiungo i valori all'editor
                     editor.putBoolean(ConfigActivity.LOGGEDIN_SHARED_PREF, true);
+                    Log.d("ProfilePicPath", "prova=" + profilePicPath);
+
+
+                    Log.d("Prova controllo", "");
                     editor.putBoolean(ConfigActivity.PROFILE_PIC, true);
+                    editor.putString("profilePicturePath", profilePicPath);
+
                     editor.putString(ConfigActivity.EMAIL_SHARED_PREF, email);
                     editor.putString(ConfigActivity.NAME_SURNAME_PREF, WordUtils.capitalize(name) + " " + WordUtils.capitalize(surname));
                     editor.putString(ConfigActivity.SESSION_ID, userSession);
                     editor.putInt(ConfigActivity.userId, id);
-                    editor.putString("profilePicture", profilePicPath);
 
                     Log.d("prova id user", "id= " + id);
 
@@ -233,7 +238,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 //Aggiungo i parametri alla richiesta
                 params.put(ConfigActivity.KEY_EMAIL, email);
                 params.put(ConfigActivity.KEY_PASSWORD, password);
-                params.put("f", function );
+                params.put("f", function);
 
                 //Ritorno i paramentri
                 return params;
@@ -252,7 +257,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             login();
         }
 
-        if (v == guest){
+        if (v == guest) {
 
             Intent guestactivity = new Intent(LoginActivity.this, GuestActivity.class);
             startActivity(guestactivity);

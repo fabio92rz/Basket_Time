@@ -145,9 +145,9 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
                 return isValueOk;
             }
         });
-        //quarterPicker.setMinValue(0);
-        //quarterPicker.setMaxValue(500);
-        //quarterPicker.setWrapSelectorWheel(false);
+
+
+
 
 
         //Inizializzo il Bottone per il logout
@@ -166,7 +166,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         String email = sharedPreferences.getString(ConfigActivity.EMAIL_SHARED_PREF, "Not Available");
         String nameSurname = sharedPreferences.getString(ConfigActivity.NAME_SURNAME_PREF, "Not Available");
-        String profilePic = sharedPreferences.getString("profilePicture", "");
+        String profilePic = sharedPreferences.getString(ConfigActivity.PROFILE_PIC_90, "");
 
         Log.d("Live Activity", "getString()" + email);
         Log.d("Live Activity", "profilePicPath= " + profilePic);
@@ -198,40 +198,8 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         scoreView.setText(String.valueOf(scoreTeamVis));
 
         profilePicture = (CircleImageView) vi.findViewById(R.id.profile_image);
+        Picasso.with(this).load(profilePic).placeholder(R.drawable.account_circle).into(profilePicture);
 
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-
-        Bitmap bitmap = BitmapFactory.decodeFile(profilePic, options);
-
-        int scaling = (int) (bitmap.getHeight() * (512.0 / bitmap.getWidth()));
-        Bitmap scaled = Bitmap.createScaledBitmap(bitmap, 512, scaling, true);
-
-        ExifInterface exif = null;
-
-        try {
-
-            exif = new ExifInterface(profilePic);
-            int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-
-            switch (rotation) {
-
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    profilePicture.setImageBitmap(rotateImage(scaled, 90));
-                    break;
-
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    profilePicture.setImageBitmap(rotateImage(scaled, 180));
-                    break;
-
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    profilePicture.setImageBitmap(rotateImage(scaled, 270));
-                    break;
-            }
-
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
 
 
         //Aggiungo la View

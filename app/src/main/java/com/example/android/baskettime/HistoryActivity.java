@@ -55,8 +55,11 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -67,6 +70,10 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -375,50 +382,26 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         super.onResume();
 
         SharedPreferences sharedPreferences = HistoryActivity.this.getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, MODE_PRIVATE);
+
         //Catturo il valore booleano dalle SharedPreference
         profilePictureBoolean = sharedPreferences.getBoolean(ConfigActivity.PROFILE_PIC, false);
 
         if (profilePictureBoolean) {
 
             String profilePic = "";
-            profilePic = sharedPreferences.getString("profilePicture", "");
+            profilePic = sharedPreferences.getString("profilePicturePath", "");
             Log.d("Prova ProfilePic", "Path: " + profilePic);
 
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            Bitmap bitmap = BitmapFactory.decodeFile(profilePic, options);
+            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View vi = inflater.inflate(R.layout.header, navigationView, false);
+            CircleImageView profilePict = (CircleImageView) vi.findViewById(R.id.profile_image);
 
-            int nh = (int) (bitmap.getHeight() * (512.0 / bitmap.getWidth()));
-            Bitmap scaled = Bitmap.createScaledBitmap(bitmap, 512, nh, true);
+            Picasso.with(this).load(profilePic).placeholder(R.drawable.account_circle).into(profilePict);
 
-            ExifInterface exif = null;
-            try {
-                exif = new ExifInterface(profilePic);
-
-                int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-
-                switch (rotation) {
-
-                    case ExifInterface.ORIENTATION_ROTATE_90:
-                        profilePicture.setImageBitmap(rotateImage(scaled, 90));
-                        break;
-
-                    case ExifInterface.ORIENTATION_ROTATE_180:
-                        profilePicture.setImageBitmap(rotateImage(scaled, 180));
-                        break;
-
-                    case ExifInterface.ORIENTATION_ROTATE_270:
-                        profilePicture.setImageBitmap(rotateImage(scaled, 270));
-                        break;
-                }
-
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
 
         }
-
     }
+
 
     public void loadImagefromGallery(View view) {
 
@@ -455,23 +438,31 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
                     ExifInterface exif = new ExifInterface(path);
 
-
                     int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
 
                     switch (rotation) {
 
                         case ExifInterface.ORIENTATION_ROTATE_90:
-                            imageView.setImageBitmap(rotateImage(scaled, 90));
+                            scaled = rotateImage(scaled, 90);
+                            imageView.setImageBitmap(scaled);
+                            String profile90 = getStringImage(scaled);
+                            editor.putString(ConfigActivity.PROFILE_PIC_90, profile90);
                             editor.putBoolean(ConfigActivity.PROFILE_PIC, true);
                             break;
 
                         case ExifInterface.ORIENTATION_ROTATE_180:
-                            imageView.setImageBitmap(rotateImage(scaled, 180));
+                            scaled = rotateImage(scaled, 180);
+                            imageView.setImageBitmap(scaled);
+                            String profile180 = getStringImage(scaled);
+                            editor.putString(ConfigActivity.PROFILE_PIC_90, profile180);
                             editor.putBoolean(ConfigActivity.PROFILE_PIC, true);
                             break;
 
                         case ExifInterface.ORIENTATION_ROTATE_270:
-                            imageView.setImageBitmap(rotateImage(scaled, 270));
+                            scaled = rotateImage(scaled, 270);
+                            imageView.setImageBitmap(scaled);
+                            String profile270 = getStringImage(scaled);
+                            editor.putString(ConfigActivity.PROFILE_PIC_90, profile270);
                             editor.putBoolean(ConfigActivity.PROFILE_PIC, true);
                             break;
                     }
@@ -497,17 +488,16 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
             }
         }) {
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError{
+            protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
 
                 final String function = "uploadPhoto";
                 final String idSession = sharedPreferences.getString(ConfigActivity.SESSION_ID, "");
-                final String profilePicImage = getStringImage(scaled);
+                final String profilePicImage = sharedPreferences.getString(ConfigActivity.PROFILE_PIC_90, "");
 
                 params.put("f", function);
                 params.put("profilePicture", profilePicImage);
                 params.put(ConfigActivity.KEY_ID_SESSION, idSession);
-                params.put("profile_picture", sharedPreferences.getString("profilePicture", ""));
                 params.put("id", String.valueOf(sharedPreferences.getInt(ConfigActivity.userId, 0)));
 
                 return params;
@@ -529,10 +519,10 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         return retVal;
     }
 
-    public String getStringImage(Bitmap source){
+    public String getStringImage(Bitmap source) {
         ByteArrayOutputStream profilePictureByte = new ByteArrayOutputStream();
         source.compress(Bitmap.CompressFormat.JPEG, 100, profilePictureByte);
-        byte [] profilePicBytes = profilePictureByte.toByteArray();
+        byte[] profilePicBytes = profilePictureByte.toByteArray();
         String encodedProfilePic = Base64.encodeToString(profilePicBytes, Base64.DEFAULT);
 
         return encodedProfilePic;

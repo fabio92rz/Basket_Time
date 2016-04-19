@@ -238,7 +238,8 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
         final int minute = calendar.get(Calendar.MINUTE);
 
         String date = "";
-        String actualMonth;
+        String actualMonth = "";
+        String actualMinute = "";
         String time = "";
 
         if (day < 10 ){
@@ -258,17 +259,25 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
             actualMonth = String.valueOf(month + 1);
         }
 
-        if (hour <10 || minute <10){
+        if (hour <10){
 
-            time = "0" + String.valueOf(hour) + ":" + "0" + String.valueOf(minute);
+            time = "0" + String.valueOf(hour);
 
         } else {
 
-            time = String.valueOf(hour) + ":" + String.valueOf(minute);
-
+            time = String.valueOf(hour);
         }
 
-        final String Time = time;
+        if (minute <10){
+
+            actualMinute = "0" + String.valueOf(minute);
+
+        } else {
+
+            actualMinute = String.valueOf(minute);
+        }
+
+        final String Time = time + ":" + actualMinute;
         final String Date = date + "/" + actualMonth + "/" + String.valueOf(year);
 
         class insertTeams extends AsyncTask<Void, Void, String> {
