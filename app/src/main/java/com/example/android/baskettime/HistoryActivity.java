@@ -322,9 +322,8 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
                         //Setto il valore Booleano a Falso
                         editor.putBoolean(ConfigActivity.LOGGEDIN_SHARED_PREF, false);
-                        //editor.putBoolean(ConfigActivity.PROFILE_PIC, false);
-                        //editor.putString(ConfigActivity.PROFILE_PIC_SERVER_PATH, "");
-                        editor.putString("profilePicture", "");
+                        editor.putBoolean(ConfigActivity.PROFILE_PIC_BOOLEAN, false);
+                        editor.putString(ConfigActivity.SERVER_PATH, "");
 
                         //Metto un valore vuoto nella mail
                         editor.putString(ConfigActivity.EMAIL_SHARED_PREF, "");
@@ -333,7 +332,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                         editor.putString(ConfigActivity.SESSION_ID, "");
 
                         //Salvo le SharedPreference
-                        editor.commit();
+                        editor.apply();
 
                         //Faccio partire la LoginActivity
                         Intent intent = new Intent(HistoryActivity.this, LoginActivity.class);
