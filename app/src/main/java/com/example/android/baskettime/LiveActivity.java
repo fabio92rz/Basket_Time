@@ -100,7 +100,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
     private Button logoutButton;
     private Button updateResult;
     private Button endGame;
-    private SwipeNumberPicker quarterPicker;
+    //private SwipeNumberPicker quarterPicker;
     private LinearLayout quarterLayout;
 
     //Varibili per la Navigation View
@@ -133,7 +133,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        quarterPicker = (SwipeNumberPicker) findViewById(R.id.quarterPicker);
+        /**quarterPicker = (SwipeNumberPicker) findViewById(R.id.quarterPicker);
 
         quarterPicker.setOnValueChangeListener(new OnValueChangeListener() {
             @Override
@@ -144,10 +144,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
                 return isValueOk;
             }
-        });
-
-
-
+        });**/
 
 
         //Inizializzo il Bottone per il logout
@@ -166,10 +163,10 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         String email = sharedPreferences.getString(ConfigActivity.EMAIL_SHARED_PREF, "Not Available");
         String nameSurname = sharedPreferences.getString(ConfigActivity.NAME_SURNAME_PREF, "Not Available");
-        String profilePic = sharedPreferences.getString(ConfigActivity.PROFILE_PIC_90, "");
+        String profilePic = sharedPreferences.getString(ConfigActivity.SERVER_PATH, "");
 
         Log.d("Live Activity", "getString()" + email);
-        Log.d("Live Activity", "profilePicPath= " + profilePic);
+        //Log.d("Live Activity", "profilePicPath= " + profilePic);
 
         //Inizializzo la NavigationView, utilizzata per il drawer
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -197,13 +194,11 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         scoreViewVisitor = (TextView) findViewById(R.id.score_team_visitor);
         scoreView.setText(String.valueOf(scoreTeamVis));
 
-        profilePicture = (CircleImageView) vi.findViewById(R.id.profile_image);
-        Picasso.with(this).load(profilePic).placeholder(R.drawable.account_circle).into(profilePicture);
-
-
-
         //Aggiungo la View
         navigationView.addHeaderView(vi);
+
+        profilePicture = (CircleImageView) vi.findViewById(R.id.profile_image);
+        Picasso.with(this).load(profilePic).placeholder(R.drawable.account_circle).into(profilePicture);
 
         //Imposto la NavigationView con un clicklistener per gestire gli eventi della navigazione del menù **/
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -272,6 +267,8 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         //Chiamo syncState per far comparire il toggle
         actionBarDrawerToggle.syncState();
         getMatch();
+
+
 
     }
 
@@ -542,6 +539,29 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        SharedPreferences sharedPreferences = LiveActivity.this.getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, MODE_PRIVATE);
+        boolean profilePictureBoolean = sharedPreferences.getBoolean(ConfigActivity.PROFILE_PIC_BOOLEAN, false);
+
+        if (profilePictureBoolean) {
+
+            String profilePic = "";
+            profilePic = sharedPreferences.getString(ConfigActivity.SERVER_PATH, "");
+            Log.d("Prova ProfilePic", "Path: " + profilePic);
+
+            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View vi = inflater.inflate(R.layout.header, navigationView, false);
+            CircleImageView profilePict = (CircleImageView) vi.findViewById(R.id.profile_image);
+
+            Picasso.with(this).load(profilePic).placeholder(R.drawable.account_circle).into(profilePict);
+
+
+        }
     }
 
     @Override

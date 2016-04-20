@@ -19,6 +19,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Config;
 import android.util.JsonReader;
 import android.util.JsonToken;
 import android.view.View;
@@ -196,13 +197,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     //Aggiungo i valori all'editor
                     editor.putBoolean(ConfigActivity.LOGGEDIN_SHARED_PREF, true);
-                    Log.d("ProfilePicPath", "prova=" + profilePicPath);
-
-
-                    Log.d("Prova controllo", "");
-                    editor.putBoolean(ConfigActivity.PROFILE_PIC, true);
-                    editor.putString("profilePicturePath", profilePicPath);
-
+                    editor.putBoolean(ConfigActivity.PROFILE_PIC_BOOLEAN, true);
+                    editor.putString(ConfigActivity.SERVER_PATH, profilePicPath);
                     editor.putString(ConfigActivity.EMAIL_SHARED_PREF, email);
                     editor.putString(ConfigActivity.NAME_SURNAME_PREF, WordUtils.capitalize(name) + " " + WordUtils.capitalize(surname));
                     editor.putString(ConfigActivity.SESSION_ID, userSession);

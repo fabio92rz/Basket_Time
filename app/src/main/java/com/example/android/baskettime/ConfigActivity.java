@@ -6,7 +6,6 @@ package com.example.android.baskettime;
 public class ConfigActivity {
 
     //Url vari
-    public static final String GET_GAME = "http://95.85.23.84/getGames.php";
     public static final String ENTRY = "http://95.85.23.84/entry.php";
 
     //Tag JSON
@@ -64,9 +63,13 @@ public class ConfigActivity {
 
     //Userò questa variabile booleana nelle Shared Preference pre seguire se l'utente è dentro o no
     public static final String LOGGEDIN_SHARED_PREF = "loggedin";
-    public static final String PROFILE_PIC = "profilePic";
-    public static final String PROFILE_PIC_SERVER_PATH = "profilePicPath";
-    public static final String PROFILE_PIC_90 = "profile90";
+    //public static final String PROFILE_PIC = "profilePic";
+    //public static final String PROFILE_PIC_SERVER_PATH = "";
+    //public static final String PROFILE_PIC_90 = "profile90";
+
+    public static final String SERVER_PATH = "serverPath";
+    public static final String PROFILE_PICTURE = "profilePic";
+    public static final String PROFILE_PIC_BOOLEAN = "booleanProfile";
 
     //Chiavi per l'inserimento dei quarti
     public static final String KEY_SCORE_HOME_TEAM = "score_home_team";

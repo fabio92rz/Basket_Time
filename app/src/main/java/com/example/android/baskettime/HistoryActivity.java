@@ -103,7 +103,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
     private Toolbar toolbar;
     private NavigationView navigationView;
-    boolean profilePictureBoolean = false;
+    //boolean profilePictureBoolean = false;
     protected DrawerLayout drawerLayout;
     public Bitmap scaled;
 
@@ -125,8 +125,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         final RVAdapter rvAdapter = new RVAdapter(matchList);
         rv.setAdapter(rvAdapter);
 
-        //dateTv = (TextView) findViewById(R.id.date_cv);
-
         //Creo un inflater per inflazionare il layout dell'header
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -145,6 +143,9 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         final SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         String email = sharedPreferences.getString(ConfigActivity.EMAIL_SHARED_PREF, "Not Available");
         String nameSurname = sharedPreferences.getString(ConfigActivity.NAME_SURNAME_PREF, "Not Available");
+        String serverPicturePath = sharedPreferences.getString(ConfigActivity.SERVER_PATH, "");
+
+        //Log.d("Prova della foto server", "Path = " + serverPicturePath);
 
         final String idSession = sharedPreferences.getString(ConfigActivity.SESSION_ID, "");
 
@@ -166,6 +167,11 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         tvNameSurname.setText(nameSurname);
 
         profilePicture = (CircleImageView) vi.findViewById(R.id.profile_image);
+
+        if (!serverPicturePath.equals("")) {
+            Log.d("prova ciclo", "dentro");
+            Picasso.with(this).load(serverPicturePath).placeholder(R.drawable.account_circle).into(profilePicture);
+        }
 
         //Aggiungo la View
         navigationView.addHeaderView(vi);
@@ -316,7 +322,9 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
                         //Setto il valore Booleano a Falso
                         editor.putBoolean(ConfigActivity.LOGGEDIN_SHARED_PREF, false);
-                        editor.putBoolean(ConfigActivity.PROFILE_PIC, false);
+                        //editor.putBoolean(ConfigActivity.PROFILE_PIC, false);
+                        //editor.putString(ConfigActivity.PROFILE_PIC_SERVER_PATH, "");
+                        editor.putString("profilePicture", "");
 
                         //Metto un valore vuoto nella mail
                         editor.putString(ConfigActivity.EMAIL_SHARED_PREF, "");
@@ -325,7 +333,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                         editor.putString(ConfigActivity.SESSION_ID, "");
 
                         //Salvo le SharedPreference
-                        editor.apply();
+                        editor.commit();
 
                         //Faccio partire la LoginActivity
                         Intent intent = new Intent(HistoryActivity.this, LoginActivity.class);
@@ -382,14 +390,12 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         super.onResume();
 
         SharedPreferences sharedPreferences = HistoryActivity.this.getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, MODE_PRIVATE);
-
-        //Catturo il valore booleano dalle SharedPreference
-        profilePictureBoolean = sharedPreferences.getBoolean(ConfigActivity.PROFILE_PIC, false);
+        boolean profilePictureBoolean = sharedPreferences.getBoolean(ConfigActivity.PROFILE_PIC_BOOLEAN, false);
 
         if (profilePictureBoolean) {
 
             String profilePic = "";
-            profilePic = sharedPreferences.getString("profilePicturePath", "");
+            profilePic = sharedPreferences.getString(ConfigActivity.SERVER_PATH, "");
             Log.d("Prova ProfilePic", "Path: " + profilePic);
 
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -414,7 +420,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        final SharedPreferences sharedPreferences = HistoryActivity.this.getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = HistoryActivity.this.getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_PICTURE) {
@@ -433,8 +439,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                     scaled = Bitmap.createScaledBitmap(bmp, 512, nh, true);
 
                     String path = FileUtility.getRealPathFromURI(getApplicationContext(), Uri.parse("file://" + selectedImageUri.getPath()));
-                    editor.putString("profilePicture", path);
-                    Log.d("Profile picture", "path= " + path);
 
                     ExifInterface exif = new ExifInterface(path);
 
@@ -446,28 +450,29 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                             scaled = rotateImage(scaled, 90);
                             imageView.setImageBitmap(scaled);
                             String profile90 = getStringImage(scaled);
-                            editor.putString(ConfigActivity.PROFILE_PIC_90, profile90);
-                            editor.putBoolean(ConfigActivity.PROFILE_PIC, true);
+                            editor.putString(ConfigActivity.PROFILE_PICTURE, profile90);
+                            editor.putBoolean(ConfigActivity.PROFILE_PIC_BOOLEAN, true);
+                            editor.apply();
                             break;
 
                         case ExifInterface.ORIENTATION_ROTATE_180:
                             scaled = rotateImage(scaled, 180);
                             imageView.setImageBitmap(scaled);
                             String profile180 = getStringImage(scaled);
-                            editor.putString(ConfigActivity.PROFILE_PIC_90, profile180);
-                            editor.putBoolean(ConfigActivity.PROFILE_PIC, true);
+                            editor.putString(ConfigActivity.PROFILE_PICTURE, profile180);
+                            editor.putBoolean(ConfigActivity.PROFILE_PIC_BOOLEAN, true);
+                            editor.apply();
                             break;
 
                         case ExifInterface.ORIENTATION_ROTATE_270:
                             scaled = rotateImage(scaled, 270);
                             imageView.setImageBitmap(scaled);
                             String profile270 = getStringImage(scaled);
-                            editor.putString(ConfigActivity.PROFILE_PIC_90, profile270);
-                            editor.putBoolean(ConfigActivity.PROFILE_PIC, true);
+                            editor.putString(ConfigActivity.PROFILE_PICTURE, profile270);
+                            editor.putBoolean(ConfigActivity.PROFILE_PIC_BOOLEAN, true);
+                            editor.apply();
                             break;
                     }
-
-                    editor.apply();
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -491,14 +496,13 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
 
+                SharedPreferences preferences2 = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
                 final String function = "uploadPhoto";
-                final String idSession = sharedPreferences.getString(ConfigActivity.SESSION_ID, "");
-                final String profilePicImage = sharedPreferences.getString(ConfigActivity.PROFILE_PIC_90, "");
 
                 params.put("f", function);
-                params.put("profilePicture", profilePicImage);
-                params.put(ConfigActivity.KEY_ID_SESSION, idSession);
-                params.put("id", String.valueOf(sharedPreferences.getInt(ConfigActivity.userId, 0)));
+                params.put("profilePicture", preferences2.getString(ConfigActivity.PROFILE_PICTURE, ""));
+                params.put(ConfigActivity.KEY_ID_SESSION, preferences2.getString(ConfigActivity.SESSION_ID, ""));
+                params.put("id", String.valueOf(preferences2.getInt(ConfigActivity.userId, 0)));
 
                 return params;
             }
