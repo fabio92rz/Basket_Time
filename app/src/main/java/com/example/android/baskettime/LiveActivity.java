@@ -82,8 +82,10 @@ import android.graphics.Matrix;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ClearCacheRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import com.vi.swipenumberpicker.OnValueChangeListener;
 import com.vi.swipenumberpicker.SwipeNumberPicker;
@@ -198,7 +200,10 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         navigationView.addHeaderView(vi);
 
         profilePicture = (CircleImageView) vi.findViewById(R.id.profile_image);
-        Picasso.with(this).load(profilePic).placeholder(R.drawable.account_circle).into(profilePicture);
+
+
+        Picasso.with(this).load(profilePic).memoryPolicy(MemoryPolicy.NO_CACHE).placeholder(R.drawable.account_circle).into(profilePicture);
+
 
         //Imposto la NavigationView con un clicklistener per gestire gli eventi della navigazione del menù **/
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -513,6 +518,8 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
                         //Setto il valore Booleano a Falso
                         editor.putBoolean(ConfigActivity.LOGGEDIN_SHARED_PREF, false);
+                        editor.putBoolean(ConfigActivity.PROFILE_PIC_BOOLEAN, false);
+                        editor.putString(ConfigActivity.SERVER_PATH, "");
                         editor.putString(ConfigActivity.SESSION_ID, "");
 
                         //Metto un valore vuto nella mail
@@ -617,6 +624,4 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
-
-
 }

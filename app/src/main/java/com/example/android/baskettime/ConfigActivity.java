@@ -63,7 +63,7 @@ public class ConfigActivity {
 
     //Userò questa variabile booleana nelle Shared Preference pre seguire se l'utente è dentro o no
     public static final String LOGGEDIN_SHARED_PREF = "loggedin";
-    //public static final String PROFILE_PIC = "profilePic";
+    public static final String PROFILE_PIC = "profilePic";
     //public static final String PROFILE_PIC_SERVER_PATH = "";
     //public static final String PROFILE_PIC_90 = "profile90";
 

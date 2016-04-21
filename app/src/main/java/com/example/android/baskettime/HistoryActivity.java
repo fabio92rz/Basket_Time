@@ -32,6 +32,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
 import android.util.Base64;
+import android.util.Config;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -60,6 +61,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -168,10 +170,11 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
         profilePicture = (CircleImageView) vi.findViewById(R.id.profile_image);
 
-        if (!serverPicturePath.equals("")) {
-            Log.d("prova ciclo", "dentro");
-            Picasso.with(this).load(serverPicturePath).placeholder(R.drawable.account_circle).into(profilePicture);
-        }
+        /**Picasso.with(getApplicationContext())
+                .load(serverPicturePath)
+                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                .placeholder(R.drawable.account_circle)
+                .into(profilePicture);**/
 
         //Aggiungo la View
         navigationView.addHeaderView(vi);
@@ -401,9 +404,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
             View vi = inflater.inflate(R.layout.header, navigationView, false);
             CircleImageView profilePict = (CircleImageView) vi.findViewById(R.id.profile_image);
 
-            Picasso.with(this).load(profilePic).placeholder(R.drawable.account_circle).into(profilePict);
-
-
+            Picasso.with(this).load(profilePic).memoryPolicy(MemoryPolicy.NO_CACHE).placeholder(R.drawable.account_circle).into(profilePict);
         }
     }
 
@@ -419,7 +420,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        SharedPreferences sharedPreferences = HistoryActivity.this.getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        final SharedPreferences sharedPreferences = HistoryActivity.this.getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_PICTURE) {
@@ -438,6 +439,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                     scaled = Bitmap.createScaledBitmap(bmp, 512, nh, true);
 
                     String path = FileUtility.getRealPathFromURI(getApplicationContext(), Uri.parse("file://" + selectedImageUri.getPath()));
+                    editor.putString(ConfigActivity.PROFILE_PIC, path);
 
                     ExifInterface exif = new ExifInterface(path);
 
@@ -482,6 +484,32 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         StringRequest pictureRequest = new StringRequest(Request.Method.POST, ConfigActivity.ENTRY, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+
+                JSONObject risposta =  null;
+                SharedPreferences preferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+
+                try {
+
+                    risposta = new JSONObject(response);
+                    String serverPath = risposta.getString("image");
+
+
+                    editor.putString(ConfigActivity.SERVER_PATH, "");
+                    editor.putString(ConfigActivity.SERVER_PATH, serverPath);
+
+                    Picasso.with(getApplicationContext())
+                            .load(serverPath)
+                            .memoryPolicy(MemoryPolicy.NO_CACHE)
+                            .placeholder(R.drawable.account_circle)
+                            .into(profilePicture);
+
+                    editor.apply();
+
+                }catch (JSONException e){
+
+                    e.printStackTrace();
+                }
 
 
             }
