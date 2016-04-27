@@ -503,18 +503,9 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
                         //Prendo l'editor
                         SharedPreferences.Editor editor = preferences.edit();
+                        editor.clear();
 
-                        //Setto il valore Booleano a Falso
-                        editor.putBoolean(ConfigActivity.LOGGEDIN_SHARED_PREF, false);
-                        editor.putBoolean(ConfigActivity.PROFILE_PIC_BOOLEAN, false);
-                        editor.putString(ConfigActivity.SERVER_PATH, "");
-                        editor.putString(ConfigActivity.SESSION_ID, "");
-
-                        //Metto un valore vuto nella mail
-                        editor.putString(ConfigActivity.EMAIL_SHARED_PREF, "");
-
-                        //Salvo le SharedPreference
-                        editor.commit();
+                        editor.apply();
 
                         //Faccio partire la LoginActivity
                         Intent intent = new Intent(LiveActivity.this, LoginActivity.class);
@@ -549,13 +540,15 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
             profilePic = sharedPreferences.getString(ConfigActivity.SERVER_PATH, "");
             Log.d("Prova ProfilePic", "Path: " + profilePic);
 
-            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View vi = inflater.inflate(R.layout.header, navigationView, false);
-            CircleImageView profilePict = (CircleImageView) vi.findViewById(R.id.profile_image);
+            View header = navigationView.getHeaderView(0);
+            CircleImageView profilePict = (CircleImageView) header.findViewById(R.id.profile_image);
 
-            Picasso.with(this).load(profilePic).placeholder(R.drawable.account_circle).into(profilePict);
-
-
+            Picasso.with(this)
+                    .load(profilePic)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .placeholder(R.drawable.account_circle)
+                    .into(profilePict);
         }
     }
 
@@ -573,15 +566,6 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         if (v == endGame) {
             endGame();
         }
-    }
-
-    public static Bitmap rotateImage(Bitmap source, float angle) {
-        Bitmap retVal;
-
-        Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
-        retVal = Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
-        return retVal;
     }
 
     private void endGame() {

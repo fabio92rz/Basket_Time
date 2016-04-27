@@ -205,8 +205,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     //Aggiungo i valori all'editor
 
-                    editor.putBoolean(ConfigActivity.PROFILE_PIC_BOOLEAN, true);
-                    editor.putString(ConfigActivity.SERVER_PATH, profilePicPath);
+                    if (profilePicPath != null) {
+                        editor.putBoolean(ConfigActivity.PROFILE_PIC_BOOLEAN, true);
+                        editor.putString(ConfigActivity.SERVER_PATH, profilePicPath);
+                    }
 
                     editor.putBoolean(ConfigActivity.LOGGEDIN_SHARED_PREF, true);
                     editor.putString(ConfigActivity.EMAIL_SHARED_PREF, email);

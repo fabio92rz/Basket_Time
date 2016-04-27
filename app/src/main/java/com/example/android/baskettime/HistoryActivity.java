@@ -172,13 +172,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
         profilePicture = (CircleImageView) vi.findViewById(R.id.profile_image);
 
-        /**Picasso.with(getApplicationContext())
-                .load(profilePic)
-                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                .networkPolicy(NetworkPolicy.NO_CACHE)
-                .placeholder(R.drawable.account_circle)
-                .into(profilePicture);**/
-
         //Aggiungo la View
         navigationView.addHeaderView(vi);
 
@@ -328,7 +321,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
                         //Setto il valore Booleano a Falso
                         editor.clear();
-                        //Salvo le SharedPreference
                         editor.apply();
 
                         //Faccio partire la LoginActivity
@@ -521,7 +513,12 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
             View header = navigationView.getHeaderView(0);
             CircleImageView profilePict = (CircleImageView) header.findViewById(R.id.profile_image);
 
-            Picasso.with(this).load(profilePicture).memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).placeholder(R.drawable.account_circle).into(profilePict);
+            Picasso.with(this)
+                    .load(profilePicture)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .placeholder(R.drawable.account_circle)
+                    .into(profilePict);
         }
     }
 
