@@ -57,11 +57,13 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -95,7 +97,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
     //TextView per i dati dell'utente
     private TextView tvEmail;
     private TextView tvNameSurname;
-    //private TextView dateTv;
     private CircleImageView profilePicture;
     public static int SELECT_PICTURE = 1;
 
@@ -145,7 +146,8 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         final SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         String email = sharedPreferences.getString(ConfigActivity.EMAIL_SHARED_PREF, "Not Available");
         String nameSurname = sharedPreferences.getString(ConfigActivity.NAME_SURNAME_PREF, "Not Available");
-        String serverPicturePath = sharedPreferences.getString(ConfigActivity.SERVER_PATH, "");
+        String profilePic = sharedPreferences.getString(ConfigActivity.SERVER_PATH, "");
+
 
         //Log.d("Prova della foto server", "Path = " + serverPicturePath);
 
@@ -171,8 +173,9 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         profilePicture = (CircleImageView) vi.findViewById(R.id.profile_image);
 
         /**Picasso.with(getApplicationContext())
-                .load(serverPicturePath)
+                .load(profilePic)
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
+                .networkPolicy(NetworkPolicy.NO_CACHE)
                 .placeholder(R.drawable.account_circle)
                 .into(profilePicture);**/
 
@@ -242,7 +245,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         };
 
         //Imposto il toggle e lo indirizzio al drawer
-        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
 
         //Chiamo syncState per far comparire il toggle
         actionBarDrawerToggle.syncState();
@@ -318,22 +321,13 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                     public void onClick(DialogInterface arg0, int arg1) {
 
                         //Rimuovo le SharedPreference
-                        SharedPreferences preferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+                        final SharedPreferences preferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
                         //Prendo l'editor
                         SharedPreferences.Editor editor = preferences.edit();
 
                         //Setto il valore Booleano a Falso
-                        editor.putBoolean(ConfigActivity.LOGGEDIN_SHARED_PREF, false);
-                        editor.putBoolean(ConfigActivity.PROFILE_PIC_BOOLEAN, false);
-                        editor.putString(ConfigActivity.SERVER_PATH, "");
-
-                        //Metto un valore vuoto nella mail
-                        editor.putString(ConfigActivity.EMAIL_SHARED_PREF, "");
-
-                        //Cancello l'id della sessione
-                        editor.putString(ConfigActivity.SESSION_ID, "");
-
+                        editor.clear();
                         //Salvo le SharedPreference
                         editor.apply();
 
@@ -387,28 +381,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        SharedPreferences sharedPreferences = HistoryActivity.this.getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, MODE_PRIVATE);
-        boolean profilePictureBoolean = sharedPreferences.getBoolean(ConfigActivity.PROFILE_PIC_BOOLEAN, false);
-
-        if (profilePictureBoolean) {
-
-            String profilePic = "";
-            profilePic = sharedPreferences.getString(ConfigActivity.SERVER_PATH, "");
-            Log.d("Prova ProfilePic", "Path: " + profilePic);
-
-            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View vi = inflater.inflate(R.layout.header, navigationView, false);
-            CircleImageView profilePict = (CircleImageView) vi.findViewById(R.id.profile_image);
-
-            Picasso.with(this).load(profilePic).memoryPolicy(MemoryPolicy.NO_CACHE).placeholder(R.drawable.account_circle).into(profilePict);
-        }
-    }
-
-
     public void loadImagefromGallery(View view) {
 
         Intent galleryIntent = new Intent();
@@ -429,7 +401,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
                 try {
 
-
                     SharedPreferences.Editor editor = sharedPreferences.edit();
 
                     CircleImageView imageView = (CircleImageView) findViewById(R.id.profile_image);
@@ -449,31 +420,25 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
                         case ExifInterface.ORIENTATION_ROTATE_90:
                             scaled = rotateImage(scaled, 90);
-                            imageView.setImageBitmap(scaled);
                             String profile90 = getStringImage(scaled);
                             editor.putString(ConfigActivity.PROFILE_PICTURE, profile90);
-                            editor.putBoolean(ConfigActivity.PROFILE_PIC_BOOLEAN, true);
-                            editor.apply();
                             break;
 
                         case ExifInterface.ORIENTATION_ROTATE_180:
                             scaled = rotateImage(scaled, 180);
-                            imageView.setImageBitmap(scaled);
                             String profile180 = getStringImage(scaled);
                             editor.putString(ConfigActivity.PROFILE_PICTURE, profile180);
-                            editor.putBoolean(ConfigActivity.PROFILE_PIC_BOOLEAN, true);
-                            editor.apply();
                             break;
 
                         case ExifInterface.ORIENTATION_ROTATE_270:
                             scaled = rotateImage(scaled, 270);
-                            imageView.setImageBitmap(scaled);
                             String profile270 = getStringImage(scaled);
                             editor.putString(ConfigActivity.PROFILE_PICTURE, profile270);
-                            editor.putBoolean(ConfigActivity.PROFILE_PIC_BOOLEAN, true);
-                            editor.apply();
                             break;
                     }
+
+                    editor.putBoolean(ConfigActivity.PROFILE_PIC_BOOLEAN, true);
+                    editor.apply();
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -485,8 +450,8 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onResponse(String response) {
 
-                JSONObject risposta =  null;
-                SharedPreferences preferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+                JSONObject risposta = null;
+                final SharedPreferences preferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = preferences.edit();
 
                 try {
@@ -494,24 +459,20 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                     risposta = new JSONObject(response);
                     String serverPath = risposta.getString("image");
 
+                    View header = navigationView.getHeaderView(0);
+                    CircleImageView profilePict = (CircleImageView) header.findViewById(R.id.profile_image);
 
-                    editor.putString(ConfigActivity.SERVER_PATH, "");
+                    Picasso.with(getBaseContext()).load(serverPath).memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).placeholder(R.drawable.account_circle).into(profilePict);
+
+                    editor.remove(ConfigActivity.SERVER_PATH);
                     editor.putString(ConfigActivity.SERVER_PATH, serverPath);
-
-                    Picasso.with(getApplicationContext())
-                            .load(serverPath)
-                            .memoryPolicy(MemoryPolicy.NO_CACHE)
-                            .placeholder(R.drawable.account_circle)
-                            .into(profilePicture);
 
                     editor.apply();
 
-                }catch (JSONException e){
+                } catch (JSONException e) {
 
                     e.printStackTrace();
                 }
-
-
             }
         }, new Response.ErrorListener() {
             @Override
@@ -525,9 +486,12 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
                 SharedPreferences preferences2 = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
                 final String function = "uploadPhoto";
+                final String profilePic = preferences2.getString(ConfigActivity.PROFILE_PICTURE, "");
+
+                Log.d("HistoryActivity", "prova upload" + profilePic);
 
                 params.put("f", function);
-                params.put("profilePicture", preferences2.getString(ConfigActivity.PROFILE_PICTURE, ""));
+                params.put("profilePicture", profilePic);
                 params.put(ConfigActivity.KEY_ID_SESSION, preferences2.getString(ConfigActivity.SESSION_ID, ""));
                 params.put("id", String.valueOf(preferences2.getInt(ConfigActivity.userId, 0)));
 
@@ -535,9 +499,30 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
             }
         };
 
+
+
         RequestQueue pictureQueue = Volley.newRequestQueue(this);
         pictureQueue.add(pictureRequest);
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        final SharedPreferences sharedPreferences = HistoryActivity.this.getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, MODE_PRIVATE);
+        boolean profilePictureBoolean = sharedPreferences.getBoolean(ConfigActivity.PROFILE_PIC_BOOLEAN, false);
+
+        if (profilePictureBoolean) {
+
+            String profilePicture = sharedPreferences.getString(ConfigActivity.SERVER_PATH, "");
+            Log.d("HistoryActivity", "profilePictureOnResume" + profilePicture);
+
+            View header = navigationView.getHeaderView(0);
+            CircleImageView profilePict = (CircleImageView) header.findViewById(R.id.profile_image);
+
+            Picasso.with(this).load(profilePicture).memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).placeholder(R.drawable.account_circle).into(profilePict);
+        }
     }
 
     public static Bitmap rotateImage(Bitmap source, float angle) {

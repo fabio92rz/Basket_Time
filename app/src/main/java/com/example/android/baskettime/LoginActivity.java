@@ -102,7 +102,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.login_activity);
 
 
-
         //Inizializzo le Views
         eTEmail = (EditText) findViewById(R.id.login_email_text);
         eTPassword = (EditText) findViewById(R.id.login_pass_text);
@@ -186,18 +185,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             profilePicPath = jsonObject.getString("profilePicturePath");
 
 
-                            NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
-                            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                            View vi = inflater.inflate(R.layout.header, navigationView, false);
-                            CircleImageView profilePict = (CircleImageView) vi.findViewById(R.id.profile_image);
-
-                            Picasso.with(getBaseContext())
-                                    .load(profilePicPath)
-                                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                                    .placeholder(R.drawable.account_circle)
-                                    .into(profilePict);
-
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -217,9 +204,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     SharedPreferences.Editor editor = sharedPreferences.edit();
 
                     //Aggiungo i valori all'editor
-                    editor.putBoolean(ConfigActivity.LOGGEDIN_SHARED_PREF, true);
+
                     editor.putBoolean(ConfigActivity.PROFILE_PIC_BOOLEAN, true);
                     editor.putString(ConfigActivity.SERVER_PATH, profilePicPath);
+
+                    editor.putBoolean(ConfigActivity.LOGGEDIN_SHARED_PREF, true);
                     editor.putString(ConfigActivity.EMAIL_SHARED_PREF, email);
                     editor.putString(ConfigActivity.NAME_SURNAME_PREF, WordUtils.capitalize(name) + " " + WordUtils.capitalize(surname));
                     editor.putString(ConfigActivity.SESSION_ID, userSession);
@@ -239,6 +228,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 } else {
                     //Se la risposta del server non è Success stampa un messaggi di errore su toast
                     Toast.makeText(LoginActivity.this, "Username o Password errate", Toast.LENGTH_LONG).show();
+                    loading.dismiss();
                 }
             }
         },

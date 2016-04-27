@@ -60,14 +60,11 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
     @Override
     public void onBindViewHolder(GamesViewHolder holder, int position) {
 
-
         if (! String.valueOf(matches.get(position).date).equals(tempTime)) {
-
             holder.dateTv.setText(matches.get(position).date);
             tempTime = String.valueOf(matches.get(position).date);
             holder.dateTv.setVisibility(View.VISIBLE);
             holder.dateImage.setVisibility(View.VISIBLE);
-
         }
 
         holder.timeTv.setText(matches.get(position).time);

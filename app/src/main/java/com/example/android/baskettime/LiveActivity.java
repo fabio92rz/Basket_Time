@@ -83,9 +83,11 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ClearCacheRequest;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.vi.swipenumberpicker.OnValueChangeListener;
 import com.vi.swipenumberpicker.SwipeNumberPicker;
@@ -134,19 +136,6 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         //Inizializzo la Toolbar e la inserisco nell'actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        /**quarterPicker = (SwipeNumberPicker) findViewById(R.id.quarterPicker);
-
-        quarterPicker.setOnValueChangeListener(new OnValueChangeListener() {
-            @Override
-            public boolean onValueChange(SwipeNumberPicker view, int oldValue, int newValue) {
-                boolean isValueOk = (newValue & 1) == 0;
-                if (isValueOk)
-                    quarterPicker.setText(Integer.toString(newValue) + "°");
-
-                return isValueOk;
-            }
-        });**/
 
 
         //Inizializzo il Bottone per il logout
@@ -202,8 +191,9 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         profilePicture = (CircleImageView) vi.findViewById(R.id.profile_image);
 
 
-        Picasso.with(this).load(profilePic).memoryPolicy(MemoryPolicy.NO_CACHE).placeholder(R.drawable.account_circle).into(profilePicture);
-
+        if (!"".equalsIgnoreCase(profilePic)) {
+            Picasso.with(this).load(profilePic).memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).placeholder(R.drawable.account_circle).into(profilePicture);
+        }
 
         //Imposto la NavigationView con un clicklistener per gestire gli eventi della navigazione del menù **/
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -267,13 +257,11 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         };
 
         //Imposto il toggle e lo indirizzio al drawer
-        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
 
         //Chiamo syncState per far comparire il toggle
         actionBarDrawerToggle.syncState();
         getMatch();
-
-
 
     }
 

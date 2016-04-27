@@ -30,7 +30,6 @@
         android:textColor="#FFF"
         android:textStyle="bold"
         android:gravity="left"
-        android:paddingBottom="4dp"
         android:text="Nome e Cognome "
         android:id="@+id/username_header"
         android:layout_above="@+id/email_header"
