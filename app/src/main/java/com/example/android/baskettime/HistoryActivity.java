@@ -103,6 +103,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
     //Bottone per il logout
     private Button logoutButton;
     private FloatingActionButton newgame;
+    private FloatingActionButton prova;
 
     private Toolbar toolbar;
     private NavigationView navigationView;
@@ -134,6 +135,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         //Inizializzo il Bottone per il logout
         logoutButton = (Button) findViewById(R.id.logout_button);
         newgame = (FloatingActionButton) findViewById(R.id.new_game);
+
         logoutButton.setOnClickListener(this);
         newgame.setOnClickListener(this);
 
@@ -360,6 +362,11 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
             Intent newgame = new Intent(HistoryActivity.this, NewGameActivity.class);
             startActivity(newgame);
             //overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
+        }
+
+        if (v == prova){
+            Intent prova = new Intent(HistoryActivity.this, prova.class);
+            startActivity(prova);
         }
     }
 

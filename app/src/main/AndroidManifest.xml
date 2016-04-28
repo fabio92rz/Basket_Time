@@ -36,6 +36,7 @@
         <activity android:name=".NewGameActivity"></activity>
         <activity android:name=".ChampActivity"></activity>
         <activity android:name=".GuestActivity"></activity>
+        <activity android:name=".prova"></activity>
 
         <activity
             android:name=".Popup0Activity"

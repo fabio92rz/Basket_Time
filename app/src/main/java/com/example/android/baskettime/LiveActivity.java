@@ -100,11 +100,15 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
     private TextView tvEmail;
     private TextView tvNameSurname;
 
+    private SwipeNumberPicker quarterPicker;
+    private SwipeNumberPicker homePicker;
+    private SwipeNumberPicker visitorPicker;
+
     //Bottone per il logout
     private Button logoutButton;
     private Button updateResult;
     private Button endGame;
-    //private SwipeNumberPicker quarterPicker;
+
     private LinearLayout quarterLayout;
 
     //Varibili per la Navigation View
@@ -150,6 +154,10 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         teamhome = (TextView) findViewById(R.id.team_home_text);
         teamvis = (TextView) findViewById(R.id.team_visitors_text);
 
+        quarterPicker = (SwipeNumberPicker) findViewById(R.id.quarterPicker);
+        homePicker = (SwipeNumberPicker) findViewById(R.id.homePicker);
+        visitorPicker = (SwipeNumberPicker) findViewById(R.id.visitorPicker);
+
         //Catturo i dati e li inserisco nell'header
         SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         String email = sharedPreferences.getString(ConfigActivity.EMAIL_SHARED_PREF, "Not Available");
@@ -157,7 +165,6 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         String profilePic = sharedPreferences.getString(ConfigActivity.SERVER_PATH, "");
 
         Log.d("Live Activity", "getString()" + email);
-        //Log.d("Live Activity", "profilePicPath= " + profilePic);
 
         //Inizializzo la NavigationView, utilizzata per il drawer
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -177,13 +184,13 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         tvNameSurname.setText(nameSurname);
 
         quarterView = (TextView) findViewById(R.id.quarto_textView);
-        quarterView.setText(String.valueOf(quarter) + "°");
+        //quarterView.setText(String.valueOf(quarter) + "°");
 
         scoreView = (TextView) findViewById(R.id.score_team_home);
-        scoreView.setText(String.valueOf(scoreTeamHm));
+        //scoreView.setText(String.valueOf(scoreTeamHm));
 
         scoreViewVisitor = (TextView) findViewById(R.id.score_team_visitor);
-        scoreView.setText(String.valueOf(scoreTeamVis));
+        //scoreView.setText(String.valueOf(scoreTeamVis));
 
         //Aggiungo la View
         navigationView.addHeaderView(vi);
@@ -192,8 +199,48 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
 
         if (!"".equalsIgnoreCase(profilePic)) {
-            Picasso.with(this).load(profilePic).memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).placeholder(R.drawable.account_circle).into(profilePicture);
+            Picasso.with(this)
+                    .load(profilePic)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .networkPolicy(NetworkPolicy.NO_CACHE)
+                    .placeholder(R.drawable.account_circle)
+                    .into(profilePicture);
         }
+
+        quarterPicker.setOnValueChangeListener(new OnValueChangeListener() {
+            @Override
+            public boolean onValueChange(SwipeNumberPicker view, int oldValue, int newValue) {
+
+                if (newValue >= 5) {
+
+                    //quarterPicker.setText(String.valueOf("1° OT"));
+
+                }else {
+
+                    quarterPicker.setText(String.valueOf(newValue + "°"));
+
+                }
+                return true;
+            }
+        });
+
+        homePicker.setOnValueChangeListener(new OnValueChangeListener() {
+            @Override
+            public boolean onValueChange(SwipeNumberPicker view, int oldValue, int newValue) {
+
+                homePicker.setText(String.valueOf(newValue));
+                return true;
+            }
+        });
+
+        visitorPicker.setOnValueChangeListener(new OnValueChangeListener() {
+            @Override
+            public boolean onValueChange(SwipeNumberPicker view, int oldValue, int newValue) {
+
+                visitorPicker.setText(String.valueOf(newValue));
+                return true;
+            }
+        });
 
         //Imposto la NavigationView con un clicklistener per gestire gli eventi della navigazione del menù **/
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -338,12 +385,15 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
         final SharedPreferences sharedPreferences1 = getSharedPreferences(ConfigActivity.TAG_ID_GAME, Context.MODE_PRIVATE);
 
-        final String getQuarter = String.valueOf(quarterView.getText().toString());
-        final String getHomeScore = String.valueOf(scoreView.getText().toString());
-        final String getVisitorScore = String.valueOf(scoreViewVisitor.getText().toString());
+        //final String getQuarter = String.valueOf(quarterView.getText().toString());
+        final String quarter = String.valueOf(quarterPicker.getValue());
+        final String homeScore = String.valueOf(homePicker.getValue());
+        //final String getHomeScore = String.valueOf(scoreView.getText().toString());
+        final String visitorScore = String.valueOf(visitorPicker.getValue());
+        //final String getVisitorScore = String.valueOf(scoreViewVisitor.getText().toString());
         final String id_game = String.valueOf(sharedPreferences1.getInt(ConfigActivity.ID_GAME, 0));
 
-        Log.d("String get quarter", "=" + getQuarter);
+        Log.d("String get quarter", "=" + quarter);
 
         class insertQuarter extends AsyncTask<Void, Void, String> {
 
@@ -352,9 +402,9 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
             protected String doInBackground(Void... params) {
 
                 HashMap<String, String> param = new HashMap<>();
-                param.put(ConfigActivity.KEY_SCORE_QUARTER, getQuarter);
-                param.put(ConfigActivity.KEY_SCORE_HOME_TEAM, getHomeScore);
-                param.put(ConfigActivity.KEY_SCORE_VISITOR_TEAM, getVisitorScore);
+                param.put(ConfigActivity.KEY_SCORE_QUARTER, quarter);
+                param.put(ConfigActivity.KEY_SCORE_HOME_TEAM, homeScore);
+                param.put(ConfigActivity.KEY_SCORE_VISITOR_TEAM, visitorScore);
                 param.put(ConfigActivity.KEY_ID_CURRENT_MATCH, id_game);
                 param.put(ConfigActivity.KEY_ID_SESSION, sharedPreferences1.getString(ConfigActivity.SESSION_ID, ""));
                 param.put("f", function);
