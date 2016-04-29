@@ -30,6 +30,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.graphics.PorterDuff;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.util.Config;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -109,7 +110,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
     private Button updateResult;
     private Button endGame;
 
-    private LinearLayout quarterLayout;
+    private CardView cardRecap;
 
     //Varibili per la Navigation View
     private Toolbar toolbar;
@@ -118,8 +119,17 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
     private String teamHome = "";
     private String teamVisitor = "";
+    private String time = "";
+    private String championship = "";
     private TextView teamhome;
     private TextView teamvis;
+    private TextView teamHomeRecap;
+    private TextView teamVisitorRecap;
+    private TextView scoreHomeRecap;
+    private TextView scoreVisitorRecap;
+    private TextView championshipRecap;
+    private TextView timeRecap;
+    private TextView quarterRecap;
     private TextView quarterView;
     private TextView scoreView;
     private TextView scoreViewVisitor;
@@ -153,6 +163,14 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         //Inizializzo le textView
         teamhome = (TextView) findViewById(R.id.team_home_text);
         teamvis = (TextView) findViewById(R.id.team_visitors_text);
+        teamHomeRecap = (TextView) findViewById(R.id.teamHome_cv_live);
+        teamVisitorRecap = (TextView) findViewById(R.id.teamVisitor_cv_live);
+        quarterRecap = (TextView) findViewById(R.id.actual_quarter);
+        scoreHomeRecap = (TextView) findViewById(R.id.scoreHome_cv_live);
+        scoreVisitorRecap = (TextView) findViewById(R.id.scoreVisitor_cv_live);
+        timeRecap = (TextView) findViewById(R.id.time_cv_live);
+        championshipRecap = (TextView) findViewById(R.id.championship_cv_live);
+
 
         quarterPicker = (SwipeNumberPicker) findViewById(R.id.quarterPicker);
         homePicker = (SwipeNumberPicker) findViewById(R.id.homePicker);
@@ -320,6 +338,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         final String id_game = String.valueOf(sharedPreferences2.getInt(ConfigActivity.ID_GAME, 0));
         final String idSession = sharedPreferences1.getString(ConfigActivity.SESSION_ID, "");
         final String function = "getGames";
+
         Log.d("Live Activity", "valore id_game" + id_game);
         Log.d("Live Activity", "Sessione numero: " + idSession);
 
@@ -351,7 +370,8 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
                         teamHome = teams.getString(ConfigActivity.TAG_CURRENT_TEAM_HOME);
                         teamVisitor = teams.getString(ConfigActivity.TAG_CURRENT_TEAM_VISITOR);
-
+                        time = teams.getString("time");
+                        championship = teams.getString("champ");
                     }
 
                 } catch (JSONException e) {
@@ -373,6 +393,10 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
                 teamhome.setText(teamHome);
                 teamvis.setText(teamVisitor);
+                teamHomeRecap.setText(teamHome);
+                teamVisitorRecap.setText(teamVisitor);
+                championshipRecap.setText(championship);
+                timeRecap.setText(time);
 
             }
         }
@@ -385,12 +409,9 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
         final SharedPreferences sharedPreferences1 = getSharedPreferences(ConfigActivity.TAG_ID_GAME, Context.MODE_PRIVATE);
 
-        //final String getQuarter = String.valueOf(quarterView.getText().toString());
         final String quarter = String.valueOf(quarterPicker.getValue());
         final String homeScore = String.valueOf(homePicker.getValue());
-        //final String getHomeScore = String.valueOf(scoreView.getText().toString());
         final String visitorScore = String.valueOf(visitorPicker.getValue());
-        //final String getVisitorScore = String.valueOf(scoreViewVisitor.getText().toString());
         final String id_game = String.valueOf(sharedPreferences1.getInt(ConfigActivity.ID_GAME, 0));
 
         Log.d("String get quarter", "=" + quarter);
@@ -422,6 +443,9 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
                 JSONObject j = null;
                 String uploadOk = "";
+                String actualQuarter = "";
+                String actualScoreHome = "";
+                String actualScoreVisitor = "";
 
                 try {
 
@@ -434,6 +458,11 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
 
                             JSONObject jsonObject = upload.getJSONObject(i);
                             uploadOk = jsonObject.getString(ConfigActivity.TAG_STATUS);
+                            actualQuarter = jsonObject.getString("nquarter");
+                            actualScoreHome = jsonObject.getString("score_home_team");
+                            actualScoreVisitor = jsonObject.getString("score_visitor_team");
+
+
 
                         } catch (JSONException e) {
 
@@ -446,6 +475,9 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
                     e.printStackTrace();
                 }
 
+                quarterRecap.setText(actualQuarter + "°");
+                scoreHomeRecap.setText(actualScoreHome);
+                scoreVisitorRecap.setText(actualScoreVisitor);
                 Toast.makeText(LiveActivity.this, uploadOk, Toast.LENGTH_LONG).show();
 
             }
