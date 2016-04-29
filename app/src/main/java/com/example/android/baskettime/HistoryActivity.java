@@ -363,11 +363,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
             startActivity(newgame);
             //overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
         }
-
-        if (v == prova){
-            Intent prova = new Intent(HistoryActivity.this, prova.class);
-            startActivity(prova);
-        }
     }
 
     @Override

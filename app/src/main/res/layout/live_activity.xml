@@ -57,6 +57,17 @@
                 android:layout_marginTop="16dp"
                 android:background="@android:color/black" />
 
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/firstDivider"
+                android:layout_centerInParent="true"
+                android:id="@+id/teamDivider"
+                android:layout_marginTop="22dp"
+                android:text="-"
+                android:textSize="35sp" />
+
             <TextView
                 android:id="@+id/team_home_text"
                 android:layout_width="wrap_content"
@@ -69,16 +80,6 @@
                 android:paddingTop="30dp"
                 android:textColor="#039be5"
                 android:textSize="22sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/firstDivider"
-                android:layout_centerInParent="true"
-                android:id="@+id/teamDivider"
-                android:layout_marginTop="22dp"
-                android:text="-"
-                android:textSize="35sp" />
 
 
             <TextView
