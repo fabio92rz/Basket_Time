@@ -1,8 +1,10 @@
 package com.example.android.baskettime;
 
+import android.annotation.TargetApi;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Fabio on 10/03/2016.
@@ -57,15 +60,39 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
         return pvh;
     }
 
+    void setValue(String value, String temp, ImageView imageView, TextView textView) {
+
+        if (!value.equals(temp)) {
+
+            textView.setText(value);
+            showViews(imageView, textView);
+
+        } else {
+
+            hideViews(imageView, textView);
+        }
+    }
+
+
+    private void showViews(ImageView imageView, TextView textView) {
+
+        imageView.setVisibility(View.VISIBLE);
+        textView.setVisibility(View.VISIBLE);
+    }
+
+    private void hideViews(ImageView imageView, TextView textView) {
+
+        imageView.setVisibility(View.GONE);
+        textView.setVisibility(View.GONE);
+    }
+
     @Override
     public void onBindViewHolder(GamesViewHolder holder, int position) {
 
-        if (! String.valueOf(matches.get(position).date).equals(tempTime)) {
-            holder.dateTv.setText(matches.get(position).date);
-            tempTime = String.valueOf(matches.get(position).date);
-            holder.dateTv.setVisibility(View.VISIBLE);
-            holder.dateImage.setVisibility(View.VISIBLE);
-        }
+        String time = String.valueOf(matches.get(position).date);
+        setValue(time, tempTime, holder.dateImage, holder.dateTv);
+
+        tempTime = String.valueOf(matches.get(position).date);
 
         holder.timeTv.setText(matches.get(position).time);
         holder.champ.setText(matches.get(position).championship);
@@ -129,16 +156,15 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
                 @Override
                 public void onClick(View v) {
 
-
                     Intent matchDetails = new Intent(v.getContext(), Popup0Activity.class);
                     matchDetails.putExtra("matchID", selectedGame);
                     v.getContext().startActivity(matchDetails);
-
 
                 }
             });
 
             options.setOnClickListener(new View.OnClickListener() {
+                @TargetApi(Build.VERSION_CODES.M)
                 @Override
                 public void onClick(View v) {
 

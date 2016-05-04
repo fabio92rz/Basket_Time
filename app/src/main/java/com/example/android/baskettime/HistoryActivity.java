@@ -21,9 +21,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -88,11 +90,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * Created by fabio on 11/11/2015.
  */
-public class HistoryActivity extends AppCompatActivity implements View.OnClickListener, ListView.OnItemSelectedListener {
+public class HistoryActivity extends AppCompatActivity implements View.OnClickListener, ListView.OnItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
 
     RecyclerView rv;
     LinearLayoutManager llm;
     List<Games> matchList;
+
+    SwipeRefreshLayout swipeRefreshLayout;
 
     //TextView per i dati dell'utente
     private TextView tvEmail;
@@ -128,6 +132,14 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
         final RVAdapter rvAdapter = new RVAdapter(matchList);
         rv.setAdapter(rvAdapter);
+
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
+        swipeRefreshLayout.setOnRefreshListener(this);
+
+        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         //Creo un inflater per inflazionare il layout dell'header
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -541,6 +553,81 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         String encodedProfilePic = Base64.encodeToString(profilePicBytes, Base64.DEFAULT);
 
         return encodedProfilePic;
+    }
+
+    @Override
+    public void onRefresh() {
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(false);
+
+                StringRequest gameRequest = new StringRequest(Request.Method.POST, ConfigActivity.ENTRY, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+
+                            final RVAdapter rvAdapter = new RVAdapter(matchList);
+                            rv.setAdapter(rvAdapter);
+
+                            JSONObject j = null;
+                            j = new JSONObject(response);
+                            JSONArray matches = j.getJSONArray(ConfigActivity.JSON_GAMES_TAG);
+
+                            for (int i = 0; i < matches.length(); i++) {
+
+                                JSONObject jsonObject = matches.getJSONObject(i);
+                                Games games = new Games();
+
+
+                                games.date = jsonObject.getString("day");
+                                games.time = jsonObject.getString("time");
+                                games.championship = jsonObject.getString(ConfigActivity.TAG_CHAMP_HIST);
+                                games.teamHome = jsonObject.getString(ConfigActivity.TAG_HOME_TEAM_ID);
+                                games.scoreHome = jsonObject.getInt(ConfigActivity.TAG_SCORE_HOME);
+                                games.teamVisitor = jsonObject.getString(ConfigActivity.TAG_VISITOR_TEAM_ID);
+                                games.scoreVisitor = jsonObject.getInt(ConfigActivity.TAG_SCORE_VISITOR);
+                                games.quarter = jsonObject.getInt(ConfigActivity.TAG_QUARTER);
+                                games.id_game = jsonObject.getInt(ConfigActivity.TAG_ID_GAME);
+
+                                matchList.add(games);
+
+                            }
+
+                            rvAdapter.notifyDataSetChanged();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }) {
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<>();
+
+                        SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+                        final String function = "getGames";
+
+                        //Aggiungo i parametri alla richiesta
+                        params.put(ConfigActivity.KEY_ID_SESSION, sharedPreferences.getString(ConfigActivity.SESSION_ID,"" ));
+                        params.put("f", function);
+
+                        //Ritorno i paramentri
+                        return params;
+                    }
+                };
+
+                RequestQueue requestQueue = Volley.newRequestQueue(getBaseContext());
+                requestQueue.add(gameRequest);
+            }
+        }, 2000);
+
     }
 }
 

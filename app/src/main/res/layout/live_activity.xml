@@ -116,22 +116,13 @@
                 app:snp_max="500"
                 app:snp_min="0" />
 
-            <View
-                android:id="@+id/secondDivider"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@id/visitorPicker"
-                android:layout_marginLeft="32dp"
-                android:layout_marginRight="32dp"
-                android:layout_marginTop="33dp"
-                android:background="@android:color/black" />
-
             <android.support.v7.widget.CardView
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/cv_live"
+                android:layout_marginTop="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/secondDivider"
+                android:layout_below="@id/visitorPicker"
                 card_view:cardCornerRadius="2dp"
                 card_view:cardElevation="5dp"
                 card_view:cardPreventCornerOverlap="false"

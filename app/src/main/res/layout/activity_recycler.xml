@@ -4,91 +4,102 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.DrawerLayout
-        android:id="@+id/drawer_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
-
-        <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+        <android.support.v4.widget.DrawerLayout
+            android:id="@+id/drawer_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#eeeeee"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:fitsSystemWindows="true">
 
-            <include
-                android:id="@+id/toolbar"
-                layout="@layout/tool_bar" />
-
-
-            <TextView
-                android:id="@+id/championship"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/toolbar"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:text="Partite concluse"
-                android:textColor="#616161"
-                android:textSize="20sp" />
-
-            <View
-                android:id="@+id/view_divider"
-                android:layout_width="50dp"
-                android:layout_height="1dp"
-                android:layout_below="@id/championship"
-                android:layout_centerInParent="true"
-                android:background="@android:color/holo_blue_light" />
-
-            <LinearLayout
+            <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/view_divider"
-                android:layout_marginTop="5dp"
-                tools:context=".HistoryActivity">
+                android:background="#eeeeee"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="3dp" />
-
-            </LinearLayout>
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/new_game"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:layout_margin="20dp"
-                android:src="@drawable/plus" />
-
-        </RelativeLayout>
-
-        <android.support.design.widget.NavigationView
-            android:id="@+id/navigation_view"
-            android:layout_width="320dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            app:menu="@menu/drawer">
+                <include
+                    android:id="@+id/toolbar"
+                    layout="@layout/tool_bar" />
 
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <Button
-                    android:id="@+id/logout_button"
+                <TextView
+                    android:id="@+id/championship"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:text="Logout" />
+                    android:layout_below="@id/toolbar"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="Partite concluse"
+                    android:textColor="#616161"
+                    android:textSize="20sp" />
+
+                <View
+                    android:id="@+id/view_divider"
+                    android:layout_width="50dp"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/championship"
+                    android:layout_centerInParent="true"
+                    android:background="@android:color/holo_blue_light" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/view_divider"
+                    android:layout_marginTop="5dp"
+                    tools:context=".HistoryActivity">
+
+                    <android.support.v4.widget.SwipeRefreshLayout
+                        android:id="@+id/swipeRefresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="3dp" />
+
+                    </android.support.v4.widget.SwipeRefreshLayout>
+
+                </LinearLayout>
+
             </RelativeLayout>
 
-        </android.support.design.widget.NavigationView>
-    </android.support.v4.widget.DrawerLayout>
+            <android.support.design.widget.NavigationView
+                android:id="@+id/navigation_view"
+                android:layout_width="320dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                app:menu="@menu/drawer">
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <Button
+                        android:id="@+id/logout_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:text="Logout" />
+                </RelativeLayout>
+
+            </android.support.design.widget.NavigationView>
+        </android.support.v4.widget.DrawerLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/new_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="20dp"
+            android:src="@drawable/plus"
+            app:layout_anchor="@id/recyclerView"
+            app:layout_anchorGravity="bottom|end"
+            app:layout_behavior="com.example.android.baskettime.ScrollingFAB" />
 </android.support.design.widget.CoordinatorLayout>
 

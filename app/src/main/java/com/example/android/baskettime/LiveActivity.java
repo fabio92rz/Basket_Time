@@ -214,6 +214,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         navigationView.addHeaderView(vi);
 
         profilePicture = (CircleImageView) vi.findViewById(R.id.profile_image);
+        profilePicture.setOnClickListener(null);
 
 
         if (!"".equalsIgnoreCase(profilePic)) {
@@ -663,6 +664,7 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
                         //Faccio partire la LoginActivity
                         Intent intent = new Intent(LiveActivity.this, HistoryActivity.class);
                         startActivity(intent);
+                        finish();
                     }
                 });
 
