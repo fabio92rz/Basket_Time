@@ -110,8 +110,6 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
     private Button updateResult;
     private Button endGame;
 
-    private CardView cardRecap;
-
     //Varibili per la Navigation View
     private Toolbar toolbar;
     private NavigationView navigationView;
@@ -135,7 +133,6 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
     private TextView scoreViewVisitor;
     private CircleImageView profilePicture;
     final String function = "insertQuarter";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,11 +160,18 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
         //Inizializzo le textView
         teamhome = (TextView) findViewById(R.id.team_home_text);
         teamvis = (TextView) findViewById(R.id.team_visitors_text);
+
         teamHomeRecap = (TextView) findViewById(R.id.teamHome_cv_live);
         teamVisitorRecap = (TextView) findViewById(R.id.teamVisitor_cv_live);
+
         quarterRecap = (TextView) findViewById(R.id.actual_quarter);
+
+        assert quarterRecap != null;
+        quarterRecap.setText("1°");
+
         scoreHomeRecap = (TextView) findViewById(R.id.scoreHome_cv_live);
         scoreVisitorRecap = (TextView) findViewById(R.id.scoreVisitor_cv_live);
+
         timeRecap = (TextView) findViewById(R.id.time_cv_live);
         championshipRecap = (TextView) findViewById(R.id.championship_cv_live);
 

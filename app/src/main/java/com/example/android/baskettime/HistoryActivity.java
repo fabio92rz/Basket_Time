@@ -29,6 +29,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -256,65 +257,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
         //Chiamo syncState per far comparire il toggle
         actionBarDrawerToggle.syncState();
-
-        StringRequest gameRequest = new StringRequest(Request.Method.POST, ConfigActivity.ENTRY, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-
-                    JSONObject j = null;
-                    j = new JSONObject(response);
-                    JSONArray matches = j.getJSONArray(ConfigActivity.JSON_GAMES_TAG);
-
-                    for (int i = 0; i < matches.length(); i++) {
-
-                        JSONObject jsonObject = matches.getJSONObject(i);
-                        Games games = new Games();
-
-
-                        games.date = jsonObject.getString("day");
-                        games.time = jsonObject.getString("time");
-                        games.championship = jsonObject.getString(ConfigActivity.TAG_CHAMP_HIST);
-                        games.teamHome = jsonObject.getString(ConfigActivity.TAG_HOME_TEAM_ID);
-                        games.scoreHome = jsonObject.getInt(ConfigActivity.TAG_SCORE_HOME);
-                        games.teamVisitor = jsonObject.getString(ConfigActivity.TAG_VISITOR_TEAM_ID);
-                        games.scoreVisitor = jsonObject.getInt(ConfigActivity.TAG_SCORE_VISITOR);
-                        games.quarter = jsonObject.getInt(ConfigActivity.TAG_QUARTER);
-                        games.id_game = jsonObject.getInt(ConfigActivity.TAG_ID_GAME);
-
-                        matchList.add(games);
-
-                    }
-
-                    rvAdapter.notifyDataSetChanged();
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-
-                final String function = "getGames";
-
-                //Aggiungo i parametri alla richiesta
-                params.put(ConfigActivity.KEY_ID_SESSION, idSession);
-                params.put("f", function);
-
-                //Ritorno i paramentri
-                return params;
-            }
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(gameRequest);
+        getGames();
     }
 
     //Funzione Logout
@@ -561,73 +504,148 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+
+                getGamesRefreshed();
                 swipeRefreshLayout.setRefreshing(false);
 
-                StringRequest gameRequest = new StringRequest(Request.Method.POST, ConfigActivity.ENTRY, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-
-                            final RVAdapter rvAdapter = new RVAdapter(matchList);
-                            rv.setAdapter(rvAdapter);
-
-                            JSONObject j = null;
-                            j = new JSONObject(response);
-                            JSONArray matches = j.getJSONArray(ConfigActivity.JSON_GAMES_TAG);
-
-                            for (int i = 0; i < matches.length(); i++) {
-
-                                JSONObject jsonObject = matches.getJSONObject(i);
-                                Games games = new Games();
 
 
-                                games.date = jsonObject.getString("day");
-                                games.time = jsonObject.getString("time");
-                                games.championship = jsonObject.getString(ConfigActivity.TAG_CHAMP_HIST);
-                                games.teamHome = jsonObject.getString(ConfigActivity.TAG_HOME_TEAM_ID);
-                                games.scoreHome = jsonObject.getInt(ConfigActivity.TAG_SCORE_HOME);
-                                games.teamVisitor = jsonObject.getString(ConfigActivity.TAG_VISITOR_TEAM_ID);
-                                games.scoreVisitor = jsonObject.getInt(ConfigActivity.TAG_SCORE_VISITOR);
-                                games.quarter = jsonObject.getInt(ConfigActivity.TAG_QUARTER);
-                                games.id_game = jsonObject.getInt(ConfigActivity.TAG_ID_GAME);
 
-                                matchList.add(games);
-
-                            }
-
-                            rvAdapter.notifyDataSetChanged();
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                    }
-                }) {
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String, String> params = new HashMap<>();
-
-                        SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
-                        final String function = "getGames";
-
-                        //Aggiungo i parametri alla richiesta
-                        params.put(ConfigActivity.KEY_ID_SESSION, sharedPreferences.getString(ConfigActivity.SESSION_ID,"" ));
-                        params.put("f", function);
-
-                        //Ritorno i paramentri
-                        return params;
-                    }
-                };
-
-                RequestQueue requestQueue = Volley.newRequestQueue(getBaseContext());
-                requestQueue.add(gameRequest);
             }
         }, 2000);
+    }
 
+    public void getGamesRefreshed(){
+
+        StringRequest gameRequest = new StringRequest(Request.Method.POST, ConfigActivity.ENTRY, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+
+                    final RVAdapter rvAdapter = new RVAdapter(matchList);
+                    rv.setAdapter(rvAdapter);
+                    rvAdapter.clear();
+
+                    JSONObject j = null;
+                    j = new JSONObject(response);
+                    JSONArray matches = j.getJSONArray(ConfigActivity.JSON_GAMES_TAG);
+
+                    for (int i = 0; i < matches.length(); i++) {
+
+                        JSONObject jsonObject = matches.getJSONObject(i);
+                        Games games = new Games();
+
+
+                        games.date = jsonObject.getString("day");
+                        games.time = jsonObject.getString("time");
+                        games.championship = jsonObject.getString(ConfigActivity.TAG_CHAMP_HIST);
+                        games.teamHome = jsonObject.getString(ConfigActivity.TAG_HOME_TEAM_ID);
+                        games.scoreHome = jsonObject.getInt(ConfigActivity.TAG_SCORE_HOME);
+                        games.teamVisitor = jsonObject.getString(ConfigActivity.TAG_VISITOR_TEAM_ID);
+                        games.scoreVisitor = jsonObject.getInt(ConfigActivity.TAG_SCORE_VISITOR);
+                        games.quarter = jsonObject.getInt(ConfigActivity.TAG_QUARTER);
+                        games.id_game = jsonObject.getInt(ConfigActivity.TAG_ID_GAME);
+
+                        matchList.add(games);
+
+                    }
+
+                    rvAdapter.notifyDataSetChanged();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+
+                SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+                final String function = "getGames";
+
+                //Aggiungo i parametri alla richiesta
+                params.put(ConfigActivity.KEY_ID_SESSION, sharedPreferences.getString(ConfigActivity.SESSION_ID,"" ));
+                params.put("f", function);
+
+                //Ritorno i paramentri
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getBaseContext());
+        requestQueue.add(gameRequest);
+    }
+
+    public void getGames(){
+
+        StringRequest gameRequest = new StringRequest(Request.Method.POST, ConfigActivity.ENTRY, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+
+                    final RVAdapter rvAdapter = new RVAdapter(matchList);
+                    rv.setAdapter(rvAdapter);
+
+                    JSONObject j = null;
+                    j = new JSONObject(response);
+                    JSONArray matches = j.getJSONArray(ConfigActivity.JSON_GAMES_TAG);
+
+                    for (int i = 0; i < matches.length(); i++) {
+
+                        JSONObject jsonObject = matches.getJSONObject(i);
+                        Games games = new Games();
+
+
+                        games.date = jsonObject.getString("day");
+                        games.time = jsonObject.getString("time");
+                        games.championship = jsonObject.getString(ConfigActivity.TAG_CHAMP_HIST);
+                        games.teamHome = jsonObject.getString(ConfigActivity.TAG_HOME_TEAM_ID);
+                        games.scoreHome = jsonObject.getInt(ConfigActivity.TAG_SCORE_HOME);
+                        games.teamVisitor = jsonObject.getString(ConfigActivity.TAG_VISITOR_TEAM_ID);
+                        games.scoreVisitor = jsonObject.getInt(ConfigActivity.TAG_SCORE_VISITOR);
+                        games.quarter = jsonObject.getInt(ConfigActivity.TAG_QUARTER);
+                        games.id_game = jsonObject.getInt(ConfigActivity.TAG_ID_GAME);
+
+                        matchList.add(games);
+
+                    }
+
+                    rvAdapter.notifyDataSetChanged();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+
+                SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+                final String function = "getGames";
+
+                //Aggiungo i parametri alla richiesta
+                params.put(ConfigActivity.KEY_ID_SESSION, sharedPreferences.getString(ConfigActivity.SESSION_ID,"" ));
+                params.put("f", function);
+
+                //Ritorno i paramentri
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getBaseContext());
+        requestQueue.add(gameRequest);
     }
 }
 

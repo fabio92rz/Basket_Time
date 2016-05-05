@@ -292,8 +292,7 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
 
                 Intent livegame = new Intent(NewGameActivity.this, LiveActivity.class);
                 startActivity(livegame);
-                overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-
+                finish();
             }
 
             @Override
