@@ -63,6 +63,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListener;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.squareup.picasso.MemoryPolicy;
@@ -126,13 +127,15 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         matchList = new ArrayList<>();
 
         rv = (RecyclerView) findViewById(R.id.recyclerView);
+
+        final RVAdapter rvAdapter = new RVAdapter(matchList);
+        rv.setAdapter(rvAdapter);
+
+        rv.setItemViewCacheSize(1000);
         rv.setHasFixedSize(true);
 
         llm = new LinearLayoutManager(HistoryActivity.this);
         rv.setLayoutManager(llm);
-
-        final RVAdapter rvAdapter = new RVAdapter(matchList);
-        rv.setAdapter(rvAdapter);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -156,6 +159,8 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         //Inizializzo la Toolbar e la inserisco nell'actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
 
         //Catturo i dati e li inserisco nell'header
         final SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
@@ -258,6 +263,45 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         //Chiamo syncState per far comparire il toggle
         actionBarDrawerToggle.syncState();
         getGames();
+
+        SwipeableRecyclerViewTouchListener swipeTouchListener =
+                new SwipeableRecyclerViewTouchListener(rv,
+                        new SwipeableRecyclerViewTouchListener.SwipeListener() {
+
+                            @Override
+                            public boolean canSwipeLeft(int position) {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean canSwipeRight(int position) {
+                                return true;
+                            }
+
+                            @Override
+                            public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
+                                for (int position : reverseSortedPositions) {
+                                    matchList.remove(position);
+                                    rvAdapter.notifyItemRemoved(position);
+                                }
+                                rvAdapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
+                                for (int position : reverseSortedPositions) {
+                                    matchList.remove(position);
+                                    rvAdapter.notifyItemRemoved(position);
+
+
+
+
+                                }
+                                rvAdapter.notifyDataSetChanged();
+                            }
+                        });
+
+        rv.addOnItemTouchListener(swipeTouchListener);
     }
 
     //Funzione Logout
@@ -297,7 +341,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         //Showing the alert dialog
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
-
     }
 
 
@@ -587,10 +630,10 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         StringRequest gameRequest = new StringRequest(Request.Method.POST, ConfigActivity.ENTRY, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                try {
+                final RVAdapter rvAdapter = new RVAdapter(matchList);
+                rv.setAdapter(rvAdapter);
 
-                    final RVAdapter rvAdapter = new RVAdapter(matchList);
-                    rv.setAdapter(rvAdapter);
+                try {
 
                     JSONObject j = null;
                     j = new JSONObject(response);
@@ -621,7 +664,9 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                rvAdapter.notifyDataSetChanged();
             }
+
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {

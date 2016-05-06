@@ -62,26 +62,28 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
         return pvh;
     }
 
-    void setValue(String value, String temp,TextView textView, LinearLayout linearLayout) {
+    void setValue(String value, String temp,ImageView imageView, TextView textView) {
 
         if (!value.equals(temp)) {
             textView.setText(value);
-            showViews(linearLayout);
+            showViews(imageView, textView);
 
         } else {
             textView.setText("");
-            hideViews(linearLayout);
+            hideViews(imageView, textView);
         }
     }
 
-    private void showViews(LinearLayout linearLayout) {
+    private void showViews(ImageView imageView, TextView textView) {
 
-        linearLayout.setVisibility(View.VISIBLE);
+        imageView.setVisibility(View.VISIBLE);
+        textView.setVisibility(View.VISIBLE);
     }
 
-    private void hideViews(LinearLayout linearLayout) {
+    private void hideViews(ImageView imageView, TextView textView) {
 
-        linearLayout.setVisibility(View.GONE);
+        imageView.setVisibility(View.GONE);
+        textView.setVisibility(View.GONE);
     }
 
     public void clear() {
@@ -98,8 +100,10 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
     public void onBindViewHolder(GamesViewHolder holder, int position) {
 
         String time = String.valueOf(matches.get(position).date);
-        setValue(time, tempTime,holder.dateTv, holder.dateLayout);
-        tempTime = time;
+
+        setValue(time, tempTime, holder.dateImage, holder.dateTv);
+
+        tempTime = String.valueOf(matches.get(position).date);
 
         holder.timeTv.setText(matches.get(position).time);
         holder.champ.setText(matches.get(position).championship);
@@ -131,7 +135,6 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
         CardView cv;
         Integer selectedGame;
         View click;
-        LinearLayout dateLayout;
         TextView champ;
         ImageView dateImage;
         TextView teamHome;
@@ -148,10 +151,9 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
             super(itemView);
 
             click = itemView;
-            cv = (CardView) itemView.findViewById(R.id.cv);
+            cv = (CardView) itemView.findViewById(R.id.cv_games);
             dateImage = (ImageView) itemView.findViewById(R.id.calendar_icon);
             timeTv = (TextView) itemView.findViewById(R.id.time_cv);
-            dateLayout = (LinearLayout) itemView.findViewById(R.id.dateLayout);
             dateTv = (TextView) itemView.findViewById(R.id.date_cv);
             options = (ImageButton) itemView.findViewById(R.id.popupmenu);
             quarter = (TextView) itemView.findViewById(R.id.final_quarter);
