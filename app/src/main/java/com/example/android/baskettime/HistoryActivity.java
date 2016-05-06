@@ -70,6 +70,7 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -282,6 +283,9 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                             public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
                                 for (int position : reverseSortedPositions) {
                                     matchList.remove(position);
+                                    String idGame = String.valueOf(matchList.get(position).id_game);
+
+                                    deleteMatch(idGame);
                                     rvAdapter.notifyItemRemoved(position);
                                 }
                                 rvAdapter.notifyDataSetChanged();
@@ -691,6 +695,53 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
         RequestQueue requestQueue = Volley.newRequestQueue(getBaseContext());
         requestQueue.add(gameRequest);
+    }
+
+    public void deleteMatch(final String idGame){
+
+        final StringRequest deleteMatch = new StringRequest(Request.Method.POST, ConfigActivity.ENTRY, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                String deletedMatch = "";
+
+                try {
+                    JSONObject j = null;
+                    j = new JSONObject(response);
+
+                    String risposta = j.getString("result");
+                    deletedMatch = j.getString("match");
+
+                } catch (JSONException e) {
+
+                    e.printStackTrace();
+                }
+
+                Toast.makeText(getBaseContext(), deletedMatch, Toast.LENGTH_LONG).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError{
+                Map<String, String> params = new HashMap<>();
+
+                final String function = "deleteMatch";
+                SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+
+                params.put(ConfigActivity.KEY_ID_SESSION, sharedPreferences.getString(ConfigActivity.SESSION_ID, ""));
+                params.put("f", function);
+                params.put("id", idGame);
+
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getBaseContext());
+        requestQueue.add(deleteMatch);
     }
 }
 
