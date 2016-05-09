@@ -132,7 +132,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         final RVAdapter rvAdapter = new RVAdapter(matchList);
         rv.setAdapter(rvAdapter);
 
-        rv.setItemViewCacheSize(1000);
+        rv.setItemViewCacheSize(2000);
         rv.setHasFixedSize(true);
 
         llm = new LinearLayoutManager(HistoryActivity.this);
@@ -282,26 +282,26 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                             @Override
                             public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
                                 for (int position : reverseSortedPositions) {
-                                    matchList.remove(position);
-                                    String idGame = String.valueOf(matchList.get(position).id_game);
 
-                                    deleteMatch(idGame);
-                                    rvAdapter.notifyItemRemoved(position);
                                 }
-                                rvAdapter.notifyDataSetChanged();
+
                             }
 
                             @Override
                             public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
                                 for (int position : reverseSortedPositions) {
-                                    matchList.remove(position);
+
+                                    rv.setAdapter(rvAdapter);
+                                    String idGame = String.valueOf(matchList.get(position).id_game);
+                                    deleteMatch(idGame);
+                                    Log.d("HistoryActivity", "prova idgame" + idGame);
+                                    matchList.remove(matchList.get(position));
+                                    Log.d("Controllo posizione", "posizione = " + position);
                                     rvAdapter.notifyItemRemoved(position);
-
-
-
-
                                 }
+
                                 rvAdapter.notifyDataSetChanged();
+
                             }
                         });
 
@@ -554,9 +554,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
                 getGamesRefreshed();
                 swipeRefreshLayout.setRefreshing(false);
-
-
-
 
             }
         }, 2000);

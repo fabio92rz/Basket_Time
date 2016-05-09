@@ -9,6 +9,7 @@
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
+        android:background="#eeeeee"
         android:layout_height="match_parent"
         android:fillViewport="true"
         android:scrollbars="none"
@@ -25,104 +26,124 @@
                 android:id="@+id/toolbar"
                 layout="@layout/tool_bar" />
 
-            <TextView
-                android:id="@+id/quarter"
-                android:layout_width="fill_parent"
+            <android.support.v7.widget.CardView
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/toolbar"
-                android:layout_marginTop="10dp"
-                android:fontFamily="sans-serif-medium"
-                android:gravity="center_horizontal"
-                android:text="Quarto"
-                android:textColor="#000000"
-                android:textSize="18sp" />
+                card_view:cardCornerRadius="2dp"
+                card_view:cardElevation="5dp"
+                card_view:cardPreventCornerOverlap="false"
+                card_view:cardUseCompatPadding="true"
+                card_view:contentPadding="2dp"
+                android:id="@+id/cv_live2">
 
-            <com.vi.swipenumberpicker.SwipeNumberPicker
-                android:id="@+id/quarterPicker"
-                android:layout_width="100dp"
-                android:layout_height="50dp"
-                android:layout_below="@id/quarter"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                app:snp_max="40"
-                app:snp_min="0" />
+                <RelativeLayout
+                    android:id="@+id/rel_layout1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingBottom="20dp">
 
-            <View
-                android:id="@+id/firstDivider"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@id/quarterPicker"
-                android:layout_marginLeft="32dp"
-                android:layout_marginRight="32dp"
-                android:layout_marginTop="16dp"
-                android:background="@android:color/black" />
+                <TextView
+                    android:id="@+id/quarter"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center_horizontal"
+                    android:text="Quarto"
+                    android:textColor="#000000"
+                    android:textSize="18sp" />
 
+                <com.vi.swipenumberpicker.SwipeNumberPicker
+                    android:id="@+id/quarterPicker"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:layout_below="@id/quarter"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    app:snp_max="15"
+                    app:snp_min="1" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/firstDivider"
-                android:layout_centerInParent="true"
-                android:id="@+id/teamDivider"
-                android:layout_marginTop="22dp"
-                android:text="-"
-                android:textSize="35sp" />
-
-            <TextView
-                android:id="@+id/team_home_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/firstDivider"
-                android:layout_toLeftOf="@id/teamDivider"
-                android:paddingRight="45dp"
-                android:background="#00000000"
-                android:paddingBottom="30dp"
-                android:paddingTop="30dp"
-                android:textColor="#039be5"
-                android:textSize="22sp" />
+                <View
+                    android:id="@+id/firstDivider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@id/quarterPicker"
+                    android:layout_marginLeft="32dp"
+                    android:layout_marginRight="32dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@android:color/black" />
 
 
-            <TextView
-                android:id="@+id/team_visitors_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_toRightOf="@id/teamDivider"
-                android:layout_below="@id/firstDivider"
-                android:background="#00000000"
-                android:paddingBottom="30dp"
-                android:paddingLeft="45dp"
-                android:paddingTop="30dp"
-                android:textColor="#F44336"
-                android:textSize="22sp" />
+                <TextView
+                    android:id="@+id/teamDivider"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/firstDivider"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="22dp"
+                    android:text="-"
+                    android:textSize="35sp" />
+
+                <TextView
+                    android:id="@+id/team_home_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/firstDivider"
+                    android:layout_toLeftOf="@id/teamDivider"
+                    android:background="#00000000"
+                    android:paddingBottom="30dp"
+                    android:paddingRight="45dp"
+                    android:paddingTop="30dp"
+                    android:textColor="#039be5"
+                    android:textSize="22sp" />
 
 
-            <com.vi.swipenumberpicker.SwipeNumberPicker
-                android:id="@+id/homePicker"
-                android:layout_width="120dp"
-                android:layout_height="50dp"
-                android:layout_below="@id/team_home_text"
-                android:layout_marginLeft="50dp"
-                app:snp_max="500"
-                app:snp_min="0" />
+                <TextView
+                    android:id="@+id/team_visitors_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/firstDivider"
+                    android:layout_centerInParent="true"
+                    android:layout_toRightOf="@id/teamDivider"
+                    android:background="#00000000"
+                    android:paddingBottom="30dp"
+                    android:paddingLeft="45dp"
+                    android:paddingTop="30dp"
+                    android:textColor="#F44336"
+                    android:textSize="22sp" />
 
-            <com.vi.swipenumberpicker.SwipeNumberPicker
-                android:id="@+id/visitorPicker"
-                android:layout_width="120dp"
-                android:layout_height="50dp"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/team_visitors_text"
-                android:layout_marginRight="50dp"
-                app:snp_max="500"
-                app:snp_min="0" />
+
+                <com.vi.swipenumberpicker.SwipeNumberPicker
+                    android:id="@+id/homePicker"
+                    android:layout_width="120dp"
+                    android:layout_height="50dp"
+                    android:layout_below="@id/team_home_text"
+                    android:layout_marginLeft="50dp"
+                    app:snp_max="500"
+                    app:snp_min="0" />
+
+                <com.vi.swipenumberpicker.SwipeNumberPicker
+                    android:id="@+id/visitorPicker"
+                    android:layout_width="120dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/team_visitors_text"
+                    android:layout_marginRight="50dp"
+                    app:snp_max="500"
+                    app:snp_min="0" />
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/cv_live"
-                android:layout_marginTop="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/visitorPicker"
+                android:layout_below="@id/cv_live2"
+
                 card_view:cardCornerRadius="2dp"
                 card_view:cardElevation="5dp"
                 card_view:cardPreventCornerOverlap="false"
@@ -139,7 +160,7 @@
                         android:id="@+id/championship_cv_live"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="15dp"/>
+                        android:layout_marginBottom="15dp" />
 
                     <TextView
                         android:id="@+id/quart"
@@ -157,7 +178,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/quart"
                         android:layout_marginTop="3dp"
-                        android:gravity="center_horizontal"/>
+                        android:gravity="center_horizontal" />
 
                     <TextView
                         android:id="@+id/orario"
@@ -239,23 +260,23 @@
 
             <Button
                 android:id="@+id/start_button"
-                android:layout_width="wrap_content"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_marginLeft="20dp"
                 android:background="@drawable/custom_button"
-                android:text="Update !"
+                android:text="Aggiorna risultato!"
                 android:textAllCaps="false" />
 
             <Button
                 android:id="@+id/stop_button"
-                android:layout_width="wrap_content"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/custom_button2"
-                android:text="Stop!"
+                android:text="Fine           Partita!"
                 android:textAllCaps="false" />
 
         </RelativeLayout>

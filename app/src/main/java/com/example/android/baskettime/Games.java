@@ -3,9 +3,12 @@ package com.example.android.baskettime;
 import android.annotation.TargetApi;
 import android.content.ClipData;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Build;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,8 +25,21 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -179,7 +195,7 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
                 @Override
                 public void onClick(View v) {
 
-                    PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
+                    final PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
                     MenuInflater inflater = popupMenu.getMenuInflater();
                     inflater.inflate(R.menu.popup_menu, popupMenu.getMenu());
 
@@ -188,12 +204,33 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
 
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
-                        public boolean onMenuItemClick(MenuItem item) {
+                        public boolean onMenuItemClick(final MenuItem item) {
 
                             switch (item.getItemId()) {
 
                                 case R.id.delete:
-                                    Toast.makeText(itemView.getContext(), item.getTitle(), Toast.LENGTH_LONG).show();
+
+                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(itemView.getContext());
+                                    alertDialogBuilder.setMessage("Sicuro di voler eliminare la partita?");
+                                    alertDialogBuilder.setPositiveButton("Si",
+                                            new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface arg0, int arg1) {
+
+                                                    deleteMatch(String.valueOf(selectedGame));
+                                                }
+                                            });
+
+                                    alertDialogBuilder.setNegativeButton("No",
+                                            new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface arg0, int arg1) {
+
+                                                }
+                                            });
+
+                                    AlertDialog alertDialog = alertDialogBuilder.create();
+                                    alertDialog.show();
                                     break;
 
                                 case R.id.modify:
@@ -209,5 +246,54 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
 
 
         }
+        public void deleteMatch(final String idGame){
+
+            final StringRequest deleteMatch = new StringRequest(Request.Method.POST, ConfigActivity.ENTRY, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                    String deletedMatch = "";
+
+                    try {
+                        JSONObject j = null;
+                        j = new JSONObject(response);
+
+                        String risposta = j.getString("result");
+                        deletedMatch = j.getString("match");
+
+                    } catch (JSONException e) {
+
+                        e.printStackTrace();
+                    }
+
+                    Toast.makeText(itemView.getContext(), deletedMatch, Toast.LENGTH_LONG).show();
+                    itemView.setVisibility(View.GONE);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            }) {
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+
+                    final String function = "deleteMatch";
+                    SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+
+                    params.put(ConfigActivity.KEY_ID_SESSION, sharedPreferences.getString(ConfigActivity.SESSION_ID, ""));
+                    params.put("f", function);
+                    params.put("id", idGame);
+
+                    return params;
+                }
+            };
+
+            RequestQueue requestQueue = Volley.newRequestQueue(itemView.getContext());
+            requestQueue.add(deleteMatch);
+        }
+
+
     }
 }
