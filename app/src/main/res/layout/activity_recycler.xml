@@ -2,6 +2,7 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -20,8 +21,7 @@
 
                 <include
                     android:id="@+id/toolbar"
-                    layout="@layout/tool_bar"
-                    app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"/>
+                    layout="@layout/tool_bar" />
 
 
                 <TextView
@@ -66,6 +66,12 @@
                     </android.support.v4.widget.SwipeRefreshLayout>
 
                 </LinearLayout>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/undoBar"
+                    android:visibility="gone"/>
 
             </RelativeLayout>
 

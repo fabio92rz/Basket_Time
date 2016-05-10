@@ -37,4 +37,5 @@ dependencies {
     compile 'me.angrybyte.picker:picker:1.2.0'
     compile 'com.wefika:horizontal-picker:1.1.1'
     compile 'com.github.brnunes:swipeablerecyclerview:1.0.2'
+    compile 'com.github.jenzz.undobar:library:1.3:api15Release@aar'
 }

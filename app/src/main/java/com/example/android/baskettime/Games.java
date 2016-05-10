@@ -78,6 +78,14 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
         return pvh;
     }
 
+    public void removeAt(int position) {
+        matches.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, matches.size());
+        notifyDataSetChanged();
+
+    }
+
     void setValue(String value, String temp,ImageView imageView, TextView textView) {
 
         if (!value.equals(temp)) {
@@ -90,13 +98,13 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
         }
     }
 
-    private void showViews(ImageView imageView, TextView textView) {
+    public void showViews(ImageView imageView, TextView textView) {
 
         imageView.setVisibility(View.VISIBLE);
         textView.setVisibility(View.VISIBLE);
     }
 
-    private void hideViews(ImageView imageView, TextView textView) {
+    public void hideViews(ImageView imageView, TextView textView) {
 
         imageView.setVisibility(View.GONE);
         textView.setVisibility(View.GONE);
@@ -105,6 +113,10 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
     public void clear() {
         matches.clear();
         notifyDataSetChanged();
+    }
+
+    public void hideCard(int position){
+
     }
 
     public void addAll(List<Games> list) {
@@ -146,7 +158,7 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
         super.onAttachedToRecyclerView(recyclerView);
     }
 
-    public static class GamesViewHolder extends RecyclerView.ViewHolder {
+    public class GamesViewHolder extends RecyclerView.ViewHolder {
 
         CardView cv;
         Integer selectedGame;
@@ -218,6 +230,8 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
                                                 public void onClick(DialogInterface arg0, int arg1) {
 
                                                     deleteMatch(String.valueOf(selectedGame));
+                                                    notifyDataSetChanged();
+
                                                 }
                                             });
 
@@ -267,7 +281,7 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
                     }
 
                     Toast.makeText(itemView.getContext(), deletedMatch, Toast.LENGTH_LONG).show();
-                    itemView.setVisibility(View.GONE);
+                    removeAt(getAdapterPosition());
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -293,7 +307,5 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
             RequestQueue requestQueue = Volley.newRequestQueue(itemView.getContext());
             requestQueue.add(deleteMatch);
         }
-
-
     }
 }

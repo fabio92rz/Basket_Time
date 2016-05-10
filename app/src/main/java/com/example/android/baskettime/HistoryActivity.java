@@ -24,6 +24,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -64,6 +65,7 @@ import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.github.brnunes.swipeablerecyclerview.SwipeableRecyclerViewTouchListener;
+import com.jensdriller.libs.undobar.UndoBar;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.squareup.picasso.MemoryPolicy;
@@ -114,7 +116,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
     private Toolbar toolbar;
     private NavigationView navigationView;
-    //boolean profilePictureBoolean = false;
     protected DrawerLayout drawerLayout;
     public Bitmap scaled;
 
@@ -137,6 +138,8 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
         llm = new LinearLayoutManager(HistoryActivity.this);
         rv.setLayoutManager(llm);
+
+        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -293,10 +296,13 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
                                     rv.setAdapter(rvAdapter);
                                     String idGame = String.valueOf(matchList.get(position).id_game);
+
+
+
                                     deleteMatch(idGame);
-                                    Log.d("HistoryActivity", "prova idgame" + idGame);
+
                                     matchList.remove(matchList.get(position));
-                                    Log.d("Controllo posizione", "posizione = " + position);
+
                                     rvAdapter.notifyItemRemoved(position);
                                 }
 
@@ -686,6 +692,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                 params.put("f", function);
 
                 //Ritorno i paramentri
+                //Ritorno i paramentri
                 return params;
             }
         };
@@ -696,6 +703,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
     public void deleteMatch(final String idGame){
 
+        final CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
         final StringRequest deleteMatch = new StringRequest(Request.Method.POST, ConfigActivity.ENTRY, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -715,6 +723,21 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                 }
 
                 Toast.makeText(getBaseContext(), deletedMatch, Toast.LENGTH_LONG).show();
+
+
+
+                Snackbar snackbar = Snackbar
+                        .make(coordinatorLayout, deletedMatch, Snackbar.LENGTH_LONG)
+                        .setAction("ANNULLA", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+
+
+                            }
+                        });
+                snackbar.show();
+
             }
         }, new Response.ErrorListener() {
             @Override
