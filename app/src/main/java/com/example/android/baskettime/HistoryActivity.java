@@ -296,7 +296,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
 
                                     String idGame = String.valueOf(matchList.get(position).id_game);
-
                                     int positionTemp = matchList.get(position).id_game;
 
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -304,8 +303,12 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                                     editor.apply();
 
                                     deleteMatch(idGame);
-
+                                    matchList.remove(matchList.get(position));
+                                    rvAdapter.notifyItemRemoved(position);
+                                    rv.setAdapter(rvAdapter);
                                 }
+
+                                rvAdapter.notifyDataSetChanged();
                             }
                         });
 
@@ -727,12 +730,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
                                     e.printStackTrace();
                                 }
-
-                                matchList.remove(matchList.get(position));
-                                adapter.notifyItemRemoved(position);
-                                rv.setAdapter(adapter);
-                                adapter.notifyDataSetChanged();
-
                             }
                         }, new Response.ErrorListener() {
                             @Override
@@ -761,7 +758,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                 })
                 .setAction("ANNULLA", new View.OnClickListener() {
                     @Override
-                    public void onClick(View v){
+                    public void onClick(View v){/**
 
                         SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
                         int position = sharedPreferences.getInt(ConfigActivity.ID_TEMP_GAME, 0);
@@ -775,7 +772,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                         adapter.notifyItemChanged(position);
                         adapter.notifyDataSetChanged();
 
-                        recyclerView.setAdapter(adapter);
+                        recyclerView.setAdapter(adapter);**/
 
                     }
                 })
