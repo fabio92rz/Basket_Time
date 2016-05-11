@@ -170,7 +170,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         final SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
         String email = sharedPreferences.getString(ConfigActivity.EMAIL_SHARED_PREF, "Not Available");
         String nameSurname = sharedPreferences.getString(ConfigActivity.NAME_SURNAME_PREF, "Not Available");
-        String profilePic = sharedPreferences.getString(ConfigActivity.SERVER_PATH, "");
+        final String profilePic = sharedPreferences.getString(ConfigActivity.SERVER_PATH, "");
 
 
         //Log.d("Prova della foto server", "Path = " + serverPicturePath);
@@ -294,20 +294,18 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                             public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
                                 for (int position : reverseSortedPositions) {
 
-                                    rv.setAdapter(rvAdapter);
+
                                     String idGame = String.valueOf(matchList.get(position).id_game);
 
+                                    int positionTemp = matchList.get(position).id_game;
 
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putInt(ConfigActivity.ID_TEMP_GAME, positionTemp);
+                                    editor.apply();
 
                                     deleteMatch(idGame);
 
-                                    matchList.remove(matchList.get(position));
-
-                                    rvAdapter.notifyItemRemoved(position);
                                 }
-
-                                rvAdapter.notifyDataSetChanged();
-
                             }
                         });
 
@@ -704,64 +702,84 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
     public void deleteMatch(final String idGame){
 
         final CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
-        final StringRequest deleteMatch = new StringRequest(Request.Method.POST, ConfigActivity.ENTRY, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
 
-                String deletedMatch = "";
+        Snackbar
+                .make(coordinatorLayout, "Match eliminato!", Snackbar.LENGTH_LONG)
+                .setCallback(new Snackbar.Callback() {
+                    @Override
+                    public void onDismissed(Snackbar snackbar, int event) {
+                        super.onDismissed(snackbar, DISMISS_EVENT_TIMEOUT);
 
-                try {
-                    JSONObject j = null;
-                    j = new JSONObject(response);
-
-                    String risposta = j.getString("result");
-                    deletedMatch = j.getString("match");
-
-                } catch (JSONException e) {
-
-                    e.printStackTrace();
-                }
-
-                Toast.makeText(getBaseContext(), deletedMatch, Toast.LENGTH_LONG).show();
-
-
-
-                Snackbar snackbar = Snackbar
-                        .make(coordinatorLayout, deletedMatch, Snackbar.LENGTH_LONG)
-                        .setAction("ANNULLA", new View.OnClickListener() {
+                        final StringRequest deleteMatch = new StringRequest(Request.Method.POST, ConfigActivity.ENTRY, new Response.Listener<String>() {
                             @Override
-                            public void onClick(View v) {
 
+                            public void onResponse(String response) {
 
+                                RVAdapter adapter = new RVAdapter(matchList);
+                                SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+                                int position = sharedPreferences.getInt(ConfigActivity.ID_TEMP_GAME, 0);
+
+                                try {
+                                    JSONObject j = null;
+                                    j = new JSONObject(response);
+
+                                } catch (JSONException e) {
+
+                                    e.printStackTrace();
+                                }
+
+                                matchList.remove(matchList.get(position));
+                                adapter.notifyItemRemoved(position);
+                                rv.setAdapter(adapter);
+                                adapter.notifyDataSetChanged();
 
                             }
-                        });
-                snackbar.show();
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
 
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
+                            }
+                        }) {
+                            @Override
+                            protected Map<String, String> getParams() throws AuthFailureError{
+                                Map<String, String> params = new HashMap<>();
 
-            }
-        }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError{
-                Map<String, String> params = new HashMap<>();
+                                final String function = "deleteMatch";
+                                SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
-                final String function = "deleteMatch";
-                SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+                                params.put(ConfigActivity.KEY_ID_SESSION, sharedPreferences.getString(ConfigActivity.SESSION_ID, ""));
+                                params.put("f", function);
+                                params.put("id", idGame);
 
-                params.put(ConfigActivity.KEY_ID_SESSION, sharedPreferences.getString(ConfigActivity.SESSION_ID, ""));
-                params.put("f", function);
-                params.put("id", idGame);
+                                return params;
+                            }
+                        };
 
-                return params;
-            }
-        };
+                        RequestQueue requestQueue = Volley.newRequestQueue(getBaseContext());
+                        requestQueue.add(deleteMatch);
+                    }
+                })
+                .setAction("ANNULLA", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v){
 
-        RequestQueue requestQueue = Volley.newRequestQueue(getBaseContext());
-        requestQueue.add(deleteMatch);
+                        SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+                        int position = sharedPreferences.getInt(ConfigActivity.ID_TEMP_GAME, 0);
+
+                        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+                        RVAdapter adapter = new RVAdapter(matchList);
+
+
+                        matchList.add(matchList.get(position));
+
+                        adapter.notifyItemChanged(position);
+                        adapter.notifyDataSetChanged();
+
+                        recyclerView.setAdapter(adapter);
+
+                    }
+                })
+                .show();
     }
 }
 

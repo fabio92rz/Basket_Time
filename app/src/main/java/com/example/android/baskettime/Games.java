@@ -83,8 +83,8 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, matches.size());
         notifyDataSetChanged();
-
     }
+
 
     void setValue(String value, String temp,ImageView imageView, TextView textView) {
 
@@ -115,9 +115,6 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
         notifyDataSetChanged();
     }
 
-    public void hideCard(int position){
-
-    }
 
     public void addAll(List<Games> list) {
         matches.addAll(list);
@@ -257,8 +254,6 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
                     });
                 }
             });
-
-
         }
         public void deleteMatch(final String idGame){
 

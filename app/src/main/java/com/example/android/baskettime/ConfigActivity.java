@@ -54,6 +54,7 @@ public class ConfigActivity {
     //Questo sarà il nome delle nostre Shared Preferences
     public static final String SHARED_PREF_NAME = "Dati Personali";
     public static final String ID_GAME = "id_game";
+    public static final String ID_TEMP_GAME = "ig_game";
 
     //Questo verrà usato per conservare l'email dell'utente corrente
     public static final String EMAIL_SHARED_PREF = "email";
