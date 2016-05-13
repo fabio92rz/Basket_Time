@@ -42,6 +42,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -118,6 +119,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
     private NavigationView navigationView;
     protected DrawerLayout drawerLayout;
     public Bitmap scaled;
+    Games positionTemp;
 
 
     @Override
@@ -133,7 +135,10 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         final RVAdapter rvAdapter = new RVAdapter(matchList);
         rv.setAdapter(rvAdapter);
 
-        rv.setItemViewCacheSize(2000);
+        rv.setItemViewCacheSize(ViewGroup.PERSISTENT_SCROLLING_CACHE);
+        rv.setItemViewCacheSize(ViewGroup.PERSISTENT_ALL_CACHES);
+        rv.setItemViewCacheSize(10000);
+
         rv.setHasFixedSize(true);
 
         llm = new LinearLayoutManager(HistoryActivity.this);
@@ -163,7 +168,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         //Inizializzo la Toolbar e la inserisco nell'actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
 
         //Catturo i dati e li inserisco nell'header
@@ -279,6 +283,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
                             @Override
                             public boolean canSwipeRight(int position) {
+
                                 return true;
                             }
 
@@ -287,7 +292,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                                 for (int position : reverseSortedPositions) {
 
                                 }
-
                             }
 
                             @Override
@@ -296,11 +300,8 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
 
                                     String idGame = String.valueOf(matchList.get(position).id_game);
-                                    int positionTemp = matchList.get(position).id_game;
 
-                                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                                    editor.putInt(ConfigActivity.ID_TEMP_GAME, positionTemp);
-                                    editor.apply();
+                                    positionTemp = rvAdapter.getItem(position);
 
                                     deleteMatch(idGame);
                                     matchList.remove(matchList.get(position));
@@ -503,7 +504,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         };
 
 
-
         RequestQueue pictureQueue = Volley.newRequestQueue(this);
         pictureQueue.add(pictureRequest);
 
@@ -566,7 +566,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         }, 2000);
     }
 
-    public void getGamesRefreshed(){
+    public void getGamesRefreshed() {
 
         StringRequest gameRequest = new StringRequest(Request.Method.POST, ConfigActivity.ENTRY, new Response.Listener<String>() {
             @Override
@@ -621,7 +621,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                 final String function = "getGames";
 
                 //Aggiungo i parametri alla richiesta
-                params.put(ConfigActivity.KEY_ID_SESSION, sharedPreferences.getString(ConfigActivity.SESSION_ID,"" ));
+                params.put(ConfigActivity.KEY_ID_SESSION, sharedPreferences.getString(ConfigActivity.SESSION_ID, ""));
                 params.put("f", function);
 
                 //Ritorno i paramentri
@@ -633,7 +633,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         requestQueue.add(gameRequest);
     }
 
-    public void getGames(){
+    public void getGames() {
 
         StringRequest gameRequest = new StringRequest(Request.Method.POST, ConfigActivity.ENTRY, new Response.Listener<String>() {
             @Override
@@ -689,7 +689,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                 final String function = "getGames";
 
                 //Aggiungo i parametri alla richiesta
-                params.put(ConfigActivity.KEY_ID_SESSION, sharedPreferences.getString(ConfigActivity.SESSION_ID,"" ));
+                params.put(ConfigActivity.KEY_ID_SESSION, sharedPreferences.getString(ConfigActivity.SESSION_ID, ""));
                 params.put("f", function);
 
                 //Ritorno i paramentri
@@ -702,13 +702,15 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         requestQueue.add(gameRequest);
     }
 
-    public void deleteMatch(final String idGame){
+    public void deleteMatch(final String idGame) {
 
         final CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
 
         Snackbar
                 .make(coordinatorLayout, "Match eliminato!", Snackbar.LENGTH_LONG)
+
                 .setCallback(new Snackbar.Callback() {
+
                     @Override
                     public void onDismissed(Snackbar snackbar, int event) {
                         super.onDismissed(snackbar, DISMISS_EVENT_TIMEOUT);
@@ -718,9 +720,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
                             public void onResponse(String response) {
 
-                                RVAdapter adapter = new RVAdapter(matchList);
-                                SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
-                                int position = sharedPreferences.getInt(ConfigActivity.ID_TEMP_GAME, 0);
 
                                 try {
                                     JSONObject j = null;
@@ -738,7 +737,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                             }
                         }) {
                             @Override
-                            protected Map<String, String> getParams() throws AuthFailureError{
+                            protected Map<String, String> getParams() throws AuthFailureError {
                                 Map<String, String> params = new HashMap<>();
 
                                 final String function = "deleteMatch";
@@ -758,21 +757,16 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                 })
                 .setAction("ANNULLA", new View.OnClickListener() {
                     @Override
-                    public void onClick(View v){/**
-
-                        SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
-                        int position = sharedPreferences.getInt(ConfigActivity.ID_TEMP_GAME, 0);
+                    public void onClick(View v) {
 
                         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
                         RVAdapter adapter = new RVAdapter(matchList);
 
-
-                        matchList.add(matchList.get(position));
-
-                        adapter.notifyItemChanged(position);
+                        matchList.add(positionTemp);
+                        adapter.notifyItemInserted(matchList.size());
                         adapter.notifyDataSetChanged();
 
-                        recyclerView.setAdapter(adapter);**/
+                        recyclerView.setAdapter(adapter);
 
                     }
                 })

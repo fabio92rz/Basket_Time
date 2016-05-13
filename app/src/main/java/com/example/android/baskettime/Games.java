@@ -81,10 +81,12 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
     public void removeAt(int position) {
         matches.remove(position);
         notifyItemRemoved(position);
-        notifyItemRangeChanged(position, matches.size());
         notifyDataSetChanged();
     }
 
+    public Games getItem(int position) {
+        return matches.get(position);
+    }
 
     void setValue(String value, String temp,ImageView imageView, TextView textView) {
 
@@ -120,6 +122,7 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
         matches.addAll(list);
         notifyDataSetChanged();
     }
+
 
     @Override
     public void onBindViewHolder(GamesViewHolder holder, int position) {
