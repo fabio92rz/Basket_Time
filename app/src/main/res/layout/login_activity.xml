@@ -1,75 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="56dp"
+    android:background="#64B5F6"
     android:paddingLeft="24dp"
     android:paddingRight="24dp"
-    android:background="#64B5F6"
-    android:id="@+id/login_layout">
+    android:paddingBottom="80dp">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="20dp"
-        android:src="@drawable/pallone2"
-        android:id="@+id/ball_view"/>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Email"
-        android:id="@+id/login_email_text"
-        android:inputType="textEmailAddress"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        android:backgroundTint="#FFFFFF"/>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Password"
-        android:id="@+id/login_pass_text"
-        android:inputType="textPassword"
-        android:layout_marginBottom="16dp"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        android:backgroundTint="#FFFFFF" />
-
-
-    <Button
-        android:layout_height="wrap_content"
+    <TextView
+        android:id="@+id/guest_tv"
         android:layout_width="fill_parent"
-        android:layout_marginBottom="24dp"
-        android:layout_marginTop="24dp"
-        android:padding="12dp"
-        android:text="Login"
-        android:id="@+id/login_button"
-        android:background="@drawable/custom_button"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:text="Accedi come ospite!"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/crea_ora"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
-        android:text="Non hai un account? Crealo ora!"
         android:gravity="center"
+        android:layout_above="@id/guest_tv"
+        android:text="Non hai un account? Crealo ora!"
         android:textSize="16sp" />
 
-    <TextView
-        android:id="@+id/guest_tv"
+    <Button
+        android:id="@+id/login_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Accedi come ospite!"
-        android:textSize="16sp"
-        android:gravity="center"/>
+        android:layout_marginBottom="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_above="@id/crea_ora"
+        android:background="@drawable/custom_button"
+        android:padding="12dp"
+        android:text="Login" />
 
+    <EditText
+        android:id="@+id/login_pass_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#FFFFFF"
+        android:hint="Password"
+        android:layout_above="@id/login_button"
+        android:inputType="textPassword"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF" />
 
+    <EditText
+        android:id="@+id/login_email_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#FFFFFF"
+        android:hint="Email"
+        android:layout_above="@id/login_pass_text"
+        android:inputType="textEmailAddress"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF" />
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/ball_view"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_above="@id/login_email_text"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="30dp"
+        android:src="@drawable/pallone2" />
+</RelativeLayout>

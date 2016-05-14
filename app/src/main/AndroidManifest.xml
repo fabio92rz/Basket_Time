@@ -21,13 +21,16 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize">
+            
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
         <activity android:name=".LiveActivity"
             android:hardwareAccelerated="true"></activity>
         <activity android:name=".RegisterActivity"></activity>
@@ -36,7 +39,6 @@
         <activity android:name=".NewGameActivity"></activity>
         <activity android:name=".ChampActivity"></activity>
         <activity android:name=".GuestActivity"></activity>
-        <activity android:name=".prova"></activity>
 
         <activity
             android:name=".Popup0Activity"

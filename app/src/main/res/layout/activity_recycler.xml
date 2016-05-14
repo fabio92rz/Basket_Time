@@ -49,6 +49,7 @@
                     android:layout_height="match_parent"
                     android:layout_below="@id/view_divider"
                     android:layout_marginTop="5dp"
+                    android:id="@+id/parentLayoutRecycler"
                     tools:context=".HistoryActivity">
 
                     <android.support.v4.widget.SwipeRefreshLayout

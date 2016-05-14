@@ -296,19 +296,44 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
                             @Override
                             public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
-                                for (int position : reverseSortedPositions) {
+                                for (final int position : reverseSortedPositions) {
 
 
-                                    String idGame = String.valueOf(matchList.get(position).id_game);
-
+                                    final String idGame = String.valueOf(matchList.get(position).id_game);
                                     positionTemp = rvAdapter.getItem(position);
 
-                                    deleteMatch(idGame);
                                     matchList.remove(matchList.get(position));
                                     rvAdapter.notifyItemRemoved(position);
                                     rv.setAdapter(rvAdapter);
-                                }
 
+                                    CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
+
+                                    Snackbar.make(coordinatorLayout, "Match eliminato!", Snackbar.LENGTH_LONG)
+                                            .setCallback(new Snackbar.Callback() {
+
+                                                @Override
+                                                public void onDismissed(Snackbar snackbar, int event) {
+                                                    super.onDismissed(snackbar, event);
+
+                                                    if (event == DISMISS_EVENT_TIMEOUT) {
+
+                                                        deleteMatch(idGame);
+                                                    }
+
+                                                }
+
+                                            })
+                                            .setAction("ANNULLA", new View.OnClickListener() {
+
+                                                @Override public void onClick(View v) {
+
+                                                    matchList.add(position, positionTemp);
+                                                    rvAdapter.notifyItemInserted(matchList.size());
+                                                    rv.setAdapter(rvAdapter);
+                                                }
+                                            })
+                                            .show();
+                                }
                                 rvAdapter.notifyDataSetChanged();
                             }
                         });
@@ -704,73 +729,46 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
     public void deleteMatch(final String idGame) {
 
-        final CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
+        final StringRequest deleteMatch = new StringRequest(Request.Method.POST, ConfigActivity.ENTRY, new Response.Listener<String>() {
+            @Override
 
-        Snackbar
-                .make(coordinatorLayout, "Match eliminato!", Snackbar.LENGTH_LONG)
-
-                .setCallback(new Snackbar.Callback() {
-
-                    @Override
-                    public void onDismissed(Snackbar snackbar, int event) {
-                        super.onDismissed(snackbar, DISMISS_EVENT_TIMEOUT);
-
-                        final StringRequest deleteMatch = new StringRequest(Request.Method.POST, ConfigActivity.ENTRY, new Response.Listener<String>() {
-                            @Override
-
-                            public void onResponse(String response) {
+            public void onResponse(String response) {
 
 
-                                try {
-                                    JSONObject j = null;
-                                    j = new JSONObject(response);
+                try {
+                    JSONObject j = null;
+                    j = new JSONObject(response);
 
-                                } catch (JSONException e) {
+                } catch (JSONException e) {
 
-                                    e.printStackTrace();
-                                }
-                            }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
 
-                            }
-                        }) {
-                            @Override
-                            protected Map<String, String> getParams() throws AuthFailureError {
-                                Map<String, String> params = new HashMap<>();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
 
-                                final String function = "deleteMatch";
-                                SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+                final String function = "deleteMatch";
+                SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
-                                params.put(ConfigActivity.KEY_ID_SESSION, sharedPreferences.getString(ConfigActivity.SESSION_ID, ""));
-                                params.put("f", function);
-                                params.put("id", idGame);
+                params.put(ConfigActivity.KEY_ID_SESSION, sharedPreferences.getString(ConfigActivity.SESSION_ID, ""));
+                params.put("f", function);
+                params.put("id", idGame);
 
-                                return params;
-                            }
-                        };
+                return params;
+            }
+        };
 
-                        RequestQueue requestQueue = Volley.newRequestQueue(getBaseContext());
-                        requestQueue.add(deleteMatch);
-                    }
-                })
-                .setAction("ANNULLA", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+        RequestQueue requestQueue = Volley.newRequestQueue(getBaseContext());
+        requestQueue.add(deleteMatch);
 
-                        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-                        RVAdapter adapter = new RVAdapter(matchList);
 
-                        matchList.add(positionTemp);
-                        adapter.notifyItemInserted(matchList.size());
-                        adapter.notifyDataSetChanged();
-
-                        recyclerView.setAdapter(adapter);
-
-                    }
-                })
-                .show();
     }
 }
 

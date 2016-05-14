@@ -51,6 +51,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -101,7 +103,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
 
-
         //Inizializzo le Views
         eTEmail = (EditText) findViewById(R.id.login_email_text);
         eTPassword = (EditText) findViewById(R.id.login_pass_text);
@@ -144,6 +145,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void login() {
+
         //Prendo i valori dalle EditText
         final String email = eTEmail.getText().toString().trim();
         final String password = eTPassword.getText().toString().trim();
@@ -271,7 +273,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Intent guestactivity = new Intent(LoginActivity.this, GuestActivity.class);
             startActivity(guestactivity);
         }
-
 
     }
 }
