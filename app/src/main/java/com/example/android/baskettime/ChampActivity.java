@@ -24,29 +24,32 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.vi.swipenumberpicker.OnValueChangeListener;
+import com.vi.swipenumberpicker.SwipeNumberPicker;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.StringTokenizer;
 
 
 /**
- * Created by Fabio on 12/01/2016.
+ * CreatedbyFabioon12/01/2016.
  */
 public class ChampActivity extends AppCompatActivity implements View.OnClickListener {
 
     Toolbar mtoolbar;
     FloatingActionButton newTeam;
     Button newChamp;
-    LinearLayout champLayout;
-    EditText firstTeam;
-    EditText secondTeam;
+    RelativeLayout champLayout;
+    SwipeNumberPicker teamPicker;
     EditText newChampionship;
 
     @Override
     protected void onCreate(Bundle InstanceState) {
         super.onCreate(InstanceState);
         setContentView(R.layout.activity_champ);
-        setTitle("Nuovo Torneo");
+        setTitle("NuovoTorneo");
 
         mtoolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mtoolbar);
@@ -54,14 +57,22 @@ public class ChampActivity extends AppCompatActivity implements View.OnClickList
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         newChampionship = (EditText) findViewById(R.id.champ_text);
-        firstTeam = (EditText) findViewById(R.id.team1_text);
         newTeam = (FloatingActionButton) findViewById(R.id.new_team);
         newChamp = (Button) findViewById(R.id.new_champion);
-        champLayout = (LinearLayout) findViewById(R.id.linear_champ);
+        champLayout = (RelativeLayout) findViewById(R.id.champLayout);
+        teamPicker = (SwipeNumberPicker) findViewById(R.id.teamPicker);
 
         newChamp.setOnClickListener(this);
         newTeam.setOnClickListener(this);
 
+        teamPicker.setOnValueChangeListener(new OnValueChangeListener() {
+            @Override
+            public boolean onValueChange(SwipeNumberPicker view, int oldValue, int newValue) {
+
+                teamPicker.setText(String.valueOf(newValue));
+                return true;
+            }
+        });
 
     }
 
@@ -71,7 +82,6 @@ public class ChampActivity extends AppCompatActivity implements View.OnClickList
             case android.R.id.home:
 
                 this.finish();
-                overridePendingTransition(R.anim.push_out_right, R.anim.pull_in_left);
 
         }
         return true;
@@ -81,13 +91,13 @@ public class ChampActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
 
         if (v == newTeam) {
-            secondTeam = new EditText(getBaseContext());
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(1000, LinearLayout.LayoutParams.WRAP_CONTENT);
+            /**secondTeam=newEditText(getBaseContext());
+            LinearLayout.LayoutParamslayoutParams=newLinearLayout.LayoutParams(1000,LinearLayout.LayoutParams.WRAP_CONTENT);
             secondTeam.setTextColor(Color.parseColor("#000000"));
             secondTeam.setLayoutParams(layoutParams);
             changeEditTextUnderlineColor(secondTeam);
             secondTeam.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
-            champLayout.addView(secondTeam);
+            champLayout.addView(secondTeam);**/
         }
 
         if (v == newChamp) {
@@ -101,14 +111,14 @@ public class ChampActivity extends AppCompatActivity implements View.OnClickList
 
         final String idSession = sharedPreferences.getString(ConfigActivity.SESSION_ID, "");
         final String function = "insertTeams";
-        final String team = firstTeam.getText().toString().trim();
         final String championship = newChampionship.getText().toString().trim();
 
 
-        class addTeams extends AsyncTask<String, Void, String>{
+        class addTeams extends AsyncTask<String, Void, String> {
 
             @Override
-            protected void onPreExecute() {}
+            protected void onPreExecute() {
+            }
 
             @Override
             protected void onPostExecute(String s) {
@@ -117,10 +127,9 @@ public class ChampActivity extends AppCompatActivity implements View.OnClickList
             }
 
             @Override
-            protected String doInBackground(String... v){
+            protected String doInBackground(String... v) {
 
-                HashMap<String, String> params = new HashMap<>();
-                params.put(ConfigActivity.KEY_TEAM, team);
+                HashMap<String, String> params = new HashMap <>();
                 params.put(ConfigActivity.KEY_CHAMP, championship);
                 params.put(ConfigActivity.KEY_ID_SESSION, idSession);
                 params.put("f", function);

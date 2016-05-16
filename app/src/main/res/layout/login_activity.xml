@@ -6,7 +6,7 @@
     android:background="#64B5F6"
     android:paddingLeft="24dp"
     android:paddingRight="24dp"
-    android:paddingBottom="80dp">
+    android:paddingBottom="60dp">
 
     <TextView
         android:id="@+id/guest_tv"
@@ -69,6 +69,6 @@
         android:layout_height="100dp"
         android:layout_above="@id/login_email_text"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="45dp"
         android:src="@drawable/pallone2" />
 </RelativeLayout>
