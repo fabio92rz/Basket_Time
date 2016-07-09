@@ -23,15 +23,15 @@ public class TCPClient {
     public static final int ServerPort = 8080;
     private boolean mRun = false;
 
-    private String mServerMessage;
+    private Boolean mServerMessage;
 
     PrintWriter out;
     BufferedReader in;
 
-    public void stopClient(){
+    public void stopClient() {
 
         mRun = false;
-        if (out != null){
+        if (out != null) {
             out.flush();
             out.close();
         }
@@ -42,12 +42,12 @@ public class TCPClient {
         mServerMessage = null;
     }
 
-    public TCPClient(OnMessageReceived listener){
+    public TCPClient(OnMessageReceived listener) {
 
         mMessageListener = listener;
     }
 
-    public void run(){
+    public void run() {
 
         mRun = true;
 
@@ -65,38 +65,33 @@ public class TCPClient {
 
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-                while (mRun){
+                while (mRun) {
 
-                    mServerMessage = in.readLine();
+                    mServerMessage = in.read()!=0;
 
-                    if (mServerMessage != null && mMessageListener != null){
-
-
-                    }
                 }
-
                 Log.e("Response from server", "Login ok");
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
 
-            }finally {
+            } finally {
                 socket.close();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void sendMessage(String message){
+    public void sendMessage(String message) {
 
-        if (out != null && !out.checkError()){
+        if (out != null && !out.checkError()) {
             out.println(message);
             out.flush();
         }
     }
 
-    public interface OnMessageReceived{
+    public interface OnMessageReceived {
         public void messageReceived(Boolean message);
     }
 }

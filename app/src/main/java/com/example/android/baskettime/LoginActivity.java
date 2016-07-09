@@ -271,10 +271,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         final String email = eTEmail.getText().toString().trim();
         final String password = eTPassword.getText().toString().trim();
 
+        new ConnectTask().execute();
+
         if (TCPclient != null){
 
+            TCPclient.sendMessage(email);
             TCPclient.sendMessage(password);
-            new ConnectTask().execute();
 
         }
 
@@ -284,7 +286,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         if (v == loginButton) {
 
-            login();
+            login2();
         }
 
         if (v == guest) {
@@ -308,6 +310,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                         Intent live = new Intent(LoginActivity.this, HistoryActivity.class);
                         startActivity(live);
+
                     } else {
 
                         Toast.makeText(LoginActivity.this, "Username o Password errate", Toast.LENGTH_LONG).show();
