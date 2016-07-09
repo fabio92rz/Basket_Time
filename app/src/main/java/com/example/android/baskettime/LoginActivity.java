@@ -286,7 +286,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         if (v == loginButton) {
 
-            login2();
+            login();
         }
 
         if (v == guest) {
