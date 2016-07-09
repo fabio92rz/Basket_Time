@@ -37,7 +37,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.HttpURLConnection;
+import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,7 +84,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -90,6 +92,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText eTEmail;
     private EditText eTPassword;
     private Button loginButton;
+    public TCPClient TCPclient;
+    public TCPClient mTcpClient;
+
 
 
     TextView guest;
@@ -261,6 +266,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         requestQueue.add(stringRequest);
     }
 
+    private void login2(){
+
+        final String email = eTEmail.getText().toString().trim();
+        final String password = eTPassword.getText().toString().trim();
+
+        if (TCPclient != null){
+
+            TCPclient.sendMessage(password);
+            new ConnectTask().execute();
+
+        }
+
+    }
+
     @Override
     public void onClick(View v) {
         if (v == loginButton) {
@@ -274,5 +293,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             startActivity(guestactivity);
         }
 
+    }
+
+    public class ConnectTask extends AsyncTask<Boolean, String, TCPClient>{
+
+
+        @Override
+        protected TCPClient doInBackground(Boolean... params) {
+
+            TCPclient = new TCPClient(new TCPClient.OnMessageReceived() {
+                @Override
+                public void messageReceived(Boolean message) {
+                    if (message){
+
+                        Intent live = new Intent(LoginActivity.this, HistoryActivity.class);
+                        startActivity(live);
+                    } else {
+
+                        Toast.makeText(LoginActivity.this, "Username o Password errate", Toast.LENGTH_LONG).show();
+
+                    }
+                }
+            });
+
+            TCPclient.run();
+            return null;
+        }
     }
 }
