@@ -47,7 +47,7 @@ public class TCPClient {
         mMessageListener = listener;
     }
 
-    public void run() {
+    public void run(String email, String password) {
 
         mRun = true;
 
@@ -64,11 +64,14 @@ public class TCPClient {
                 Log.d("TCP Client", "C: Done");
 
                 in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                sendMessage(email);
+                sendMessage(password);
 
                 while (mRun) {
 
                     Log.d("TCP Client", "C: Response");
-                    mServerMessage = in.read()!=0;
+                    mMessageListener.messageReceived(in.readLine().compareTo("1")==0);
+                    stopClient();
 
                 }
                 Log.e("Response from server", "Login ok");

@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.nfc.Tag;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.provider.ContactsContract;
 import android.renderscript.ScriptGroup;
@@ -84,6 +85,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -94,9 +96,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button loginButton;
     public TCPClient TCPclient;
     public TCPClient mTcpClient;
-
-
-
     TextView guest;
 
     //Definisco la variabile Booleana e la setto false
@@ -266,19 +265,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         requestQueue.add(stringRequest);
     }
 
-    private void login2(){
+    private void login2() {
 
         final String email = eTEmail.getText().toString().trim();
         final String password = eTPassword.getText().toString().trim();
-
-        new ConnectTask().execute();
-
-        if (TCPclient != null){
-
-            TCPclient.sendMessage(email);
-            TCPclient.sendMessage(password);
-
-        }
+        new ConnectTask(email, password).execute();
 
     }
 
@@ -297,28 +288,45 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    public class ConnectTask extends AsyncTask<Boolean, String, TCPClient>{
+    public class ConnectTask extends AsyncTask<Boolean, String, TCPClient> {
+        String email;
+        String password;
+
+        public ConnectTask(String email, String pass) {
+            this.email = email;
+            this.password = pass;
+        }
+
         @Override
         protected TCPClient doInBackground(Boolean... params) {
 
             TCPclient = new TCPClient(new TCPClient.OnMessageReceived() {
                 @Override
                 public void messageReceived(Boolean message) {
-                    if (message){
+                    if (message) {
 
                         Intent live = new Intent(LoginActivity.this, HistoryActivity.class);
                         startActivity(live);
 
                     } else {
 
-                        Toast.makeText(LoginActivity.this, "Username o Password errate", Toast.LENGTH_LONG).show();
+                        Handler mainHandler = new Handler(getMainLooper());
+
+                        Runnable myRunnable = new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(LoginActivity.this, "Username o Password errate", Toast.LENGTH_LONG).show();
+                            }
+                        };
+                        mainHandler.post(myRunnable);
 
                     }
                 }
             });
 
-            TCPclient.run();
+            TCPclient.run(email, password);
             return null;
+
         }
     }
 }
