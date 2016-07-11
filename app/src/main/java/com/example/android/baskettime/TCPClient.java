@@ -19,7 +19,7 @@ public class TCPClient {
 
     private String serverMessage;
     private OnMessageReceived mMessageListener = null;
-    public static final String ServerIp = "192.168.1.11";
+    public static final String ServerIp = "192.168.1.9";
     public static final int ServerPort = 8080;
     private boolean mRun = false;
 
@@ -67,6 +67,7 @@ public class TCPClient {
 
                 while (mRun) {
 
+                    Log.d("TCP Client", "C: Response");
                     mServerMessage = in.read()!=0;
 
                 }

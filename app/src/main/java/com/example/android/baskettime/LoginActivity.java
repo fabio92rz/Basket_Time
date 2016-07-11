@@ -286,7 +286,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         if (v == loginButton) {
 
-            login();
+            login2();
         }
 
         if (v == guest) {
@@ -298,8 +298,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public class ConnectTask extends AsyncTask<Boolean, String, TCPClient>{
-
-
         @Override
         protected TCPClient doInBackground(Boolean... params) {
 
