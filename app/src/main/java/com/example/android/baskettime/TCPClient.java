@@ -19,7 +19,7 @@ public class TCPClient {
 
     private String serverMessage;
     private OnMessageReceived mMessageListener = null;
-    public static final String ServerIp = "192.168.1.9";
+    public static final String ServerIp = "172.17.116.188";
     public static final int ServerPort = 8080;
     private boolean mRun = false;
 

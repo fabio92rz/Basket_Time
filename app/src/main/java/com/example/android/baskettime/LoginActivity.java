@@ -171,6 +171,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String status = "";
                 String userSession = "";
                 String profilePicPath = "";
+                int permission = 0;
                 int id = 0;
 
                 try {
@@ -189,6 +190,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             userSession = jsonObject.getString("session");
                             id = jsonObject.getInt(ConfigActivity.TAG_ID);
                             profilePicPath = jsonObject.getString("profilePicturePath");
+                            permission = jsonObject.getInt("id_permission");
 
 
                         } catch (JSONException e) {
@@ -221,6 +223,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     editor.putString(ConfigActivity.NAME_SURNAME_PREF, WordUtils.capitalize(name) + " " + WordUtils.capitalize(surname));
                     editor.putString(ConfigActivity.SESSION_ID, userSession);
                     editor.putInt(ConfigActivity.userId, id);
+                    editor.putInt(ConfigActivity.permission, permission);
 
                     Log.d("prova id user", "id= " + id);
 
@@ -277,7 +280,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         if (v == loginButton) {
 
-            login2();
+            login();
         }
 
         if (v == guest) {

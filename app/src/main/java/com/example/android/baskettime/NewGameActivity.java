@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -124,7 +125,7 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
                     public void onErrorResponse(VolleyError error) {
 
                     }
-                }){
+                }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
@@ -151,9 +152,9 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
 
         try {
 
-        JSONArray j = response.getJSONObject(ConfigActivity.JSON_ARRAY).getJSONArray(ConfigActivity.TAG_TEAM);
+            JSONArray j = response.getJSONObject(ConfigActivity.JSON_ARRAY).getJSONArray(ConfigActivity.TAG_TEAM);
 
-        for (int i = 0; i < j.length(); i++) {
+            for (int i = 0; i < j.length(); i++) {
 
 
                 JSONObject json = j.getJSONObject(i);
@@ -163,9 +164,9 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
 
             }
 
-        j = response.getJSONObject(ConfigActivity.JSON_ARRAY).getJSONArray(ConfigActivity.TAG_CHAMP);
+            j = response.getJSONObject(ConfigActivity.JSON_ARRAY).getJSONArray(ConfigActivity.TAG_CHAMP);
 
-        for (int i = 0; i < j.length(); i++) {
+            for (int i = 0; i < j.length(); i++) {
 
 
                 JSONObject json = j.getJSONObject(i);
@@ -199,7 +200,7 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
         return id;
     }
 
-    private int getChampID(int position){
+    private int getChampID(int position) {
 
         int id = 0;
 
@@ -210,7 +211,7 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
 
             id = jsonObject.getInt(ConfigActivity.TAG_ID);
 
-        } catch (JSONException e){
+        } catch (JSONException e) {
 
             e.printStackTrace();
         }
@@ -218,7 +219,7 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
         return id;
     }
 
-    private void insertTeams() {
+    public void insertTeams() {
 
         SharedPreferences sharedPreferences = getSharedPreferences(ConfigActivity.SHARED_PREF_NAME, MODE_PRIVATE);
         final String idhome = String.valueOf(getTeamsID((int) spinnerHome.getSelectedItemId()));
@@ -240,24 +241,24 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
         String actualMinute = "";
         String time = "";
 
-        if (day < 10 ){
+        if (day < 10) {
 
             date = "0" + String.valueOf(day);
 
-        }else{
+        } else {
 
             date = String.valueOf(day);
         }
-        if (month + 1 < 10){
+        if (month + 1 < 10) {
 
             actualMonth = "0" + String.valueOf(month + 1);
 
-        }else {
+        } else {
 
             actualMonth = String.valueOf(month + 1);
         }
 
-        if (hour <10){
+        if (hour < 10) {
 
             time = "0" + String.valueOf(hour);
 
@@ -266,7 +267,7 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
             time = String.valueOf(hour);
         }
 
-        if (minute <10){
+        if (minute < 10) {
 
             actualMinute = "0" + String.valueOf(minute);
 
@@ -278,66 +279,72 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
         final String Time = time + ":" + actualMinute;
         final String Date = date + "/" + actualMonth + "/" + String.valueOf(year);
 
-        class insertTeams extends AsyncTask<Void, Void, String> {
-
+        StringRequest insertTeams = new StringRequest(Request.Method.POST, ConfigActivity.ENTRY, new Response.Listener<String>() {
             @Override
-            protected void onPreExecute() {
-            }
+            public void onResponse(String response) {
 
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-
-                Intent livegame = new Intent(NewGameActivity.this, LiveActivity.class);
-                startActivity(livegame);
-                finish();
-            }
-
-            @Override
-            protected String doInBackground(Void... params) {
-
-                HashMap<String, String> param = new HashMap<>();
-                param.put(ConfigActivity.KEY_HOME_TEAM, idhome);
-                param.put(ConfigActivity.KEY_VISITOR_TEAM, idvisitor);
-                param.put(ConfigActivity.TAG_GAMES_CHAMP, idChamp);
-                param.put(ConfigActivity.KEY_ID_SESSION, sessionId);
-                param.put("f", function);
-                param.put("day", Date);
-                param.put("time", Time);
-
-                RequestHandler requestHandler = new RequestHandler();
-                String res = requestHandler.sendPostRequest(ConfigActivity.ENTRY, param);
-
+                String status = "";
+                String message = "";
                 JSONObject j = null;
-                JSONObject gameDetails = null;
 
                 try {
+                    j = new JSONObject(response);
+                    JSONObject game = j.getJSONObject("result");
 
-                    j = new JSONObject(res);
-                    gameDetails = j.getJSONObject(ConfigActivity.TAG_CURRENT_GAME);
-                    id_game = gameDetails.getInt(ConfigActivity.TAG_CURRENT_ID);
+                    if (idhome.equals(idvisitor)) {
 
-                    SharedPreferences sharedPreferences = NewGameActivity.this.getSharedPreferences(ConfigActivity.TAG_ID_GAME, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                        status = game.getString("status");
+                        message = game.getString("message");
+                        Toast.makeText(NewGameActivity.this, message, Toast.LENGTH_LONG).show();
 
-                    editor.putInt(ConfigActivity.ID_GAME, id_game);
-                    Log.d("NewGameActivity", "id_game" + id_game);
+                    } else {
 
-                    editor.commit();
+                        id_game = game.getInt(ConfigActivity.TAG_CURRENT_ID);
+                        SharedPreferences sharedPreferences = NewGameActivity.this.getSharedPreferences(ConfigActivity.TAG_ID_GAME, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putInt(ConfigActivity.ID_GAME, id_game);
+                        Log.d("NewGameActivity", "id_game" + id_game);
 
-                } catch (JSONException e) {
+                        editor.apply();
+
+                        Intent livegame = new Intent(NewGameActivity.this, LiveActivity.class);
+                        startActivity(livegame);
+                        finish();
+                    }
+
+
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                return res;
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+
+                params.put(ConfigActivity.KEY_HOME_TEAM, idhome);
+                params.put(ConfigActivity.KEY_VISITOR_TEAM, idvisitor);
+                params.put(ConfigActivity.TAG_GAMES_CHAMP, idChamp);
+                params.put(ConfigActivity.KEY_ID_SESSION, sessionId);
+                params.put("f", function);
+                params.put("day", Date);
+                params.put("time", Time);
+
+                return params;
+
 
             }
+        };
 
-        }
-
-        insertTeams it = new insertTeams();
-        it.execute();
-
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(insertTeams);
     }
 
     @Override
