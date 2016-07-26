@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.app.VoiceInteractor;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -82,15 +83,28 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             public void onResponse(String response) {
 
                 JSONObject jsonObject = null;
-                String success = "";
+                String status = "";
+                String message = "";
 
                 try {
 
                     jsonObject = new JSONObject(response);
-                    JSONObject register = jsonObject.getJSONObject("register");
+                    JSONObject register = jsonObject.getJSONObject("result");
+                    status = register.getString("status");
 
-                    success = register.getString("result");
-                    Toast.makeText(getApplicationContext(), success, Toast.LENGTH_LONG).show();
+                    if (status.equals("success")){
+
+                        message = register.getString("message");
+                        Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_LONG).show();
+
+                        Intent login = new Intent(RegisterActivity.this, LoginActivity.class);
+                        startActivity(login);
+
+                    } else {
+
+                        message = register.getString("message");
+                        Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_LONG).show();
+                    }
 
                 } catch (JSONException e) {
                     e.printStackTrace();

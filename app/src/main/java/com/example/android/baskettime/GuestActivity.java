@@ -86,6 +86,8 @@ public class GuestActivity extends HistoryActivity {
                         JSONObject jsonObject = matches.getJSONObject(i);
                         Games games = new Games();
 
+                        games.date = jsonObject.getString("day");
+                        games.time = jsonObject.getString("time");
                         games.championship = jsonObject.getString(ConfigActivity.TAG_CHAMP_HIST);
                         games.teamHome = jsonObject.getString(ConfigActivity.TAG_HOME_TEAM_ID);
                         games.scoreHome = jsonObject.getInt(ConfigActivity.TAG_SCORE_HOME);

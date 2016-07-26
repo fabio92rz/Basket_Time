@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -10,34 +10,25 @@
     android:background="#64B5F6"
     android:id="@+id/login_layout">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="20dp"
-        android:src="@drawable/pallone2"
-        android:id="@+id/ball_view"/>
+    <android.support.v7.widget.AppCompatButton
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_marginBottom="50dp"
+        android:layout_marginTop="7dp"
+        android:layout_alignParentBottom="true"
+        android:padding="12dp"
+        android:text="Crea Account!"
+        android:id="@+id/login_butt2"
+        android:background="@drawable/custom_button"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Inserisci il tuo Nome"
-        android:id="@+id/name_text2"
-        android:inputType="textCapSentences"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF"
-        android:backgroundTint="#FFFFFF"/>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Inserisci il tuo Cognome"
-        android:id="@+id/surname_text2"
-        android:inputType="textCapSentences"
-        android:layout_marginBottom="16dp"
+        android:hint="Inserisci una Password"
+        android:id="@+id/pass_text2"
+        android:layout_above="@id/login_butt2"
+        android:inputType="textPassword"
+        android:layout_marginBottom="7dp"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"
         android:backgroundTint="#FFFFFF" />
@@ -47,8 +38,9 @@
         android:layout_height="wrap_content"
         android:hint="Inserisci una Email"
         android:id="@+id/email_text2"
+        android:layout_above="@id/pass_text2"
         android:inputType="textEmailAddress"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="7dp"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"
         android:backgroundTint="#FFFFFF" />
@@ -56,23 +48,34 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Inserisci una Password"
-        android:id="@+id/pass_text2"
-        android:inputType="textPassword"
-        android:layout_marginBottom="16dp"
+        android:hint="Inserisci il tuo Cognome"
+        android:layout_above="@id/email_text2"
+        android:id="@+id/surname_text2"
+        android:inputType="textCapSentences"
+        android:layout_marginBottom="7dp"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"
         android:backgroundTint="#FFFFFF" />
 
-
-    <android.support.v7.widget.AppCompatButton
+    <EditText
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_width="fill_parent"
-        android:layout_marginBottom="24dp"
-        android:layout_marginTop="24dp"
-        android:padding="12dp"
-        android:text="Crea Account!"
-        android:id="@+id/login_butt2"
-        android:background="@drawable/custom_button"/>
+        android:hint="Inserisci il tuo Nome"
+        android:layout_above="@id/surname_text2"
+        android:id="@+id/name_text2"
+        android:inputType="textCapSentences"
+        android:layout_marginBottom="7dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:backgroundTint="#FFFFFF"/>
 
-</LinearLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_above="@id/name_text2"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="100dp"
+        android:src="@drawable/pallone2"
+        android:id="@+id/ball_view"/>
+
+</RelativeLayout>

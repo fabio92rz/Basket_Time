@@ -33,7 +33,9 @@
 
         <activity android:name=".LiveActivity"
             android:hardwareAccelerated="true"></activity>
-        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".RegisterActivity"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
         <activity android:name=".HistoryActivity"
             android:hardwareAccelerated="true"></activity>
         <activity android:name=".NewGameActivity"></activity>

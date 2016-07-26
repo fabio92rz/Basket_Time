@@ -230,15 +230,16 @@ public class LiveActivity extends AppCompatActivity implements View.OnClickListe
                     .into(profilePicture);
         }
 
+        quarterPicker.setValue(1, true);
         quarterPicker.setText("1°");
 
         quarterPicker.setOnValueChangeListener(new OnValueChangeListener() {
             @Override
             public boolean onValueChange(SwipeNumberPicker view, int oldValue, int newValue) {
 
-                if (newValue >= 5) {
+                if (newValue > 4) {
 
-                    quarterPicker.setText(String.valueOf("1° OT"));
+                    quarterPicker.setText(String.valueOf(newValue-4 + "° OT"));
 
                 }else {
 
