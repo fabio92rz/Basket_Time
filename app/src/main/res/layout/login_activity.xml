@@ -4,9 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#64B5F6"
+    android:paddingBottom="60dp"
     android:paddingLeft="24dp"
-    android:paddingRight="24dp"
-    android:paddingBottom="60dp">
+    android:paddingRight="24dp">
 
     <TextView
         android:id="@+id/guest_tv"
@@ -21,9 +21,9 @@
         android:id="@+id/crea_ora"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@id/guest_tv"
         android:layout_marginBottom="24dp"
         android:gravity="center"
-        android:layout_above="@id/guest_tv"
         android:text="Non hai un account? Crealo ora!"
         android:textSize="16sp" />
 
@@ -31,37 +31,56 @@
         android:id="@+id/login_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@id/crea_ora"
         android:layout_marginBottom="24dp"
         android:layout_marginTop="24dp"
-        android:layout_above="@id/crea_ora"
         android:background="@drawable/custom_button"
         android:padding="12dp"
         android:text="Login" />
 
-    <EditText
+
+    <android.support.design.widget.TextInputLayout
         android:id="@+id/login_pass_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="#FFFFFF"
-        android:hint="Password"
         android:layout_above="@id/login_button"
-        android:inputType="textPassword"
         android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF" />
+        android:theme="@style/TextLabel"
+        android:textColorHint="#FFFFFF">
 
-    <EditText
+        <com.xwray.passwordview.PasswordView
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:backgroundTint="#FFFFFF"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF"
+            app:useStrikeThrough="true"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
         android:id="@+id/login_email_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_above="@id/login_pass_text"
+        android:textColor="#FFFFFF"
+        android:theme="@style/TextLabel"
+        android:layout_marginTop="10dp"
+        android:textColorHint="#FFFFFF">
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:backgroundTint="#FFFFFF"
         android:hint="Email"
-        android:layout_above="@id/login_pass_text"
         android:inputType="textEmailAddress"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF" />
+
+    </android.support.design.widget.TextInputLayout>
 
     <ImageView
         android:id="@+id/ball_view"
@@ -69,6 +88,7 @@
         android:layout_height="100dp"
         android:layout_above="@id/login_email_text"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="45dp"
+        android:layout_marginBottom="60dp"
+
         android:src="@drawable/pallone2" />
 </RelativeLayout>

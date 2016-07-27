@@ -549,12 +549,15 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
             View header = navigationView.getHeaderView(0);
             CircleImageView profilePict = (CircleImageView) header.findViewById(R.id.profile_image);
 
-            Picasso.with(this)
-                    .load(profilePicture)
-                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                    .networkPolicy(NetworkPolicy.NO_CACHE)
-                    .placeholder(R.drawable.account_circle)
-                    .into(profilePict);
+            if (!profilePicture.equals("")){
+
+                Picasso.with(this)
+                        .load(profilePicture)
+                        .memoryPolicy(MemoryPolicy.NO_CACHE)
+                        .networkPolicy(NetworkPolicy.NO_CACHE)
+                        .placeholder(R.drawable.account_circle)
+                        .into(profilePict);
+            }
         }
     }
 

@@ -18,6 +18,7 @@ import android.renderscript.ScriptGroup;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -77,6 +78,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
+import com.xwray.passwordview.PasswordView;
 
 import junit.framework.TestCase;
 
@@ -92,10 +94,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     //Definisco le Views ed il pulsante
     private EditText eTEmail;
-    private EditText eTPassword;
+    private TextInputLayout email;
+    private PasswordView eTPassword;
+    private TextInputLayout password;
+
     private Button loginButton;
     public TCPClient TCPclient;
-    public TCPClient mTcpClient;
     TextView guest;
 
     //Definisco la variabile Booleana e la setto false
@@ -108,15 +112,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.login_activity);
 
         //Inizializzo le Views
-        eTEmail = (EditText) findViewById(R.id.login_email_text);
-        eTPassword = (EditText) findViewById(R.id.login_pass_text);
+        email = (TextInputLayout) findViewById(R.id.login_email_text);
+        eTEmail = (EditText) findViewById(R.id.email);
+        password = (TextInputLayout) findViewById(R.id.login_pass_text);
+        eTPassword = (PasswordView) findViewById(R.id.password);
+
 
         //Inizializzo il bottone e setto il ClickListener
         loginButton = (Button) findViewById(R.id.login_button);
+
+        assert loginButton != null;
         loginButton.setOnClickListener(this);
 
 
         TextView signup = (TextView) findViewById(R.id.crea_ora);
+        assert signup != null;
         signup.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -127,6 +137,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
 
         guest = (TextView) findViewById(R.id.guest_tv);
+
+        assert guest != null;
         guest.setOnClickListener(this);
 
     }
@@ -213,7 +225,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     //Aggiungo i valori all'editor
 
-                    if (profilePicPath != null) {
+                    if (!profilePicPath.equals("")) {
                         editor.putBoolean(ConfigActivity.PROFILE_PIC_BOOLEAN, true);
                         editor.putString(ConfigActivity.SERVER_PATH, profilePicPath);
                     }
