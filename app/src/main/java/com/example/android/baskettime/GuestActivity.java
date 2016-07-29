@@ -63,7 +63,7 @@ public class GuestActivity extends HistoryActivity {
         llm = new LinearLayoutManager(GuestActivity.this);
         rv.setLayoutManager(llm);
 
-        final RVAdapter rvAdapter = new RVAdapter(matchList);
+        final RVAdapter rvAdapter = new RVAdapter(matchList, GuestActivity.this);
         rv.setAdapter(rvAdapter);
 
         //Inizializzo la Toolbar e la inserisco nell'actionbar

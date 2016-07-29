@@ -18,6 +18,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -65,23 +67,28 @@ public class Games {
 class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
     List<Games> matches;
     String tempTime = "";
+    int lastPosition = -1;
+    public Context context;
+    GamesViewHolder pvh;
 
-    RVAdapter(List<Games> matches) {
+    RVAdapter(List<Games> matches, Context context) {
 
         this.matches = matches;
+        this.context = context;
+
     }
 
     @Override
     public GamesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_card, parent, false);
-        GamesViewHolder pvh = new GamesViewHolder(v);
+        pvh = new GamesViewHolder(v);
         return pvh;
     }
 
     public void removeAt(int position) {
         matches.remove(position);
         notifyItemRemoved(position);
-        notifyDataSetChanged();
+        notifyItemRangeChanged(position, matches.size());
     }
 
     public Games getItem(int position) {
@@ -142,6 +149,13 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
         holder.quarter.setText(String.valueOf(matches.get(position).quarter + "°"));
         holder.cv.setTag(position);
         holder.selectedGame = matches.get(position).id_game;
+
+        if(position >lastPosition) {
+
+            Animation animation = AnimationUtils.loadAnimation(context,R.anim.fade_in);
+            pvh.itemView.startAnimation(animation);
+            lastPosition = position;
+        }
 
     }
 

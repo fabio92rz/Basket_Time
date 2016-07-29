@@ -57,9 +57,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.content.Intent;
 
@@ -97,6 +100,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextInputLayout email;
     private PasswordView eTPassword;
     private TextInputLayout password;
+    private ImageView ballView;
 
     private Button loginButton;
     public TCPClient TCPclient;
@@ -116,6 +120,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         eTEmail = (EditText) findViewById(R.id.email);
         password = (TextInputLayout) findViewById(R.id.login_pass_text);
         eTPassword = (PasswordView) findViewById(R.id.password);
+        ballView = (ImageView) findViewById(R.id.ball_view);
+
+        Animation animation = AnimationUtils.loadAnimation(LoginActivity.this,R.anim.bounce);
+        ballView.startAnimation(animation);
 
 
         //Inizializzo il bottone e setto il ClickListener

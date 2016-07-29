@@ -45,19 +45,19 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/login_button"
         android:textColor="#FFFFFF"
-        android:theme="@style/TextLabel"
-        android:textColorHint="#FFFFFF">
+        android:textColorHint="#FFFFFF"
+        android:theme="@style/TextLabel">
 
         <com.xwray.passwordview.PasswordView
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:backgroundTint="#FFFFFF"
             android:hint="Password"
             android:inputType="textPassword"
-            android:backgroundTint="#FFFFFF"
             android:textColor="#FFFFFF"
             android:textColorHint="#FFFFFF"
-            app:useStrikeThrough="true"/>
+            app:useStrikeThrough="true" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -66,20 +66,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/login_pass_text"
-        android:textColor="#FFFFFF"
-        android:theme="@style/TextLabel"
         android:layout_marginTop="10dp"
-        android:textColorHint="#FFFFFF">
-    <EditText
-        android:id="@+id/email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#FFFFFF"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
         android:textColor="#FFFFFF"
-        android:textColorHint="#FFFFFF" />
+        android:textColorHint="#FFFFFF"
+        android:theme="@style/TextLabel">
 
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#FFFFFF"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#FFFFFF" />
     </android.support.design.widget.TextInputLayout>
 
     <ImageView

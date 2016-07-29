@@ -46,6 +46,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.OvershootInterpolator;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -92,6 +94,12 @@ import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
+import jp.wasabeef.recyclerview.animators.LandingAnimator;
+import jp.wasabeef.recyclerview.animators.ScaleInLeftAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 /**
  * Created by fabio on 11/11/2015.
@@ -131,20 +139,16 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         matchList = new ArrayList<>();
 
         rv = (RecyclerView) findViewById(R.id.recyclerView);
-
-        final RVAdapter rvAdapter = new RVAdapter(matchList);
-        rv.setAdapter(rvAdapter);
-
         rv.setItemViewCacheSize(ViewGroup.PERSISTENT_SCROLLING_CACHE);
         rv.setItemViewCacheSize(ViewGroup.PERSISTENT_ALL_CACHES);
         rv.setItemViewCacheSize(10000);
-
         rv.setHasFixedSize(true);
+
+        final RVAdapter rvAdapter = new RVAdapter(matchList, HistoryActivity.this);
+        rv.setAdapter(rvAdapter);
 
         llm = new LinearLayoutManager(HistoryActivity.this);
         rv.setLayoutManager(llm);
-
-        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -304,7 +308,9 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
                                     matchList.remove(matchList.get(position));
                                     rvAdapter.notifyItemRemoved(position);
+                                    rvAdapter.notifyItemChanged(position);
                                     rv.setAdapter(rvAdapter);
+                                    llm.smoothScrollToPosition(rv, null, position);
 
                                     CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
 
@@ -316,7 +322,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                                                     super.onDismissed(snackbar, event);
 
                                                     if (event == DISMISS_EVENT_TIMEOUT) {
-
                                                         deleteMatch(idGame);
                                                     }
 
@@ -329,12 +334,15 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
                                                     matchList.add(position, positionTemp);
                                                     rvAdapter.notifyItemInserted(matchList.size());
+                                                    rvAdapter.notifyItemChanged(position);
                                                     rv.setAdapter(rvAdapter);
+                                                    llm.smoothScrollToPosition(rv, null, position);
+
                                                 }
                                             })
                                             .show();
                                 }
-                                rvAdapter.notifyDataSetChanged();
+                                //rvAdapter.notifyDataSetChanged();
                             }
                         });
 
@@ -601,7 +609,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
             public void onResponse(String response) {
                 try {
 
-                    final RVAdapter rvAdapter = new RVAdapter(matchList);
+                    final RVAdapter rvAdapter = new RVAdapter(matchList, HistoryActivity.this);
                     rv.setAdapter(rvAdapter);
                     rvAdapter.clear();
 
@@ -666,7 +674,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         StringRequest gameRequest = new StringRequest(Request.Method.POST, ConfigActivity.ENTRY, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                final RVAdapter rvAdapter = new RVAdapter(matchList);
+                final RVAdapter rvAdapter = new RVAdapter(matchList, HistoryActivity.this);
                 rv.setAdapter(rvAdapter);
 
                 try {
