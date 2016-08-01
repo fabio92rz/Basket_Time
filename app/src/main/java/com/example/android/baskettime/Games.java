@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.media.Image;
 import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -40,6 +41,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.IllegalFormatCodePointException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -130,33 +132,43 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
         notifyDataSetChanged();
     }
 
-
     @Override
     public void onBindViewHolder(GamesViewHolder holder, int position) {
 
-        String time = String.valueOf(matches.get(position).date);
+        String time = String.valueOf(matches.get(holder.getAdapterPosition()).date);
 
         setValue(time, tempTime, holder.dateImage, holder.dateTv);
+        tempTime = String.valueOf(matches.get(holder.getAdapterPosition()).date);
 
-        tempTime = String.valueOf(matches.get(position).date);
+        holder.timeTv.setText(matches.get(holder.getAdapterPosition()).time);
+        holder.champ.setText(matches.get(holder.getAdapterPosition()).championship);
+        holder.teamHome.setText(matches.get(holder.getAdapterPosition()).teamHome);
+        holder.scoreHome.setText(String.valueOf(matches.get(holder.getAdapterPosition()).scoreHome));
+        holder.teamVisitor.setText(matches.get(holder.getAdapterPosition()).teamVisitor);
+        holder.scoreVisitor.setText(String.valueOf(matches.get(holder.getAdapterPosition()).scoreVisitor));
+        holder.quarter.setText(String.valueOf(matches.get(holder.getAdapterPosition()).quarter + "°"));
+        holder.cv.setTag(holder.getAdapterPosition());
+        holder.selectedGame = matches.get(holder.getAdapterPosition()).id_game;
 
-        holder.timeTv.setText(matches.get(position).time);
-        holder.champ.setText(matches.get(position).championship);
-        holder.teamHome.setText(matches.get(position).teamHome);
-        holder.scoreHome.setText(String.valueOf(matches.get(position).scoreHome));
-        holder.teamVisitor.setText(matches.get(position).teamVisitor);
-        holder.scoreVisitor.setText(String.valueOf(matches.get(position).scoreVisitor));
-        holder.quarter.setText(String.valueOf(matches.get(position).quarter + "°"));
-        holder.cv.setTag(position);
-        holder.selectedGame = matches.get(position).id_game;
-
-        if(position >lastPosition) {
+        if(holder.getAdapterPosition()>lastPosition) {
 
             Animation animation = AnimationUtils.loadAnimation(context,R.anim.fade_in);
             pvh.itemView.startAnimation(animation);
-            lastPosition = position;
+            lastPosition = holder.getAdapterPosition();
         }
 
+    }
+
+    @Override
+    public int getItemViewType(int position){
+
+        return position;
+    }
+
+    @Override
+    public long getItemId(int position){
+
+        return position;
     }
 
     @Override

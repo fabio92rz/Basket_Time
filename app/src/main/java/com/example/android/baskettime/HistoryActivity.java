@@ -30,6 +30,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -121,7 +122,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
     //Bottone per il logout
     private Button logoutButton;
     private FloatingActionButton newgame;
-    private FloatingActionButton prova;
 
     private Toolbar toolbar;
     private NavigationView navigationView;
@@ -145,6 +145,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         rv.setHasFixedSize(true);
 
         final RVAdapter rvAdapter = new RVAdapter(matchList, HistoryActivity.this);
+        rvAdapter.setHasStableIds(true);
         rv.setAdapter(rvAdapter);
 
         llm = new LinearLayoutManager(HistoryActivity.this);
@@ -159,7 +160,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                 android.R.color.holo_red_light);
 
         //Creo un inflater per inflazionare il layout dell'header
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         //Inizializzo il Bottone per il logout
         logoutButton = (Button) findViewById(R.id.logout_button);
@@ -306,14 +307,17 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                                     final String idGame = String.valueOf(matchList.get(position).id_game);
                                     positionTemp = rvAdapter.getItem(position);
 
+                                    final String date = positionTemp.date;
+
                                     matchList.remove(matchList.get(position));
-                                    rvAdapter.notifyItemRemoved(position);
-                                    rvAdapter.notifyItemChanged(position);
-                                    rv.setAdapter(rvAdapter);
-                                    llm.smoothScrollToPosition(rv, null, position);
+                                    rv.getAdapter().notifyItemRemoved(position);
+                                    rv.getAdapter().notifyItemChanged(position);
+                                    rv.getAdapter().notifyItemRangeChanged(position, matchList.size());
+
+                                    rv.getAdapter().getItemViewType(position);
+
 
                                     CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
-
                                     Snackbar.make(coordinatorLayout, "Match eliminato!", Snackbar.LENGTH_LONG)
                                             .setCallback(new Snackbar.Callback() {
 
@@ -330,22 +334,33 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
                                             })
                                             .setAction("ANNULLA", new View.OnClickListener() {
 
-                                                @Override public void onClick(View v) {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    if (!date.equals(positionTemp.date)){
 
-                                                    matchList.add(position, positionTemp);
-                                                    rvAdapter.notifyItemInserted(matchList.size());
-                                                    rvAdapter.notifyItemChanged(position);
-                                                    rv.setAdapter(rvAdapter);
-                                                    llm.smoothScrollToPosition(rv, null, position);
+                                                        matchList.add(position, positionTemp);
+                                                        rv.getAdapter().notifyItemInserted(matchList.size());
+                                                        rv.getAdapter().notifyItemChanged(position);
+                                                        rv.getAdapter().notifyItemRangeChanged(position, matchList.size());
+
+                                                    }else{
+                                                        positionTemp.date = "";
+                                                        View vi = inflater.inflate(R.layout.activity_card, rv, false);
+                                                        ImageView imageView = (ImageView) vi.findViewById(R.id.calendar_icon);
+                                                        imageView.setVisibility(View.INVISIBLE);
+
+                                                        matchList.add(position, positionTemp);
+                                                        rv.getAdapter().notifyItemInserted(matchList.size());
+                                                        rv.getAdapter().notifyItemChanged(position);
+                                                        rv.getAdapter().notifyItemRangeChanged(position, matchList.size());
+                                                    }
 
                                                 }
                                             })
                                             .show();
                                 }
-                                //rvAdapter.notifyDataSetChanged();
                             }
                         });
-
         rv.addOnItemTouchListener(swipeTouchListener);
     }
 
@@ -404,7 +419,6 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         if (v == newgame) {
             Intent newgame = new Intent(HistoryActivity.this, NewGameActivity.class);
             startActivity(newgame);
-            //overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
         }
     }
 

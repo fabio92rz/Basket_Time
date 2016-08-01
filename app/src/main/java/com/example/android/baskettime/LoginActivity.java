@@ -18,6 +18,7 @@ import android.renderscript.ScriptGroup;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -96,7 +97,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     //Definisco le Views ed il pulsante
-    private EditText eTEmail;
+    private TextInputEditText eTEmail;
     private TextInputLayout email;
     private PasswordView eTPassword;
     private TextInputLayout password;
@@ -117,14 +118,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         //Inizializzo le Views
         email = (TextInputLayout) findViewById(R.id.login_email_text);
-        eTEmail = (EditText) findViewById(R.id.email);
+        eTEmail = (TextInputEditText) findViewById(R.id.email);
         password = (TextInputLayout) findViewById(R.id.login_pass_text);
         eTPassword = (PasswordView) findViewById(R.id.password);
         ballView = (ImageView) findViewById(R.id.ball_view);
-
-        Animation animation = AnimationUtils.loadAnimation(LoginActivity.this,R.anim.bounce);
-        ballView.startAnimation(animation);
-
 
         //Inizializzo il bottone e setto il ClickListener
         loginButton = (Button) findViewById(R.id.login_button);
