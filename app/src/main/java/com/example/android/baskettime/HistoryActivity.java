@@ -127,7 +127,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
     private NavigationView navigationView;
     protected DrawerLayout drawerLayout;
     public Bitmap scaled;
-    Games positionTemp;
+    Games positionTemp, previousPos;
 
 
     @Override
@@ -139,13 +139,12 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
         matchList = new ArrayList<>();
 
         rv = (RecyclerView) findViewById(R.id.recyclerView);
+
+        assert rv != null;
         rv.setItemViewCacheSize(ViewGroup.PERSISTENT_SCROLLING_CACHE);
-        rv.setItemViewCacheSize(ViewGroup.PERSISTENT_ALL_CACHES);
-        rv.setItemViewCacheSize(10000);
-        rv.setHasFixedSize(true);
 
         final RVAdapter rvAdapter = new RVAdapter(matchList, HistoryActivity.this);
-        rvAdapter.setHasStableIds(true);
+        rvAdapter.setHasStableIds(false);
         rv.setAdapter(rvAdapter);
 
         llm = new LinearLayoutManager(HistoryActivity.this);
@@ -306,8 +305,12 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
                                     final String idGame = String.valueOf(matchList.get(position).id_game);
                                     positionTemp = rvAdapter.getItem(position);
+                                    previousPos = rvAdapter.getItem(position-1);
 
-                                    final String date = positionTemp.date;
+                                    final TextView textView = (TextView) findViewById(R.id.date_cv);
+                                    final ImageView imageView = (ImageView) findViewById(R.id.calendar_icon);
+
+                                    final String date = previousPos.date;
 
                                     matchList.remove(matchList.get(position));
                                     rv.getAdapter().notifyItemRemoved(position);
@@ -336,24 +339,24 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
                                                 @Override
                                                 public void onClick(View v) {
-                                                    if (!date.equals(positionTemp.date)){
+                                                    if (!positionTemp.date.equals(date)) {
 
-                                                        matchList.add(position, positionTemp);
-                                                        rv.getAdapter().notifyItemInserted(matchList.size());
-                                                        rv.getAdapter().notifyItemChanged(position);
-                                                        rv.getAdapter().notifyItemRangeChanged(position, matchList.size());
+                                                        textView.setText(String.valueOf(positionTemp.date));
+                                                        imageView.setVisibility(View.VISIBLE);
+                                                        positionTemp.date = date;
 
-                                                    }else{
-                                                        positionTemp.date = "";
-                                                        View vi = inflater.inflate(R.layout.activity_card, rv, false);
-                                                        ImageView imageView = (ImageView) vi.findViewById(R.id.calendar_icon);
+                                                    } else {
+                                                        Log.d("Prova position temp", "tempo" + positionTemp);
+                                                        textView.setText("");
                                                         imageView.setVisibility(View.INVISIBLE);
+                                                        positionTemp.date = date;
 
-                                                        matchList.add(position, positionTemp);
-                                                        rv.getAdapter().notifyItemInserted(matchList.size());
-                                                        rv.getAdapter().notifyItemChanged(position);
-                                                        rv.getAdapter().notifyItemRangeChanged(position, matchList.size());
                                                     }
+
+                                                    matchList.add(position, positionTemp);
+                                                    rv.getAdapter().notifyItemInserted(matchList.size());
+                                                    rv.getAdapter().notifyItemChanged(position);
+                                                    rv.getAdapter().notifyItemRangeChanged(position, matchList.size());
 
                                                 }
                                             })
@@ -571,7 +574,7 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
             View header = navigationView.getHeaderView(0);
             CircleImageView profilePict = (CircleImageView) header.findViewById(R.id.profile_image);
 
-            if (!profilePicture.equals("")){
+            if (!profilePicture.equals("")) {
 
                 Picasso.with(this)
                         .load(profilePicture)

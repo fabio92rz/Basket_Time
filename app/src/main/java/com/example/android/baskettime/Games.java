@@ -81,11 +81,18 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
     }
 
     @Override
+    public void onViewDetachedFromWindow(RVAdapter.GamesViewHolder holder) {
+        ((GamesViewHolder)holder).clearAnimation();
+    }
+
+    @Override
     public GamesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_card, parent, false);
         pvh = new GamesViewHolder(v);
+        pvh.setIsRecyclable(false);
         return pvh;
     }
+
 
     public void removeAt(int position) {
         matches.remove(position);
@@ -93,7 +100,7 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
         notifyItemRangeChanged(position, matches.size());
     }
 
-    public Games getItem(int position) {
+    protected Games getItem(int position) {
         return matches.get(position);
     }
 
@@ -155,6 +162,7 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
             Animation animation = AnimationUtils.loadAnimation(context,R.anim.fade_in);
             pvh.itemView.startAnimation(animation);
             lastPosition = holder.getAdapterPosition();
+            pvh.setIsRecyclable(false);
         }
 
     }
@@ -164,6 +172,7 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
 
         return position;
     }
+
 
     @Override
     public long getItemId(int position){
@@ -183,6 +192,7 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
+
 
     public class GamesViewHolder extends RecyclerView.ViewHolder {
 
@@ -284,6 +294,12 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
                 }
             });
         }
+
+        public void clearAnimation()
+        {
+            itemView.clearAnimation();
+        }
+
         public void deleteMatch(final String idGame){
 
             final StringRequest deleteMatch = new StringRequest(Request.Method.POST, ConfigActivity.ENTRY, new Response.Listener<String>() {
