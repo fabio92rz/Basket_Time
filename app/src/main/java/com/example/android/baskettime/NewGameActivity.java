@@ -226,6 +226,9 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
         final String idvisitor = String.valueOf(getTeamsID((int) spinnerVisitor.getSelectedItemId()));
         final String idChamp = String.valueOf(getChampID((int) spinnerChampionship.getSelectedItemId()));
         final String sessionId = sharedPreferences.getString(ConfigActivity.KEY_ID_SESSION, "");
+        int user_id = sharedPreferences.getInt(ConfigActivity.userId, 0);
+        final String userId = String.valueOf(user_id);
+
         Log.i("idhome", "getstring" + idhome);
         Log.i("idVisitor", "getstring" + idvisitor);
         Log.d("Championship", "Get ID" + idChamp);
@@ -333,6 +336,7 @@ public class NewGameActivity extends AppCompatActivity implements View.OnClickLi
                 params.put(ConfigActivity.KEY_VISITOR_TEAM, idvisitor);
                 params.put(ConfigActivity.TAG_GAMES_CHAMP, idChamp);
                 params.put(ConfigActivity.KEY_ID_SESSION, sessionId);
+                params.put("id_user", userId);
                 params.put("f", function);
                 params.put("day", Date);
                 params.put("time", Time);

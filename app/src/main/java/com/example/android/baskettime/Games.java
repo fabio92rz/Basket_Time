@@ -82,7 +82,7 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
 
     @Override
     public void onViewDetachedFromWindow(RVAdapter.GamesViewHolder holder) {
-        ((GamesViewHolder)holder).clearAnimation();
+
     }
 
     @Override
@@ -157,13 +157,13 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
         holder.cv.setTag(holder.getAdapterPosition());
         holder.selectedGame = matches.get(holder.getAdapterPosition()).id_game;
 
-        if(holder.getAdapterPosition()>lastPosition) {
+        /**if(holder.getAdapterPosition()>lastPosition) {
 
             Animation animation = AnimationUtils.loadAnimation(context,R.anim.fade_in);
             pvh.itemView.startAnimation(animation);
             lastPosition = holder.getAdapterPosition();
             pvh.setIsRecyclable(false);
-        }
+        }**/
 
     }
 
@@ -295,7 +295,7 @@ class RVAdapter extends RecyclerView.Adapter<RVAdapter.GamesViewHolder> {
             });
         }
 
-        public void clearAnimation()
+        //public void clearAnimation()
         {
             itemView.clearAnimation();
         }

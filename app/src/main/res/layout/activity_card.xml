@@ -72,14 +72,14 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@id/popupmenu"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="15dp"
                 android:text="Quarto"
                 android:textColor="#000000"
                 android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/final_quarter"
-                android:layout_width="50dp"
+                android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/quart"
                 android:layout_marginTop="3dp"
@@ -92,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_below="@id/popupmenu"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="15dp"
                 android:text="Orario"
                 android:textColor="@android:color/black"
                 android:textSize="15sp" />
@@ -100,7 +100,7 @@
             <View
                 android:id="@+id/finishView"
                 android:layout_width="1dp"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:layout_below="@id/championship_cv"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="10dp"
@@ -110,7 +110,7 @@
             <View
                 android:id="@+id/startview"
                 android:layout_width="1dp"
-                android:layout_height="60dp"
+                android:layout_height="50dp"
                 android:layout_below="@id/championship_cv"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="5dp"
@@ -140,7 +140,7 @@
 
             <TextView
                 android:id="@+id/time_cv"
-                android:layout_width="40dp"
+                android:layout_width="35dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_below="@id/orario"

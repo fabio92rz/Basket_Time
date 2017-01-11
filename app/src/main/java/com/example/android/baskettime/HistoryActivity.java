@@ -140,8 +140,8 @@ public class HistoryActivity extends AppCompatActivity implements View.OnClickLi
 
         rv = (RecyclerView) findViewById(R.id.recyclerView);
 
-        assert rv != null;
         rv.setItemViewCacheSize(ViewGroup.PERSISTENT_SCROLLING_CACHE);
+        rv.setItemViewCacheSize(200);
 
         final RVAdapter rvAdapter = new RVAdapter(matchList, HistoryActivity.this);
         rvAdapter.setHasStableIds(false);

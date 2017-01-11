@@ -95,7 +95,7 @@
                     android:layout_toLeftOf="@id/teamDivider"
                     android:background="#00000000"
                     android:paddingBottom="30dp"
-                    android:paddingRight="45dp"
+                    android:layout_marginRight="35dp"
                     android:paddingTop="30dp"
                     android:textColor="#039be5"
                     android:textSize="22sp" />
@@ -110,7 +110,7 @@
                     android:layout_toRightOf="@id/teamDivider"
                     android:background="#00000000"
                     android:paddingBottom="30dp"
-                    android:paddingLeft="45dp"
+                    android:layout_marginLeft="35dp"
                     android:paddingTop="30dp"
                     android:textColor="#F44336"
                     android:textSize="22sp" />
@@ -174,7 +174,7 @@
 
                     <TextView
                         android:id="@+id/actual_quarter"
-                        android:layout_width="50dp"
+                        android:layout_width="40dp"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/quart"
                         android:layout_marginTop="3dp"
@@ -231,7 +231,7 @@
 
                     <TextView
                         android:id="@+id/time_cv_live"
-                        android:layout_width="40dp"
+                        android:layout_width="35dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_below="@id/orario"
@@ -276,7 +276,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/custom_button2"
-                android:text="Fine           Partita!"
+                android:text="Fine Partita!"
                 android:textAllCaps="false" />
 
         </RelativeLayout>
